@@ -1,0 +1,149 @@
+<include file="public/layout"/>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>贷款详情</h3>
+            </div>
+        </div>
+    </div>
+
+    <form method="" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="form_submit" value="ok"/>
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label >记录ID</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['id']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >申请时间</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['addtime']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>贷款编号</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['loan_number']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >客户姓名</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['user_name']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >申请额度</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['apply_amount']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >收款账号</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['account']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >放款金额</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['loan_amount']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >每月价格</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['month_amount']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >开始日期</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['str_time']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >结束日期</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['stp_time']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>授信额度</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['credit_total']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>已使用授信额度</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['credit_used']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>历史累计提款金额</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['grand_total']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>服务率</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['service_rate']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>利率</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['inter_rate']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >用途</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['uses']}</p>
+                </dd>
+            </dl>
+        </div>
+    </form>
+</div>
+</body>
+</html>

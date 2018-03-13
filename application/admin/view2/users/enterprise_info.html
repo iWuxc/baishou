@@ -1,0 +1,305 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>客户信息设置</h3>
+                <h5>客户信息内容基本选项设置</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <foreach name="group_list" item="v" key="k">
+                    <li><a href="{:U('Users/addUsers',['inc_type'=> $k])}" <if condition="$k==$inc_type">class="current"</if>><span>{$v}</span></a></li>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>客户信息提交之后自动生成客户编号</li>
+        </ul>
+    </div>
+    <form method="post" id="handlepost" action="{:U('System/handle')}" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="form_submit" value="ok" />
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label><b>企业信息</b></label>
+                </dt>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="name">企业名称</label>
+                </dt>
+                <dd class="opt">
+                    <input id="name" name="name" value="{$enterprise.name}" class="input-txt" type="text" />
+                    <p class="notic">企业名称不能包括特殊字符</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="reg_capital">注册资金</label>
+                </dt>
+                <dd class="opt">
+                    <input id="reg_capital" name="reg_capital" value="{$enterprise.reg_capital}" class="t_mane" type="text" /> 万
+                    <p class="notic">企业名称不能包括特殊字符</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="reg_address">注册地址</label>
+                </dt>
+                <dd class="opt">
+                    <input id="reg_address" name="reg_address" value="{$enterprise.reg_address}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="business_no">营业执照号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="business_no" name="business_no" value="{$enterprise.business_no}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="business_img">营业执照证件</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="business_img_a" class="nyroModal" rel="gal" href="{$enterprise.business_img}">
+                                <i id="business_img_i" class="fa fa-picture-o" onmouseover="layer.tips('<img src={$enterprise.front_face}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="business_img" name="business_img" value="{$enterprise.business_img}" class="type-file-text">
+                            <input type="button" name="button" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify(1,'','logo','img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">提示信息</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="founding_time">成立时间</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" class="input-txt" id="founding_time" name="founding_time"  value="{$enterprise.founding_time|date='Y-m-d',###}">
+                    <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                    <span class="err"></span>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="reg_capital">持续经营年限</label>
+                </dt>
+                <dd class="opt">
+                    <input id="operating_years" name="operating_years" value="{$enterprise.operating_years}" class="t_mane" type="text" /> 年
+                    <p class="notic">企业名称不能包括特殊字符</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="main_business">主营业务</label>
+                </dt>
+                <dd class="opt">
+                    <textarea rows="5" cols="30" name="main_business" class="input-txt" style="height:50px;"></textarea>
+                    <span id="main_business" class="err" style="color:#F00; display:none;"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="legal_person">法定代表人</label>
+                </dt>
+                <dd class="opt">
+                    <input id="legal_person" name="mobile" value="{$enterprise.legal_person}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="credential_type">证件类型</label>
+                </dt>
+                <dd class="opt">
+                    <input id="credential_type" name="credential_type" type="radio" value="1" checked="">公民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="2">港澳台居民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="3">护照  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="4">其他
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="id_number">证件号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="id_number" name="id_number" value="{$enterprise.id_number}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="work_phone">办公电话</label>
+                </dt>
+                <dd class="opt">
+                    <input id="work_phone" name="work_phone" value="{$enterprise.work_phone}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="mobile">手机号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="mobile" name="mobile" value="{$enterprise.mobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="control_people">实际控制人</label>
+                </dt>
+                <dd class="opt">
+                    <input id="control_people" name="control_people" value="{$enterprise.control_people}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="con_cretype">实际控制人证件类型</label>
+                </dt>
+                <dd class="opt">
+                    <input id="con_cretype" name="con_cretype" type="radio" value="1" checked="">公民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="con_cretype" type="radio" value="2">港澳台居民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="con_cretype" type="radio" value="3">护照  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="con_cretype" type="radio" value="4">其他
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="con_idnumber">实际控制人证件号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="con_idnumber" name="con_idnumber" value="{$enterprise.con_idnumber}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="con_workmobile">实际控制人办公电话</label>
+                </dt>
+                <dd class="opt">
+                    <input id="con_workmobile" name="con_workmobile" value="{$enterprise.con_workmobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="con_mobile">实际控制人手机号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="con_mobile" name="con_mobile" value="{$enterprise.con_mobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="con_homemobile">实际控制人住宅电话</label>
+                </dt>
+                <dd class="opt">
+                    <input id="con_homemobile" name="con_homemobile" value="{$enterprise.con_homemobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="link_man">联系人</label>
+                </dt>
+                <dd class="opt">
+                    <input id="link_man" name="link_man" value="{$enterprise.link_man}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="link_mobile">联系人电话</label>
+                </dt>
+                <dd class="opt">
+                    <input id="link_mobile" name="link_mobile" value="{$enterprise.link_mobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="staff_number">员工人数</label>
+                </dt>
+                <dd class="opt">
+                    <input id="staff_number" name="staff_number" value="{$enterprise.staff_number}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+            <div class="bot">
+                <input type="hidden" name="inc_type" value="{$inc_type}">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+
+<script type="text/javascript">
+    $(function () {
+        $('#founding_time').layDate();
+    });
+    //网站首页logo
+    function img_call_back(fileurl_tmp)
+    {
+        $("#store_logo").val(fileurl_tmp);
+        $("#img_a").attr('href', fileurl_tmp);
+        $("#img_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    }
+    //网站用户中心logo
+    function user_img_call_back(fileurl_tmp)
+    {
+        $("#store_user_logo").val(fileurl_tmp);
+        $("#userimg_a").attr('href', fileurl_tmp);
+        $("#userimg_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    }
+
+    //菜单节点, 点击展开
+    function optionClicked(obj,nodeDiv){
+        var src = $(obj).find('img').attr('src');
+        $('#'+nodeDiv).toggle(function(){
+            if(src == '/public/static/images/tv-expandable.gif')
+            {
+                $(obj).find('img').attr('src','/public/static/images/tv-collapsable-last.gif');
+            }else{
+                $(obj).attr('src','/public/static/images/tv-expandable.gif');
+            }
+        });
+
+    }
+</script>
+</html>

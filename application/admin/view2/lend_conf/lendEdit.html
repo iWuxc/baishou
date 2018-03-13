@@ -1,0 +1,86 @@
+<include file="public/layout"/>
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script src="__ROOT__/public/js/bs/enterprisr.js"></script>
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <a class="back" href="javascript:history.go(-1)" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>客户放款配置入口</h3>
+                <h5>放款配置内容设置</h5>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span></div>
+        <ul>
+            <li>切换第三方配置选项来配置对应的配置。</li>
+        </ul>
+    </div>
+    <form method="post" enctype="multipart/form-data" name="form1" id="form1" action="{:U('LendConf/handle')}">
+        <input type="hidden" name="user_id" value="{$user_id}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lending_type">选择放款平台</label>
+                </dt>
+                <dd class="opt">
+                    <select name="lending_type" id="lending_type">
+                        <option value="yunxin">云南国际信托企业贷</option>
+                    </select>
+                    <p class="notic">放款平台选择</p>
+                </dd>
+            </dl>
+            <div id="lending_box">
+
+            </div>
+            <!--<input type="submit" value="提交">-->
+            <div class="bot"><a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" id="LendBtn" onClick="ajax_lend_form('form1','{:U(\'LendConf/handle?is_ajax=1\')}','LendBtn');">确认添加</a></div>
+        </div>
+    </form>
+</div>
+<div id="goTop"><a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+<script>
+    $(document).ready(function(){
+        ajax_get_table();
+    });
+    $("#lending_type").change(function(){
+        ajax_get_table();
+    });
+    function checkSubmit(){
+        $('#form1').submit();
+    }
+    //ajax抓取页面
+    function ajax_get_table(){
+        var type = $.trim($('#lending_type').val());
+        $.ajax({
+            type: "GET",
+            url: "/index.php/Admin/LendConf/ajaxLend/type/"+type+"/user_id/"+{$user_id},//+tab,
+            success: function(data){
+                $("#lending_box").html('');
+                $("#lending_box").append(data);
+            }
+        });
+    }
+
+    function preview(id){
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: false,
+            area: ['300px', '300px'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: "<img width='300' height='300' src='"+$('#'+id).val()+"'>"
+        });
+    }
+</script>
+</html>

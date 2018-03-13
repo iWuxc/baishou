@@ -1,0 +1,69 @@
+<include file="public/layout"/>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>放款操作</h3>
+            </div>
+        </div>
+    </div>
+
+    <form method="" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="form_submit" value="ok"/>
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label >客户姓名</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['user_name']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >授信额度</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['credit_total']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >已使用授信额度</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['credit_used']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >剩余授信额度</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['credit_rest']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >评估总值</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['assess_total']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >审批抵押率</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['check_rate']}</p>
+                </dd>
+            </dl>
+        </div>
+    </form>
+</div>
+</body>
+</html>

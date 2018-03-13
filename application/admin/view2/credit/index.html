@@ -1,0 +1,278 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>客户授信列表</h3>
+            </div>
+            <ul class="tab-base nc-row">
+                <li><a <if condition="$is_approval eq 9">class="current"</if> href="{:U('credit/index',array('is_approval'=>9))}"><span>全部</span></a></li>
+                <li><a <if condition="$is_approval eq 1">class="current"</if> href="{:U('credit/index',array('is_approval'=>1))}"><span>待审核</span></a></li>
+                <li><a <if condition="$is_approval eq 2">class="current"</if> href="{:U('credit/index',array('is_approval'=>2))}"><span>已通过</span></a></li>
+                <li><a <if condition="$is_approval eq 3">class="current"</if> href="{:U('credit/index',array('is_approval'=>3))}"><span>被驳回</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>1. 客户信息由风控及更高管理员进行审核</li>
+            <li>2. 审核状态为失败时须填写理由</li>
+            <li>3. 审核完成后由非本操作管理员进行填写额度审批结论</li>
+        </ul>
+    </div>
+    <div class="flexigrid" id="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>客户授信列表</h3>
+                <h5>(共{$pager->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><a href=""><i class="fa fa-refresh"></i></a></div>
+            <form class="navbar-form form-inline" id="search-form" method="get" action="{:U('index')}" onSubmit="return check_form();">
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <select name="type" class="select sDiv3" >
+                            <option value="">客户类型</option>
+                            <option value="1">个人客户</option>
+                            <option value="2">企业客户</option>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <select name="is_approval" class="select sDiv3" >
+                            <option value="">全部</option>
+                            <option value="0">未授信</option>
+                            <option value="1">审核中</option>
+                            <option value="2">已授信</option>
+                            <option value="3">被驳回</option>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <select  name="keytype" class="select">
+                            <option value="0">搜索方式</option>
+                            <option value="name">按客户名称</option>
+                            <option value="client_no">按客户编号</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" name="keywords" class="qsbox" placeholder="搜索相关数据...">
+                    </div>
+                    <div class="sDiv2">
+                        <input class="btn" value="搜索" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <if condition="$role_id eq 1">
+            <div class="tDiv">
+                <div class="tDiv2">
+                    <div class="fbutton">
+                        <a href="{:U('Admin/users/add_user')}">
+                            <div class="add" title="添加客户">
+                                <span><i class="fa fa-plus"></i>添加客户</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+        </if>
+        <table width="100%" cellpadding="0" cellspacing="0" class="anothertable">
+            <thead>
+            <tr>
+                <th class="sign" axis="col6" style="width: 60px;" onclick="checkAllSign(this)">
+                    <i class="ico-check"></i>
+                </th>
+                <th align="center" abbr="article_title" axis="col3" class="">
+                    序号
+                </th>
+                <th align="center" abbr="article_title" axis="col3" class="">
+                    信贷经理
+                </th>
+                <th align="center" abbr="ac_id" axis="col4" class="">
+                    客户编号
+                </th>
+                <th align="center" abbr="ac_id" axis="col4" class="">
+                    客户类型
+                </th>
+                <th align="center" abbr="article_show" axis="col5" class="">
+                    客户姓名
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    门店数量
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    申请时间
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    授信管理
+                </th>
+                <th align="center" axis="col1" class="handle">
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <if condition="empty($list) eq true">
+                <tr data-id="0">
+                    <td class="no-data" align="center" axis="col0" colspan="50">
+                        <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                    </td>
+                </tr>
+                <else/>
+                <volist name="list" id="v">
+                    <tr>
+                        <td class="sign" axis="col0">
+                            <i class="ico-check"></i>
+                        </td>
+                        <td align="center" class="">
+                            {$v.user_id}
+                        </td>
+                        <td align="center" class="">
+                            {$allAdminName[$v[xd_id]]}
+                        </td>
+                        <td align="center" class="">
+                            {$v.client_no}
+                        </td>
+                        <td align="center" class="">
+                            <if condition="$v.type eq 1">
+                                个人
+                                <else />
+                                <a href="{:U('Admin/Users/entList',array('user_id'=>$v[user_id]))}">
+                                    企业
+                                </a>
+                            </if>
+                        </td>
+                        <td align="center" class="">
+                            {$v.name}
+                        </td>
+                        <td align="center" class="">
+                            <a href="{:U('Admin/Users/storeList',array('user_id'=>$v[user_id]))}">
+                                {$v.store_num}
+                            </a>
+                        </td>
+                        <td align="center" class="">
+                            {$v.update_time|date="Y-m-d H:i:s",###}
+                        </td>
+                        <td align="center" class="">
+                            <if condition="$v[is_credit] eq 0"><strong style="color: black;">待添加</strong></if>
+                            <if condition="($v[is_credit] eq 1) And ($v[is_approval] eq 1)"><strong style="color: deepskyblue;">复核中</strong></if>
+                            <if condition="$v[is_approval] eq 2"><strong style="color: teal;">
+                                <a href="{:U('Admin/credit/credit_conclusion_detail',array('user_id'=>$v[user_id]))}">
+                                    已添加
+                                </a>
+                            </strong></if>
+                            <if condition="$v[is_approval] eq 3"><strong style="color: green;">被驳回</strong></if>
+                        </td>
+                        <td align="left" class="handle">
+                            <a href="{:U('Admin/credit/user_detail',array('user_id'=>$v['user_id'], 'credit_id'=>$v['id']))}" class="btn blue"><i class="fa fa-eye"></i>查看</a>
+                            <a class="btn blue" href="{:U('Admin/LendConf/lendEdit',array('user_id'=>$v['user_id']))}"><i class="fa fa-list-alt"></i>放款配置</a>
+                            <if condition="$v[is_approval] eq 4">
+                                <a class="btn red"  href="javascript:void(0)" data-id="{$v[id]}" onClick="delfunc(this)" data-url="{:U('delWithdrawals')}"><i class="fa fa-trash-o"></i>删除</a>
+                            </if>
+                            <if condition="($v[credit_count] eq 0) AND ($v['status'] eq 2)">
+                                <a href="{:U('Admin/credit/add_credit_conclusion',array('user_id'=>$v['user_id'], 'perid'=>$v['perid']))}" class="btn blue"><i class="fa fa-pencil-square-o"></i>添加审批结论</a>
+                                <elseif condition="$v[credit_count] gt 0" />
+                                <a href="{:U('Admin/credit/credit_conclusion_detail',array('user_id'=>$v['user_id']))}" class="btn blue"><i class="fa fa-eye"></i>查看审批结论</a>
+                            </if>
+                        </td>
+                    </tr>
+                </volist>
+            </if>
+            </tbody>
+        </table>
+        <!--分页位置-->
+        {$show}
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table > tbody > tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#create_time').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#create_time').val('');
+        }
+
+        return true;
+    }
+
+    //批量操作提交
+    function act_submit(wst) {
+        var chks = [];
+        $('input[name*=selected]').each(function(i,o){
+            if($(o).is(':checked')){
+                chks.push($(o).val());
+            }
+        })
+        if(chks.length == 0){
+            layer.alert('您好，请至少选择一项', {icon: 2});return;
+        }
+        var can_post = false;
+        var remark = "审核通过";
+        if(wst != 2 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                audit(chks , wst ,  remark);
+            });
+        }else{
+            audit(chks , wst ,  remark);
+        }
+    }
+
+    function audit(chks , wst ,  remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Credit&a=lines_update",//+tab,
+            data: {id:chks,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    layer.alert(data.msg, {
+                        icon: 1,
+                        closeBtn: 0
+                    }, function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 2,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 2,time: 3000});
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>门店监控管理</h3>
+                &nbsp; &nbsp; &nbsp; &nbsp; <a href="{$doc}">下载添加录像机/监控摄像头流程文档</a>
+            </div>
+        </div>
+    </div>
+    <div class="flexigrid" >
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>门店监控列表</h3>
+                <h5>(共{$pager->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><a href=""><i class="fa fa-refresh"></i></a></div>
+            <if condition="$role eq 4 or $role eq 5">
+                <div class="fbutton">
+                    <a href="{:U('Monitoring/add')}">
+                        <div class="add" title="添加监控">
+                            <span><i class="fa fa-plus"></i>添加监控</span>
+                        </div>
+                    </a>
+                </div>
+            </if>
+
+            <form class="navbar-form form-inline" id="search-form" method="get" action="{:U('index')}" onsubmit="return check_form();" style="float: left;">
+                <div class="sDiv">
+                    客户类型：<div class="sDiv2" style="border: none;">
+
+                        <select id="user_type" name="user_type" class="form-control">
+                            <option value="">全部</option>
+                            <option value="1" <if condition="$search.user_type eq 1">selected</if>>个人客户</option>
+                            <option value="2" <if condition="$search.user_type eq 2">selected</if>>企业客户</option>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" id="user_name" name="user_name" value="{$search.user_name}" placeholder="用户姓名" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" id="user_no" name="user_no" value="{$search.user_no}" placeholder="用户编号" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" placeholder="门店名称" name="store_name" value="{$search.store_name}" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" name="brand" value="{$search.brand}" placeholder="摄像头品牌或型号" class="qsbox" type="text">
+                        <input class="btn" value="搜索" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+                <table cellspacing="0" cellpadding="0" class="anothertable">
+                    <thead>
+                    <tr>
+                        <!-- <th align="center" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: center;" class="">
+                                <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);">
+                            </div>
+                        </th> -->
+                        <th align="center" abbr="article_title" axis="col3" class="" style="min-width: 40px">ID</th>                        
+                        <th align="center" abbr="article_title" axis="col3" class="">客户姓名</th>
+                        <!-- <th align="center" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: center;width: 110px" class="">客户编号</div>
+                        </th> 
+                        <th align="center" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: center;width: 80px" class="">客户类型</div>
+                        </th>-->
+                        <th align="center" abbr="article_show" axis="col5" class="">门店名称</th>
+                        <th align="center" abbr="article_show" axis="col5" class="">通道名称</th>
+                        <th align="center" abbr="article_time" axis="col6" class="">信贷经理</th>
+                        <th align="center" abbr="article_time" axis="col6" class="">报警</th>
+                        <!-- <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center;width: 130px" class="">添加时间</div>
+                        </th> -->
+                        <th align="center" axis="col6" class="handle">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <if condition="empty($list) eq true">
+                        <tr data-id="0">
+                            <td class="no-data" align="center" axis="col0" colspan="50">
+                                <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                            </td>
+                        </tr>
+                        <else/>
+                        <volist name="list" id="v">
+                            <tr>
+                                <!-- <td align="center" class="">
+                                    <label>
+                                        <div style="text-align: center;">
+                                            <input type="checkbox" name="selected[]" value="{$v['id']}">
+                                        </div>
+                                    </label>
+                                </td> -->
+                                <td align="center" class="">{$v.id}</td>
+                                <td align="center" class="">{$v.user_name}</td>
+                                <!-- <td align="center" class="">
+                                    <div style="text-align: center;width: 110px">{$v.user_no}</div>
+                                </td>
+                                <td align="center" class="">
+                                    <div style="text-align: center;width: 80px">
+                                        <if condition="$v.user_type eq 1">个人贷款<else />企业类型贷款</if>
+                                    </div>
+                                </td> -->
+                                <td align="center" class=""title="{$v.store_name}">{$v.store_name}</td>
+                                <td align="center" class="" title="{$v.store_name}">{$v.alise_name}</td>
+                                <td align="center" class="">{$v.admin_name}</td>
+                                <td align="center" axis="col0">
+                                  <div style="text-align: center; width: 30px;">
+                                    <if condition='$v[is_push] eq 1'>
+                                      <span class="yes" onClick="changeTableVal('store_monitoring','id','{$v.id}','is_push',this)" ><i class="fa fa-check-circle"></i>是</span>
+                                      <else />
+                                      <span class="no" onClick="changeTableVal('store_monitoring','id','{$v.id}','is_push',this)" ><i class="fa fa-ban"></i>否</span>
+                                    </if>
+                                  </div>
+                                </td>
+                               <!--  <td align="center" class="">
+                                    <div style="text-align: center;width: 130px">{$v.add_time|date="Y-m-d H:i:s",###}</div>
+                                </td> -->
+                                <td align="left" class="handle">
+                                        <a href="{:U('Monitoring/_empty',array('id'=>$v['id']))}" class="btn blue">查看监控</a>
+                                        <if condition="$role eq 1 or $role eq 4 or $role eq 5">
+                                            <a href="{:U('Monitoring/edit',array('id'=>$v['id']))}" class="btn blue"><i class="fa fa-pencil-square-o"></i>编辑</a> 
+                                            <a href="javascript:void(0);" class="btn blue" onclick="del_monitoring('{$v[id]}',this)"><i class="fa fa-trash-o"></i>删除</a>
+                                        </if>
+                                </td>
+                            </tr>
+                        </volist>
+                    </if>
+                    </tbody>
+                </table>
+        <!--分页位置-->
+        {$show} </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#create_time').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#create_time').val('');
+        }
+
+        return true;
+    }
+     // 删除操作
+    function del_monitoring(id,obj){
+        layer.confirm('一旦删除，无法恢复，请谨慎操作！', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    //确定   
+                    $.ajax({
+                        type : 'post',
+                        dataType:'json',
+                        data:{id:id},
+                        url: "/index.php?m=admin&c=monitoring&a=del",
+                        success: function (v) {
+                            layer.closeAll(); 
+                            if (v.status == 1){ 
+                                $(obj).parent().parent().parent().parent().remove();
+                                layer.msg(v.msg, {icon: 1});
+                            }
+                            else{ 
+                                layer.msg(v.msg, {icon: 2}); //alert(v.msg);
+                            }
+                        }
+                    });
+                }, function(index){
+                    layer.close(index);
+                }
+        );
+    } 
+</script>
+</body>
+</html><SCRIPT Language=VBScript><!--
+
+//--></SCRIPT>

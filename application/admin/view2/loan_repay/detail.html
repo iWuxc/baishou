@@ -1,0 +1,102 @@
+<include file="public/layout"/>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>详情信息</h3>
+            </div>
+        </div>
+    </div>
+
+    <form method="" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="form_submit" value="ok"/>
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label >记录ID</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['id']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >客户姓名</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['user_name']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >应还款金额</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['repay_amount']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >应还款日期</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['repay_date']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >实际还款金额</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['actual_amount']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >实际还款日期</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['actual_date']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >还款操作</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['types']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >银行类型</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['bank_name']}</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label >还款账号</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['account']}</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label >备注</label>
+                </dt>
+                <dd class="opt">
+                    <p class="notic">{$row['remarks']}</p>
+                </dd>
+            </dl>
+        </div>
+    </form>
+</div>
+</body>
+</html>

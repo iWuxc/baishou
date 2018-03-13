@@ -1,0 +1,279 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<style type="text/css">
+    html, body {
+        overflow: visible;
+    }
+
+    a.btn {
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #f5f5f5;
+        border-radius: 4px;
+        color: #999;
+        cursor: pointer !important;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+        height: 20px;
+        letter-spacing: normal;
+        line-height: 20px;
+        margin: 0 5px 0 0;
+        padding: 1px 6px;
+        vertical-align: top;
+    }
+
+    a.red:hover {
+        background-color: #e84c3d;
+        border-color: #c1392b;
+        color: #fff;
+    }
+
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>添加监控</h3>
+                <!-- <h5>添加监控</h5> -->
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" action="{$action_url}" id="monitoring-add" method="post">
+        <div class="ncap-form-default"> 
+            <dl class="row">
+       <dt class="tit">
+         <label><em>*</em>选择门店：</label>
+       </dt>
+       <dd class="opt">
+         <input type="text" name="store_id" id="store" class="input-txt" placeholder="门店编号或名称搜索" />
+         <select name="store_id" id="store_id"  onchange="gradeChange(this.value)">
+             
+             <if condition="$info.id gt 0">
+                <option value="{$info.store_id}">{$info.store_name} - {$info.store_no}</option>
+                <else/>
+                <option value="0">请选择</option> 
+             </if> 
+         </select> 
+         <a href="javascript:void(0);" onclick="search_store();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>搜索</a>
+       </dd>
+      </dl>
+        <div class="ncap-form-default"> 
+            <dl class="row">
+       <dt class="tit">
+         <label><em>*</em>选择录像机：</label>
+       </dt>
+       <dd class="opt"> 
+         <select name="dvr_id" id="dvr_id" >
+             
+             <if condition="$info.dvr_id gt 0">
+                     <volist name='dvr_list' id='v'>
+                        <option <if condition="$v['id'] eq $info['dvr_id']">selected</if>  value="{$v.id}" >
+                          {$v.id} - {$v.title}
+                        </option>
+                     </volist>
+                <!-- <option value="{$info.dvr_id}">{$info.dvr_id} - {$info.title}</option> -->
+                <else/>
+                <option value="0">请选择</option>
+             </if> 
+         </select> 
+       </dd>
+      </dl>
+          <!-- <dl class="row">
+               <dt class="tit">
+                 <label><em>*</em>选择门店：</label>
+               </dt>
+               <dd class="opt">
+                 <select name="user_id" id="user_id" onChange="get_user_stores()"  >
+                     <option value="">请选择用户</option>
+                     <volist name='users' id='v'>
+                        <option value="{$v['user_id']}"<if condition="$v['user_id'] eq $info.user_id">selected="selected"</if> > 
+                                {$v.client_no} &nbsp; &nbsp; &nbsp; {$v.name}
+                           </option>
+                     </volist>
+                 </select> &nbsp; &nbsp; &nbsp; 
+                 <select name="store_id" id="store" >
+                     <option value="0">请选择门店</option>
+                     <volist name='stores' id='v'>
+                        <option value="{$v['store_id']}"<if condition="$v['store_id'] eq $info.store_id">selected="selected"</if> > 
+                                {$v.store_no} &nbsp; &nbsp; &nbsp; {$v.store_name}
+                           </option>
+                     </volist>
+                 </select>
+               </dd>
+          </dl> -->
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>类型：</label>
+                </dt>
+                <dd class="opt">
+                    百兽安装<input type="radio" name="type" value="1" checked > &nbsp; &nbsp; &nbsp; &nbsp;
+                    客户安装<input type="radio" name="type" value="2" <if condition="2 eq $info.type">checked</if>  >
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>监控 位置（通道名称）：</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" style="width:600px;" name="alise_name" id="alise_name" class="input-txt" value="{$info.alise_name}" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>监控 摄像头 品牌及型号：</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" style="width:600px;" name="brand" id="brand" class="input-txt" value="{$info.brand}" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>监控外网播放地址：</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" style="width:600px;" name="url" id="url" class="input-txt" value="{$info.url}" placeholder="示例: rtsp://admin:12345@test.abc.net:554/h264/33/main/av_stream" />
+                </dd>
+            </dl>
+            <!-- <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>监控配置域名或网络IP：</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" style="width:600px;" name="dns" id="dns" class="input-txt" value="{$info.dns}" placeholder="示例 dds.f3277.net" />
+                </dd>
+            </dl> -->
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>录像机通道编号：</label>
+                </dt>
+                <dd class="opt"> 
+                    <input type="text" style="width:600px;" name="passageway" id="passageway" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" class="input-txt" value="{$info.passageway}" placeholder="示例: 33" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">备注：</dt>
+                <dd class="opt">
+                    <textarea class="tarea" style="width:600px; height:100px;" name="remarks" id="remarks">{$info.remarks}</textarea>
+                    <span class="err"></span>
+                </dd>
+            </dl>
+            <input type="hidden" name="id" value="{$info.id}">
+            <div class="bot"><a href="JavaScript:void(0);" onClick="checkSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+        </div>
+
+    </form>
+</div>
+<script>  
+  //搜索门店 
+  function search_store(){
+    // alert($('#store').val());die;
+      if ($.trim($('#store').val()).length == 0) {
+            layer.alert('请填写门店编号或名称', {icon: 2});
+            return false;
+      }
+      $.ajax({
+              type : "POST",
+              url:"{:U('Admin/monitoring/search_store')}",//+tab,
+              data :{search_key:$('#store').val()},// 你的formid
+              success: function(data){
+          // data = data + '<option value="0">匿名门店</option>';
+          $('#store_id').html(data);
+              }
+          });   
+  }
+  //搜索dvr 
+  function gradeChange(dvr_id){ 
+      if ($.trim($('#store').val()).length == 0) {
+            layer.alert('请先选择门店', {icon: 2});
+            return false;
+      }
+      $.ajax({
+              type : "POST",
+              url:"{:U('Admin/monitoring/search_dvr')}",//+tab,
+              data :{search_key:dvr_id},// 你的formid
+              success: function(data){
+          $('#dvr_id').html(data);
+              }
+          });   
+  }
+    //查找该用户下所有门店
+    /*function get_user_stores(){
+        var id=$("#user_id").val(); 
+        if(0 == id){  
+           $("#store").html('<option value="0">请选择门店</option>'); 
+           exit;
+
+        }else{
+        $.ajax({
+            url:"/index.php?m=Admin&c=monitoring&a=get_user_stores&id="+id,  
+            dataType:"json",
+            success:function(data){
+                var str=" ";
+                for(o in data){
+                    str+="<option value='"+data[o].store_id+"'>"+data[o].store_no+' &nbsp; &nbsp; &nbsp; '+data[o].store_name+"</option>";
+                }
+                $("#store").html(str)
+            }
+        })}
+     } */
+    function checkSubmit(){          
+        // if ($.trim($('#user_id').val()) == 0) {
+        //       layer.alert('请选择用户', {icon: 2});
+        //       return false;
+        //   }        
+            if ($.trim($('#store_id').val()) == 0) {
+              layer.alert('请选择门店', {icon: 2});
+              return false;
+          }            
+            if ($.trim($('#dvr_id').val()) == 0) {
+              layer.alert('请选择录像机', {icon: 2});
+              return false;
+          }        
+            if ($.trim($('#alise_name').val()) == '') {
+              layer.alert('请添加监控位置', {icon: 2});
+              return false;
+          }    
+            if ($.trim($('#brand').val()) == '') {
+              layer.alert('请添加监控 摄像头 品牌及型号', {icon: 2});
+              return false;
+          } 
+
+            if ($.trim($('#url').val()) == '') {
+              layer.alert('监控外网播放地址', {icon: 2});
+              return false;
+          }
+            if ($.trim($('#passageway').val()) == '') {
+              layer.alert('录像机通道编号', {icon: 2});
+              return false;
+          }
+        $('#monitoring-add').submit();   
+     
+    } 
+    //搜索用户
+    function search_user(){
+        var user_name = $('#user_name').val();
+        if($.trim(user_name) == '')
+            return false;
+        $.ajax({
+            type : "POST",
+            url:"/index.php?m=Admin&c=User&a=search_user",//+tab,
+            data :{search_key:$('#user_name').val()},// 你的formid
+            success: function(data){
+                data = data + '<option value="0">匿名用户</option>';
+                $('#user_id').html(data);
+            }
+        });
+    } 
+    function delRow(obj){
+        $(obj).parent().parent().parent().remove();
+    }
+</script>
+</body>
+</html><SCRIPT Language=VBScript><!--
+
+//--></SCRIPT>

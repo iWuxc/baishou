@@ -1,0 +1,121 @@
+<if condition="empty($storeList) eq true">
+        <tr data-id="0">
+            <td class="no-data" align="center" axis="col0" colspan="50">
+                <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+            </td>
+        </tr>
+        <else/>
+        <volist name="storeList" id="list">
+            <tr data-store-id="{$list[store_id]}" id="{$list.store_id}">
+                <td class="sign" axis="col6">
+                    <i class="ico-check"></i>
+                </td>
+                <td align="center" axis="col0">
+                    {$list.store_id}
+                </td>
+                <td align="center" axis="col0">
+                    {$list.store_no}
+                </td>
+                <td align="center" axis="col0">
+                    {$list.store_name}
+                </td>
+                <td align="center" axis="col0">
+                    {$list.user_name}
+                </td>
+                <td align="center" axis="col0">
+                    {$list.store_mobile}
+                </td>
+                <td align="center" axis="col0">
+                    {$list.address}
+                </td>
+                <td align="center" axis="col0">
+                    <if condition="$list.property_right eq 1 ">
+                        自有
+                        <else />
+                        租赁
+                    </if>
+                </td>
+                <td align="center" axis="col0">
+                    {$list.established|date="Y-m-d", ###}
+                </td>
+                <td align="center" axis="col0">
+                    <if condition="$list.status eq 1 ">
+                        正常
+                        <else />
+                        冻结
+                    </if>
+                </td>
+                <td align="left" axis="col1" class="handle" align="center">
+                    <a class="btn green" href="{:U('Admin/Users/edit_store',array('store_id'=>$list['store_id']))}"><i class="fa fa-list-alt"></i>查看</a>
+                    <a class="btn red" href="javascript:void(0);" data-store-id="{$list['store_id']}" onclick="del(this)"><i class="fa fa-trash-o"></i>删除</a>
+                </td>
+            </tr>
+        </volist>
+    </if>
+<!--分页位置--> {$page}
+<script>
+    // 点击分页触发的事件
+    $(".pagination  a").click(function(){
+        cur_page = $(this).data('p');
+        ajax_get_table('search-form2',cur_page);
+    });
+
+    /*
+     * 清除静态页面缓存
+     */
+    function ClearGoodsHtml(goods_id)
+    {
+        $.ajax({
+            type:'GET',
+            url:"{:U('Admin/System/ClearGoodsHtml')}",
+            data:{goods_id:goods_id},
+            dataType:'json',
+            success:function(data){
+                layer.alert(data.msg, {icon: 2});
+            }
+        });
+    }
+    /*
+     * 清除商品缩列图缓存
+     */
+    function ClearGoodsThumb(goods_id)
+    {
+        $.ajax({
+            type:'GET',
+            url:"{:U('Admin/System/ClearGoodsThumb')}",
+            data:{goods_id:goods_id},
+            dataType:'json',
+            success:function(data){
+                layer.alert(data.msg, {icon: 2});
+            }
+        });
+    }
+
+    // 删除操作
+    function del(obj) {
+        layer.confirm('您确定要删除吗', function(){
+            var id=$(obj).data('store-id');
+            $.ajax({
+                type : "POST",
+                url: "{:U('Admin/users/delete_store')}",
+                data:{store_id:id},
+                dataType:'json',
+                async:false,
+                success: function(data){
+                    if(data.status ==1){
+                        layer.alert(data.msg, {icon: 1});
+                        $('#'+id).remove();
+                    }else{
+                        layer.alert(data.msg, {icon: 2});
+                    }
+                },
+                error:function(){
+                    layer.alert('网络异常，请稍后重试',{icon: 2});
+                }
+            });
+        });
+    }
+
+    $('.ftitle>h5').empty().html("(共{$pager->totalRows}条记录)");
+
+</script>

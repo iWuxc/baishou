@@ -1,0 +1,86 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>放款操作</h3>
+            </div>
+        </div>
+    </div>
+
+    <form action="{:U('Admin/LoanReceipt/edit')}" method="post" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="id" value="{$row['id']}">
+        <input type="hidden" name="apply_amount" value="{$row['apply_amount']}">
+        <input type="hidden" name="service_rate" value="{$row['service_rate']}">
+        <input type="hidden" name="inter_rate" value="{$row['inter_rate']}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="bank_name">收款类型</label>
+                </dt>
+                <dd class="opt">
+                    <select name="bank_name" id="bank_name">
+                        <option value="0">请选择</option>
+                        <volist name="bank_list" id="item">
+                            <option value="{$item['bank_name']}" <eq name="item['bank_name']" value="$row['bank_name']">selected</eq> >{$item['bank_name']}</option>
+                        </volist>
+                    </select>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="account">收款账号</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="account" value="{$row['account']}" id="account" class="input-txt">
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="bank_desc">描述</label>
+                </dt>
+                <dd class="opt">
+                    <textarea name="bank_desc" id="bank_desc" class="input-txt">{$row['bank_desc']}</textarea>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="loan_amount">放款金额</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="loan_amount" value="{$row['loan_amount']}" id="loan_amount" class="input-txt">
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="str_time">贷款开始时间</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="str_time" value="{$row['str_time']}" id="str_time" class="input-txt" readonly>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="stp_time">贷款结束时间</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="stp_time" value="{$row['stp_time']}" id="stp_time" class="input-txt" readonly>
+                </dd>
+            </dl>
+            <div class="bot"><a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()"><span>确认提交</span></a></div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        $('#str_time').layDate();
+        $('#stp_time').layDate();
+    })
+</script>
+</body>
+</html>

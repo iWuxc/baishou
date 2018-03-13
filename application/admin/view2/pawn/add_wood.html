@@ -1,0 +1,196 @@
+<include file="public/layout" />
+  
+<style type="text/css">
+html, body {
+	overflow: visible;
+}
+
+a.btn {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #f5f5f5;
+    border-radius: 4px;
+    color: #999;
+    cursor: pointer !important;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: normal;
+    height: 20px;
+    letter-spacing: normal;
+    line-height: 20px;
+    margin: 0 5px 0 0;
+    padding: 1px 6px;
+    vertical-align: top;
+}
+
+ a.red:hover {
+    background-color: #e84c3d;
+    border-color: #c1392b;
+    color: #fff;
+}
+
+</style>  
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+      <div class="subject">
+        <h3>添加材料</h3>
+        <h5>管理员手动添加</h5>
+      </div>
+    </div>
+  </div>
+  <form class="form-horizontal" action="{:U('Admin/pawn/add_wood')}" id="order-add" method="post">    
+    <div class="ncap-form-default">
+
+	  <dl class="row">
+        <dt class="tit">
+          <label for="name"><em>*</em>材料名称</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="name" id="name" class="input-txt" placeholder="材料名称" />
+        </dd>
+      </dl>  
+      <dl class="row">
+        <dt class="tit">
+          <label for="alarm_value"><em>*</em>木材价格指数阈值</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="alarm_value" id="alarm_value" class="input-txt" placeholder="木材价格指数阈值" />
+        </dd>
+      </dl>      
+  
+	
+      <dl class="row">
+        <dt class="tit">操作人员备注</dt>
+        <dd class="opt">
+	      <textarea class="tarea" style="width:440px; height:150px;" name="log_note" id="log_note">管理员添加家具材料</textarea>
+          <span class="err"></span>
+          <p class="notic"></p>
+        </dd>
+      </dl>
+      <input type="hidden" name="pawn_id" value="{$order.pawn_id}">
+      <div class="bot"><a href="JavaScript:void(0);" onClick="checkSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+    </div>
+        
+  </form>
+</div>
+<script type="text/javascript">
+
+	$(function () {
+		$("#order-add").validate({
+			debug: false, //调试模式取消submit的默认提交功能   
+			focusInvalid: false, //当为false时，验证无效时，没有焦点响应  
+		    onkeyup: false,   
+		    submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form   
+		    	  {
+		    		  form.submit();   //提交表单	  
+		    	  }	       
+		    },  
+		    ignore:":button",	//不验证的元素
+		    rules:{
+		    	consignee:{
+		    		required:true
+		    	},
+		    	mobile:{
+		    		required:true
+		    	},
+		    	province:{
+		    		required:true
+		    	},
+		    	city:{
+		    		required:true
+		    	},
+		    	district:{
+		    		required:true
+		    	},
+		    	address:{
+		    		required:true
+		    	}
+		    },
+		    messages:{
+		    	consignee:{
+		    		required:"请填写名称"
+		    	},
+		    	mobile:{
+		    		required:"请填写规格"
+		    	},
+		    	province:{
+		    		required:"请选择所在省份"
+		    	},
+		    	city:{
+		    		required:"请选择所在城市"
+		    	},
+		    	district:{
+		    		required:"请选择所在区县"
+		    	},
+		    	address:{
+		    		required:"请填写详细地址"
+		    	}
+		    }
+		});
+	});
+
+
+	//搜索门店 
+	function search_store(){
+      if ($.trim($('#store_no').val()).length == 0) {
+            layer.alert('请填写门店编号', {icon: 2});
+            return false;
+      }
+			$.ajax({
+	            type : "POST",
+	            url:"{:U('Admin/pawn/search_store')}",//+tab,
+	            data :{search_key:$('#store_no').val()},// 你的formid
+	            success: function(data){
+					data = data + '<option value="0">匿名门店</option>';
+					$('#store_id').html(data);
+	            }
+	        });		
+	}
+
+//选择商品
+function selectGoods(){
+    var url = "{:U('Admin/Order/search_goods')}";
+    layer.open({
+        type: 2,
+        title: '选择商品',
+        shadeClose: true,
+        shade: 0.8,
+        area: ['60%', '60%'],
+        content: url, 
+    });
+}
+
+// 选择商品返回
+function call_back(table_html){
+	$('#goods_list_div').show();
+
+	$('#goods_td').find('.table-bordered').append(table_html);
+	//过滤选择重复商品
+	$('input[name*="spec"]').each(function(i,o){
+		if($(o).val()){
+			var name='goods_id['+$(o).attr('rel')+']['+$(o).val()+'][goods_num]';
+			$('input[name="'+name+'"]').parent().parent().parent().remove();
+		}
+	});
+	layer.closeAll('iframe');
+}
+  
+function checkSubmit(){			
+	if ($.trim($('#name').val()).length == 0) {
+      layer.alert('请填写名称', {icon: 2});
+      return false;
+  }
+	$('#order-add').submit();	
+ 
+}
+
+function delRow(obj){
+	$(obj).parent().parent().parent().remove();
+}
+</script>
+</body>
+</html>

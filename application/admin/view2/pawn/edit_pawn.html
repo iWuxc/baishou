@@ -1,0 +1,374 @@
+<include file="public/layout" />
+  
+<style type="text/css">
+html, body {
+	overflow: visible;
+}
+
+a.btn {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #f5f5f5;
+    border-radius: 4px;
+    color: #999;
+    cursor: pointer !important;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: normal;
+    height: 20px;
+    letter-spacing: normal;
+    line-height: 20px;
+    margin: 0 5px 0 0;
+    padding: 1px 6px;
+    vertical-align: top;
+}
+
+ a.red:hover {
+    background-color: #e84c3d;
+    border-color: #c1392b;
+    color: #fff;
+}
+
+</style>  
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+      <div class="subject">
+        <h3>修改家具(套件)</h3>
+        <h5>此项为客户经理操作</h5>
+      </div>
+    </div>
+  </div>
+  <form class="form-horizontal" action="{:U('Admin/Pawn/edit_pawn')}" id="order-add" method="post">    
+    <div class="ncap-form-default">
+
+   	<!-- <dl class="row">
+       <dt class="tit">
+         <label><em>*</em>门店编号</label>
+       </dt>
+       <dd class="opt">
+         <input type="text" name="store_no" id="store_no" value="{$order.store_no}" class="input-txt" placeholder="门店编号搜索" />
+         <select name="store_id" id="store_id" >
+             <option value="0">匿名门店</option>
+         </select>
+         <a href="javascript:void(0);" onclick="search_user();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>搜索</a>
+       </dd>
+      </dl> -->
+
+    
+	    <dl class="row">
+        <dt class="tit">
+          <label for="pawn_name"><em>*</em>家具名称</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="pawn_name" id="pawn_name"  value="{$order.pawn_name}" class="input-txt" placeholder="家具名称" />
+        </dd>
+      </dl> 
+      <dl class="row">
+        <dt class="tit">
+          <label for="pawn_num"><em>*</em>套件数量</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="pawn_num" id="pawn_num" value="{$order.pawn_num}"  class="input-txt" placeholder="套件数量" />
+        </dd>
+      </dl> 
+      <dl class="row">
+        <dt class="tit">
+          <label for="wood_id"><em>*</em>主材料</label>
+        </dt>
+        <dd class="opt">
+          <select id="wood_id" name="wood_id"  >
+               <volist name="woodlist" id="wood">
+                   <option value="{$wood.id}" 
+                   <if condition="$wood[id] eq $order[wood_id]">selected="selected"</if>>{$wood.name}
+                   </option>
+               </volist>    
+          </select>
+        </dd>
+      </dl> 
+      <dl class="row">
+        <dt class="tit">
+          <label for="pawn_area"><em>*</em>主产地</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="pawn_area" id="pawn_area" value="{$order.pawn_area}" class="input-txt" placeholder="主产地" />
+        </dd>
+      </dl> 
+      <dl class="row">
+        <dt class="tit">
+          <label for="wood_auxid"><em>*</em>辅材料</label>
+        </dt>
+        <dd class="opt">
+          <select id="wood_auxid" name="wood_auxid"  >
+               <volist name="woodlist" id="wood">
+                   <option value="{$wood.id}" 
+                   <if condition="$wood[id] eq $order[wood_auxid]">selected="selected"</if>>{$wood.name}
+                   </option>
+               </volist>    
+          </select>
+        </dd>
+      </dl> 
+      <dl class="row">
+        <dt class="tit">
+          <label for="pawn_auxarea"><em>*</em>辅产地</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="pawn_auxarea" id="pawn_auxarea" value="{$order.pawn_auxarea}" class="input-txt" placeholder="辅产地" />
+        </dd>
+      </dl> 
+      <dl class="row">
+        <dt class="tit">
+          <label for="pawn_model"><em>*</em>规格型号</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="pawn_model" id="pawn_model" value="{$order.pawn_model}" class="input-txt" placeholder="规格型号" />
+        </dd>
+      </dl>        
+      <dl class="row">
+        <dt class="tit">
+          <label for="pawn_price">定价</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="pawn_price" id="pawn_price" value="{$order.pawn_price}"  class="input-txt" placeholder="定价" />
+        </dd>
+      </dl>
+
+<!-- 家具相册-->      
+      <dl class="row">
+        <dt class="tit">
+          <label for="pawn_value"><em>*</em>家具相册</label>
+        </dt>
+        <dd class="opt">
+            <div class="tab-pane" id="tab_goods_images">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>
+                        <foreach name="pawnimgs" item="vo" key="k" >
+                            <div style="width:100px; text-align:center; margin: 5px; display:inline-block;" class="goods_xc">
+                                <input type="hidden" value="{$vo['img_url']}" name="pawn_imgs[]">
+                
+                                 <div class='img-container'>
+                                      <img width="100" height="100" src="{$vo['img_url']}">
+                                </div>
+                                <br>
+                                <a href="javascript:void(0)" onClick="ClearPicArr2(this,'{$vo['img_url']}')">删除</a>
+                            </div>
+                        </foreach>
+
+                            <div class="goods_xc" style="width:100px; text-align:center; margin: 5px; display:inline-block;">
+                                <input type="hidden" name="pawn_imgs[]" value="" />
+                                <a href="javascript:void(0);" onClick="GetUploadify(10,'','pawn_imgs','call_back2');"><img src="/public/images/add-button.jpg" width="100" height="100" /></a>
+                                <br/>
+                                <a href="javascript:void(0)">&nbsp;&nbsp;</a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+          </dd>
+      </dl>             
+<!-- 家具相册--> 
+      <dl class="row">
+        <dt class="tit">家具备注</dt>
+        <dd class="opt">
+        <textarea class="tarea" style="width:440px; height:150px;" name="pawn_remarks" id="pawn_remarks" value="{$order.pawn_remarks}">{$order.pawn_remarks}</textarea>
+          <span class="err"></span>
+          <p class="notic"></p>
+        </dd>
+      </dl> 
+      <dl class="row">
+        <dt class="tit">操作人员备注</dt>
+        <dd class="opt">
+	      <textarea class="tarea" style="width:440px; height:150px;" name="log_note" id="log_note" value="{$order.log_note}">修改套件家具</textarea>
+          <span class="err"></span>
+          <p class="notic"></p>
+        </dd>
+      </dl>
+
+      <input type="hidden" name="pawn_id" value="{$order.pawn_id}">
+      <div class="bot"><a href="JavaScript:void(0);" onClick="checkSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a>
+      </div>
+    </div>
+        
+  </form>
+</div>
+<script type="text/javascript">
+
+	$(function () {
+		$("#order-add").validate({
+			debug: false, //调试模式取消submit的默认提交功能   
+			focusInvalid: false, //当为false时，验证无效时，没有焦点响应  
+		    onkeyup: false,   
+		    submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form   
+		    	  {
+		    		  form.submit();   //提交表单	  
+		    	  }	       
+		    },  
+		    ignore:":button",	//不验证的元素
+		    rules:{
+		    	consignee:{
+		    		required:true
+		    	},
+		    	mobile:{
+		    		required:true
+		    	},
+		    	province:{
+		    		required:true
+		    	},
+		    	city:{
+		    		required:true
+		    	},
+		    	district:{
+		    		required:true
+		    	},
+		    	address:{
+		    		required:true
+		    	}
+		    },
+		    messages:{
+		    	consignee:{
+		    		required:"请填写名称"
+		    	},
+		    	mobile:{
+		    		required:"请填写规格"
+		    	},
+		    	province:{
+		    		required:"请选择所在省份"
+		    	},
+		    	city:{
+		    		required:"请选择所在城市"
+		    	},
+		    	district:{
+		    		required:"请选择所在区县"
+		    	},
+		    	address:{
+		    		required:"请填写详细地址"
+		    	}
+		    }
+		});
+	});
+
+
+	//搜索门店
+	// function search_user(){
+	// 	  if ($.trim($('#store_no').val()).length == 0) {
+ //            layer.alert('请填写门店编号', {icon: 2});
+ //            return false;
+ //      }
+	// 		$.ajax({
+	//             type : "POST",
+	//             url:"{:U('Admin/pawn/search_store')}",//+tab,
+	//             data :{search_key:$('#store_no').val()},// 你的formid
+	//             success: function(data){
+	// 				data = data + '<option value="0">匿名门店</option>';
+	// 				$('#store_id').html(data);
+	//             }
+	//         });		
+	// }
+
+//选择商品
+function selectGoods(){
+    var url = "{:U('Admin/Order/search_goods')}";
+    layer.open({
+        type: 2,
+        title: '选择商品',
+        shadeClose: true,
+        shade: 0.8,
+        area: ['60%', '60%'],
+        content: url, 
+    });
+}
+
+// 选择商品返回
+function call_back(table_html){
+	$('#goods_list_div').show();
+
+	$('#goods_td').find('.table-bordered').append(table_html);
+	//过滤选择重复商品
+	$('input[name*="spec"]').each(function(i,o){
+		if($(o).val()){
+			var name='goods_id['+$(o).attr('rel')+']['+$(o).val()+'][goods_num]';
+			$('input[name="'+name+'"]').parent().parent().parent().remove();
+		}
+	});
+	layer.closeAll('iframe');
+}
+  
+function checkSubmit(){			
+	// if ($.trim($('#store_no').val()).length == 0) {
+ //            layer.alert('请填写门店编号', {icon: 2});
+ //            return false;
+ //  }
+	$('#order-add').submit();	
+ 
+}
+
+function delRow(obj){
+	$(obj).parent().parent().parent().remove();
+}
+
+/*
+ * 以下是图片上传方法
+ */
+// 上传商品图片成功回调函数
+function call_back(fileurl_tmp){
+    $("#original_img").val(fileurl_tmp);
+  $("#original_img2").attr('href', fileurl_tmp);
+}
+
+// 上传商品相册回调函数
+function call_back2(paths){
+    
+    var  last_div = $(".goods_xc:last").prop("outerHTML");  
+    for (var i=0;i<paths.length ;i++ )
+    {
+        $(".goods_xc:eq(0)").before(last_div);  // 插入一个 新图片
+            $(".goods_xc:eq(0)").find('a:eq(0)').attr('href',paths[i]).attr('onclick','').attr('target', "_blank");// 修改他的链接地址
+        $(".goods_xc:eq(0)").find('img').attr('src',paths[i]);// 修改他的图片路径
+            $(".goods_xc:eq(0)").find('a:eq(1)').attr('onclick',"ClearPicArr2(this,'"+paths[i]+"')").text('删除');
+        $(".goods_xc:eq(0)").find('input').val(paths[i]); // 设置隐藏域 要提交的值
+    }          
+}
+/*
+ * 上传之后删除组图input     
+ * @access   public
+ * @val      string  删除的图片input
+ */
+function ClearPicArr2(obj,path)
+{
+  $.ajax({
+                type:'GET',
+                url:"{:U('Admin/Uploadify/delupload')}",
+                data:{action:"del", filename:path},
+                success:function(){
+                       $(obj).parent().remove(); // 删除完服务器的, 再删除 html上的图片        
+                }
+  });
+  // 删除数据库记录
+  $.ajax({
+                type:'GET',
+                url:"{:U('Admin/Pawn/del_pawn_imgs')}",
+                data:{filename:path},
+                success:function(){
+                      //     
+                }
+  });   
+}
+</script>
+<!-- 图片查看 -->
+<script 
+src="__PUBLIC__/plugins/jquery-image-show/js/postbird-img-glass.js">
+</script>
+<script>
+    PostbirdImgGlass.init({
+        domSelector:".img-container img",
+        animation:true
+    });
+</script>
+</body>
+</html>

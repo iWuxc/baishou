@@ -1,0 +1,1127 @@
+<dl class="row">
+    <dt class="tit">
+        <label for="EnterPriseName"><em>*</em>企业名称</label>
+    </dt>
+    <dd class="opt">
+        <input id="EnterPriseName" name="EnterPriseName" value='<if condition="$list[name]">$list[name]<else />{$lending[EnterPriseName]}</if>' class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="RegisteredAddress"><em>*</em>注册地址</label>
+    </dt>
+    <dd class="opt">
+        <input id="RegisteredAddress" name="RegisteredAddress" value='<if condition="$list[regon_address]">$list[regon_address]<else />{$lending[RegisteredAddress]}</if>' class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="Corporation"><em>*</em>企业法人</label>
+    </dt>
+    <dd class="opt">
+        <input id="Corporation" name="Corporation" value='<if condition="$list[legal_person]">$list[legal_person]<else />{$lending[Corporation]}</if>' class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="CorporationIdCardNo"><em>*</em>企业法人身份证号码</label>
+    </dt>
+    <dd class="opt">
+        <input id="CorporationIdCardNo" name="CorporationIdCardNo" value='<if condition="$list[id_number]">$list[id_number]<else />{$lending[CorporationIdCardNo]}</if>' class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="BankCardAttribution"><em>*</em>企业特征</label>
+    </dt>
+    <dd class="opt">
+        <select id="EnterPriseKind" name="EnterPriseKind">
+            <option value="2" <if condition="$lending['EnterPriseKind'] eq 2">selected="selected"</if>>大型企业</option>
+            <option value="3" <if condition="$lending['EnterPriseKind'] eq 3">selected="selected"</if>>中型企业</option>
+            <option value="4" <if condition="$lending['EnterPriseKind'] eq 4">selected="selected"</if>>小型企业</option>
+            <option value="5" <if condition="$lending['EnterPriseKind'] eq 5">selected="selected"</if>>微型企业</option>
+            <option value="9" <if condition="$lending['EnterPriseKind'] eq 9">selected="selected"</if>>其他</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="RegisteredCapital"><em>*</em>注册资本</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" id="RegisteredCapital" value='<if condition="$list[reg_capital]">$list[reg_capital]<else />{$lending[RegisteredCapital]}</if>' name="RegisteredCapital" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label><em>*</em>登记开始时间</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" class="input-txt" id="LicenseStartDate" name="LicenseStartDate" value="{$lending[LicenseStartDate]}">
+        <span class="add-on input-group-addon">
+            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+        </span>
+        <p class="notic"></p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label><em>*</em>登记到期时间</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" class="input-txt" id="LicenseEndDate" name="LicenseEndDate" value="{$lending[LicenseEndDate]}">
+        <span class="add-on input-group-addon">
+            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+        </span>
+        <p class="notic"></p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="IndustryType"><em>*</em>行业分类</label>
+    </dt>
+    <dd class="opt">
+        <select id="IndustryType" name="IndustryType">
+            <option value="1" <if condition="$lending['IndustryType'] eq 1">selected="selected"</if>>基础产业</option>
+            <option value="2" <if condition="$lending['IndustryType'] eq 2">selected="selected"</if>>房地产</option>
+            <option value="3" <if condition="$lending['IndustryType'] eq 3">selected="selected"</if>>证券</option>
+            <option value="4" <if condition="$lending['IndustryType'] eq 4">selected="selected"</if>>金融机构</option>
+            <option value="5" <if condition="$lending['IndustryType'] eq 5">selected="selected"</if>>工商企业</option>
+            <option value="9" <if condition="$lending['IndustryType'] eq 99">selected="selected"</if>>其他</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="TotalEnterpriseAssets"><em>*</em>企业总资产</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" id="TotalEnterpriseAssets" value="{$lending[TotalEnterpriseAssets]}" name="TotalEnterpriseAssets" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 元
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="TotalEnterpriseDebt"><em>*</em>企业总负债</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" id="TotalEnterpriseDebt" value="{$lending[TotalEnterpriseDebt]}" name="TotalEnterpriseDebt" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 元
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="AInvestorsElementsrea"><em>*</em>企业出资人经济成分</label>
+    </dt>
+    <dd class="opt">
+        <select id="InvestorsElements" name="InvestorsElements">
+            <option value="A" <if condition="$lending['InvestorsElements'] eq A">selected="selected"</if>>公有控股经济</option>
+            <option value="A01" <if condition="$lending['InvestorsElements'] eq A01">selected="selected"</if>>国有控股</option>
+            <option value="A0101" <if condition="$lending['InvestorsElements'] eq A0101">selected="selected"</if>>国有相对控股</option>
+            <option value="A0102" <if condition="$lending['InvestorsElements'] eq A0102">selected="selected"</if>>国有绝对控股</option>
+            <option value="A02" <if condition="$lending['InvestorsElements'] eq A02">selected="selected"</if>>集体控股</option>
+            <option value="A0201" <if condition="$lending['InvestorsElements'] eq A0201">selected="selected"</if>>集体相对控股</option>
+            <option value="A0201" <if condition="$lending['InvestorsElements'] eq A0201">selected="selected"</if>>集体相对控股</option>
+            <option value="A0202" <if condition="$lending['InvestorsElements'] eq A0202">selected="selected"</if>>集体绝对控股</option>
+            <option value="B" <if condition="$lending['InvestorsElements'] eq B">selected="selected"</if>>非公有控股经济</option>
+            <option value="B01" <if condition="$lending['InvestorsElements'] eq B01">selected="selected"</if>>私人控股</option>
+            <option value="B0101" <if condition="$lending['InvestorsElements'] eq B0101">selected="selected"</if>>私人相对控股</option>
+            <option value="B0102" <if condition="$lending['InvestorsElements'] eq B0102">selected="selected"</if>>私人绝对控股</option>
+            <option value="B02" <if condition="$lending['InvestorsElements'] eq B02">selected="selected"</if>>港澳台控股</option>
+            <option value="B0201" <if condition="$lending['InvestorsElements'] eq B0201">selected="selected"</if>>港澳台相对控股</option>
+            <option value="B0202" <if condition="$lending['InvestorsElements'] eq B0202">selected="selected"</if>>港澳台绝对控股</option>
+            <option value="B03" <if condition="$lending['InvestorsElements'] eq B03">selected="selected"</if>>外商控股</option>
+            <option value="B0301" <if condition="$lending['InvestorsElements'] eq B0301">selected="selected"</if>>外商相对控股</option>
+            <option value="B0302" <if condition="$lending['InvestorsElements'] eq B0302">selected="selected"</if>>外商绝对控股</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="BeListed"><em>*</em>是否上市</label>
+    </dt>
+    <dd class="opt">
+        <input name="BeListed" type="radio" value="1" <if condition="$lending['BeListed'] eq 1">checked='checked'</if>>是  &nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="BeListed" type="radio" value="2" <if condition="$lending['BeListed'] eq 2">checked='checked'</if>>否
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="IsGroup"><em>*</em>是否集团</label>
+    </dt>
+    <dd class="opt">
+        <input name="IsGroup" type="radio" value="1" <if condition="$lending['IsGroup'] eq 1">checked='checked'</if>>是  &nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="IsGroup" type="radio" value="2" <if condition="$lending['IsGroup'] eq 2">checked='checked'</if>>否
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="ImportandexportFlag"><em>*</em>进出口权标识</label>
+    </dt>
+    <dd class="opt">
+        <input name="ImportandexportFlag" type="radio" value="1" <if condition="$lending['IsGroup'] eq 1">checked='checked'</if>>是  &nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="ImportandexportFlag" type="radio" value="2" <if condition="$lending['IsGroup'] eq 2">checked='checked'</if>>否
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="RelationType"><em>*</em>关联类型</label>
+    </dt>
+    <dd class="opt">
+        <select id="RelationType" name="RelationType">
+            <option value="0" <if condition="$lending['RelationType'] eq 0">selected="selected"</if>>无</option>
+            <option value="1" <if condition="$lending['RelationType'] eq 1">selected="selected"</if>>公司的股东</option>
+            <option value="2" <if condition="$lending['RelationType'] eq 2">selected="selected"</if>>公司股东的关联企业</option>
+            <option value="3" <if condition="$lending['RelationType'] eq 3">selected="selected"</if>>公司自有资金投资的企业</option>
+            <option value="4" <if condition="$lending['RelationType'] eq 3">selected="selected"</if>>公司自有资金投资的企业的关联企业</option>
+            <option value="5" <if condition="$lending['RelationType'] eq 5">selected="selected"</if>>公司以托管或信托等其他方式控制的企业</option>
+            <option value="6" <if condition="$lending['RelationType'] eq 6">selected="selected"</if>>公司的董事、监事、经理</option>
+            <option value="7" <if condition="$lending['RelationType'] eq 7">selected="selected"</if>>公司的董事、监事、经理投资持股5%以上</option>
+            <option value="8" <if condition="$lending['RelationType'] eq 8">selected="selected"</if>>其他关联</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="Address"><em>*</em>通讯地址</label>
+    </dt>
+    <dd class="opt">
+        <input id="Address" name="Address" value="{$lending.Address}" class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="FinancePhone"><em>*</em>财务部电话</label>
+    </dt>
+    <dd class="opt">
+        <input id="FinancePhone" name="FinancePhone" value="{$lending.FinancePhone}" class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="RoleType">角色分类</label>
+    </dt>
+    <dd class="opt">
+        <select id="RoleType" name="RoleType">
+            <option value="1" <if condition="$lending['sms_time_out'] eq 1">selected="selected"</if>>贷款借款人</option>
+            <option value="2"<if condition="$lending['sms_time_out'] eq 1">selected="selected"</if>>其他投融资交易对手</option>
+            <option value="3"<if condition="$lending['sms_time_out'] eq 3">selected="selected"</if>>抵质押人、担保人（贷款类）</option>
+            <option value="4"<if condition="$lending['sms_time_out'] eq 4">selected="selected"</if>>抵质押人、担保人（非贷款类）</option>
+            <option value="5"<if condition="$lending['sms_time_out'] eq 5">selected="selected"</if>>委托方x外保内贷抵质押人、担保人</option>
+            <option value="x"<if condition="$lending['sms_time_out'] eq 5">selected="selected"</if>>外保内贷抵质押人、担保人</option>
+            <option value="y"<if condition="$lending['sms_time_out'] eq 5">selected="selected"</if>>外保内贷借款人</option>
+            <option value="z"<if condition="$lending['sms_time_out'] eq 5">selected="selected"</if>>其他对手方</option>
+        </select>
+        <p class="notic">贷款人角色分类</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="OrganizationCode">组织机构代码</label>
+    </dt>
+    <dd class="opt">
+        <input id="OrganizationCode" name="OrganizationCode" value="{$lending.OrganizationCode}" class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="BusinessLicense">登记注册号</label>
+    </dt>
+    <dd class="opt">
+        <input id="BusinessLicense" name="BusinessLicense" value="{$lending.BusinessLicense}" class="input-txt" type="text"/>
+        <p class="notic">三证合一号</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="TaxRegistrationType">税务登记证号类型</label>
+    </dt>
+    <dd class="opt">
+        <select id="TaxRegistrationType" name="TaxRegistrationType">
+            <option value="1" <if condition="$lending['TaxRegistrationType'] eq 1">selected="selected"</if>>国税</option>
+            <option value="2"<if condition="$lending['TaxRegistrationType'] eq 1">selected="selected"</if>>地税</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="TaxRegistration">税务登记证号</label>
+    </dt>
+    <dd class="opt">
+        <input id="TaxRegistration" name="TaxRegistration" value="{$lending.TaxRegistration}" class="input-txt" type="text"/>
+        <p class="notic">国税或者地税号(三证合一)</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="CreditCode">贷款卡号</label>
+    </dt>
+    <dd class="opt">
+        <input id="CreditCode" name="CreditCode" value="{$lending.CreditCode}" class="input-txt" type="text"/>
+        <p class="notic">中征码</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="BankCardNo">还款银行账户</label>
+    </dt>
+    <dd class="opt">
+        <input id="BankCardNo" name="BankCardNo" value="{$lending.BankCardNo}" class="input-txt" type="text"/>
+        <p class="notic">正确的还款银行卡账号</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label><em>*</em>开户银行名称</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" name="bankCodeKey" id="bankCodeKey" class="input-txt" placeholder="银行名称关键字" />
+        <select name="BankCode" id="BankCode" >
+            <option value="0">请搜索银行名称</option>
+        </select>
+        <a href="javascript:void(0);" onclick="bankCodeSearch();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>点击搜索</a>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="BranchBankName">开户支行名称</label>
+    </dt>
+    <dd class="opt">
+        <input id="BranchBankName" name="BranchBankName" value="{$lending.BranchBankName}" class="input-txt" type="text"/>
+        <p class="notic">借款人开户支行名称</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="BankCardAttribution"><em>*</em>银行卡归属地</label>
+    </dt>
+    <dd class="opt">
+        <input id="BankCardAttribution" name="BankCardAttribution" value="{$RegionCode}" class="input-txt" type="text"/>
+        <p class="notic">系统默认匹配法人身份证前4位，请勿修改</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="EnterPriseType"><em>*</em>企业性质</label>
+    </dt>
+    <dd class="opt">
+        <select id="EnterPriseType" name="EnterPriseType">
+            <option value="1" <if condition="$lending['EnterPriseType'] eq 1">selected="selected"</if>>企业法人(公司、非公司制企业法人)</option>
+            <option value="2" <if condition="$lending['EnterPriseType'] eq 2">selected="selected"</if>>企业非法人(个人独资企业、合伙企业)</option>
+            <option value="3" <if condition="$lending['EnterPriseType'] eq 3">selected="selected"</if>>个体工商户</option>
+            <option value="4" <if condition="$lending['EnterPriseType'] eq 4">selected="selected"</if>>事业单位</option>
+            <option value="5" <if condition="$lending['EnterPriseType'] eq 5">selected="selected"</if>>机关</option>
+            <option value="6" <if condition="$lending['EnterPriseType'] eq 6">selected="selected"</if>>社会团体</option>
+            <option value="6" <if condition="$lending['EnterPriseType'] eq 99">selected="selected"</if>>其他</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="IndustryDetail"><em>*</em>明细分类</label>
+    </dt>
+    <dd class="opt">
+        <select id="IndustryDetail" name="IndustryDetail">
+            <option value="c2110" <if condition="$lending['IndustryType'] eq c2110">selected="selected"</if>>木质家具制造</option>
+            <option value="c2120" <if condition="$lending['IndustryType'] eq c2120">selected="selected"</if>>竹、藤家具制造</option>
+            <option value="c2130" <if condition="$lending['IndustryType'] eq c2130">selected="selected"</if>>金属家具制造</option>
+            <option value="c2140" <if condition="$lending['IndustryType'] eq c2140">selected="selected"</if>>塑料家具制造</option>
+            <option value="c2190" <if condition="$lending['IndustryType'] eq c2190">selected="selected"</if>>其他家具制造</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="Area"><em>*</em>行政区划</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" name="AreaKey" id="AreaKey" class="input-txt" value="{$lending.Area}" placeholder="行政区划名称关键字" />
+        <select name="Area" id="Area" >
+            <option value="0">行政区划名称关键字</option>
+        </select>
+        <a href="javascript:void(0);" onclick="AreaKeySearch();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>点击搜索</a>
+        <p class="notic">输入区域关键字，如：昌平或昌平区 点击搜索</p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="RegistrationType">公司类型</label>
+    </dt>
+    <dd class="opt">
+        <select id="RegistrationType" name="RegistrationType">
+            <option value="100" <if condition="$lending['RegistrationType'] eq 100">selected="selected"</if>>内资企业</option>
+            <option value="110" <if condition="$lending['RegistrationType'] eq 110">selected="selected"</if>>国有企业</option>
+            <option value="120" <if condition="$lending['RegistrationType'] eq 120">selected="selected"</if>>集体企业</option>
+            <option value="130" <if condition="$lending['RegistrationType'] eq 130">selected="selected"</if>>股份合作企业</option>
+            <option value="140" <if condition="$lending['RegistrationType'] eq 140">selected="selected"</if>>联营企业</option>
+            <option value="150" <if condition="$lending['RegistrationType'] eq 150">selected="selected"</if>>有限责任公司</option>
+            <option value="160" <if condition="$lending['RegistrationType'] eq 160">selected="selected"</if>>股份有限公司</option>
+            <option value="170" <if condition="$lending['RegistrationType'] eq 170">selected="selected"</if>>私营企业</option>
+            <option value="200" <if condition="$lending['RegistrationType'] eq 200">selected="selected"</if>>三资企业（港、澳、台投资企业）企业</option>
+            <option value="300" <if condition="$lending['RegistrationType'] eq 300">selected="selected"</if>>外商投资企业</option>
+            <option value="400" <if condition="$lending['RegistrationType'] eq 400">selected="selected"</if>>个头经营</option>
+            <option value="500" <if condition="$lending['RegistrationType'] eq 500">selected="selected"</if>>其他</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="OrganizationDetail">机构细分</label>
+    </dt>
+    <dd class="opt">
+        <select id="OrganizationDetail" name="OrganizationDetail">
+            <option value="10" <if condition="$lending['OrganizationDetail'] eq 10">selected="selected"</if>>企业法人</option>
+            <option value="11" <if condition="$lending['OrganizationDetail'] eq 11">selected="selected"</if>>其他企业</option>
+            <option value="12" <if condition="$lending['OrganizationDetail'] eq 12">selected="selected"</if>>农民专业合作社</option>
+            <option value="13" <if condition="$lending['OrganizationDetail'] eq 13">selected="selected"</if>>个人独资、合伙企业</option>
+            <option value="14" <if condition="$lending['OrganizationDetail'] eq 13">selected="selected"</if>>企业的分支机构</option>
+            <option value="20" <if condition="$lending['OrganizationDetail'] eq 20">selected="selected"</if>>事业法人</option>
+            <option value="21" <if condition="$lending['OrganizationDetail'] eq 21">selected="selected"</if>>未登记的事业单位</option>
+            <option value="24" <if condition="$lending['OrganizationDetail'] eq 24">selected="selected"</if>>事业单位的分支机构</option>
+            <option value="30" <if condition="$lending['OrganizationDetail'] eq 30">selected="selected"</if>>机关法人</option>
+            <option value="31" <if condition="$lending['OrganizationDetail'] eq 31">selected="selected"</if>>机关的内设机构</option>
+            <option value="32" <if condition="$lending['OrganizationDetail'] eq 32">selected="selected"</if>>机关的下设机构</option>
+            <option value="40" <if condition="$lending['OrganizationDetail'] eq 40">selected="selected"</if>>社会团体法人</option>
+            <option value="41" <if condition="$lending['OrganizationDetail'] eq 41">selected="selected"</if>>社会团体分支机构</option>
+            <option value="51" <if condition="$lending['OrganizationDetail'] eq 51">selected="selected"</if>>民办非企业</option>
+            <option value="52" <if condition="$lending['OrganizationDetail'] eq 52">selected="selected"</if>>基金会</option>
+            <option value="53" <if condition="$lending['OrganizationDetail'] eq 53">selected="selected"</if>>居委会</option>
+            <option value="54" <if condition="$lending['OrganizationDetail'] eq 54">selected="selected"</if>>村委会</option>
+            <option value="60" <if condition="$lending['OrganizationDetail'] eq 60">selected="selected"</if>>律师事务所、司法鉴定所</option>
+            <option value="61" <if condition="$lending['OrganizationDetail'] eq 61">selected="selected"</if>>宗教活动场所</option>
+            <option value="62" <if condition="$lending['OrganizationDetail'] eq 62">selected="selected"</if>>境外在境内成立的组织机构</option>
+            <option value="70" <if condition="$lending['OrganizationDetail'] eq 70">selected="selected"</if>>个体工商户</option>
+            <option value="99" <if condition="$lending['OrganizationDetail'] eq 99">selected="selected"</if>>其他</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="IndustryType"><em>*</em>注册类型</label>
+    </dt>
+    <dd class="opt">
+        <select id="RegistrationKind" name="RegistrationKind">
+            <option value="1" <if condition="$lending['RegistrationKind'] eq 1">selected="selected"</if>>工商注册号</option>
+            <option value="2" <if condition="$lending['RegistrationKind'] eq 2">selected="selected"</if>>机关和事业单位登记号</option>
+            <option value="3" <if condition="$lending['RegistrationKind'] eq 3">selected="selected"</if>>社会团体登记号</option>
+            <option value="4" <if condition="$lending['RegistrationKind'] eq 4">selected="selected"</if>>民办非企业登记号</option>
+            <option value="5" <if condition="$lending['RegistrationKind'] eq 5">selected="selected"</if>>基金会登记号</option>
+            <option value="6" <if condition="$lending['RegistrationKind'] eq 6">selected="selected"</if>>宗教证书登记号</option>
+            <option value="7" <if condition="$lending['RegistrationKind'] eq 7">selected="selected"</if>>统一社会信用代码</option>
+            <option value="8" <if condition="$lending['RegistrationKind'] eq 8">selected="selected"</if>>商事与非商事登记证号</option>
+            <option value="99" <if condition="$lending['RegistrationKind'] eq 99">selected="selected"</if>>其他</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="Telephone">电话</label>
+    </dt>
+    <dd class="opt">
+        <input id="Telephone" name="Telephone" value='<if condition="$list[mobile]">$list[mobile]<else/>{$lending[Telephone]}</if>' class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="ZipCode">邮编</label>
+    </dt>
+    <dd class="opt">
+        <input id="ZipCode" name="ZipCode" value="{$lending.ZipCode}" class="input-txt" type="text"/>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="EconomyType"><em>*</em>经济类型</label>
+    </dt>
+    <dd class="opt">
+        <select id="EconomyType" name="EconomyType">
+            <option value="10" <if condition="$lending['EconomyType'] eq 10">selected="selected"</if>>内资</option>
+            <option value="11" <if condition="$lending['EconomyType'] eq 11">selected="selected"</if>>国有全资</option>
+            <option value="12" <if condition="$lending['EconomyType'] eq 12">selected="selected"</if>>集体全资</option>
+            <option value="13" <if condition="$lending['EconomyType'] eq 13">selected="selected"</if>>股份合作</option>
+            <option value="14" <if condition="$lending['EconomyType'] eq 14">selected="selected"</if>>联营</option>
+            <option value="15" <if condition="$lending['EconomyType'] eq 15">selected="selected"</if>>有限责任公司</option>
+            <option value="16" <if condition="$lending['EconomyType'] eq 16">selected="selected"</if>>股份有限公司</option>
+            <option value="17" <if condition="$lending['EconomyType'] eq 17">selected="selected"</if>>私有</option>
+            <option value="19" <if condition="$lending['EconomyType'] eq 19">selected="selected"</if>>其它内资</option>
+            <option value="20" <if condition="$lending['EconomyType'] eq 20">selected="selected"</if>>港澳台投资</option>
+            <option value="21" <if condition="$lending['EconomyType'] eq 21">selected="selected"</if>>内地和港澳台投资</option>
+            <option value="22" <if condition="$lending['EconomyType'] eq 22">selected="selected"</if>>内地和港澳台合作</option>
+            <option value="23" <if condition="$lending['EconomyType'] eq 23">selected="selected"</if>>港澳台独资</option>
+            <option value="24" <if condition="$lending['EconomyType'] eq 24">selected="selected"</if>>港澳台投资股份有限公司</option>
+            <option value="29" <if condition="$lending['EconomyType'] eq 29">selected="selected"</if>>其他港澳台投资</option>
+            <option value="30" <if condition="$lending['EconomyType'] eq 30">selected="selected"</if>>国外投资</option>
+            <option value="31" <if condition="$lending['EconomyType'] eq 31">selected="selected"</if>>中外合资</option>
+            <option value="32" <if condition="$lending['EconomyType'] eq 32">selected="selected"</if>>中外合作</option>
+            <option value="33" <if condition="$lending['EconomyType'] eq 33">selected="selected"</if>>外资</option>
+            <option value="34" <if condition="$lending['EconomyType'] eq 34">selected="selected"</if>>国外投资股份有限公司</option>
+            <option value="39" <if condition="$lending['EconomyType'] eq 39">selected="selected"</if>>其他国外投资</option>
+            <option value="90" <if condition="$lending['EconomyType'] eq 90">selected="selected"</if>>其他</option>
+        </select>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="ZipCode">备注</label>
+    </dt>
+    <dd class="opt">
+        <textarea name="Remark" id="Remark" cols="30" rows="10">{$lending.Remark}</textarea>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label onClick="optionClicked(this,'lending-option')">
+            <img fieldid="2" id="optionClickedImg" src="/public/static/images/tv-collapsable-last.gif">
+            <b>证件上传</b>
+        </label>
+    </dt>
+</dl>
+<div id="lending-option" style="display: block;">
+    <dl class="row">
+        <dt class="tit">
+            <label for="LicenseNo">营业执照号</label>
+        </dt>
+        <dd class="opt">
+            <input id="LicenseNo" name="enterprise[LicenseNo]" value="{$cert_ent_info.LicenseNo}" class="input-txt" type="text"/>
+            <p class="notic">营业执照证件号码</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EA"><em>*</em>营业执照</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EA_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EA')">
+                        <i id="EA_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EA" name="enterprise[EA]" value="{$cert_ent_info.EA}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EA_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EB"><em>*</em>借款申请书</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EB_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EB')">
+                        <i id="EB_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EB" name="enterprise[EB]" value="{$cert_ent_info.EB}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EB_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EC"><em></em>提款借据</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EC_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EC')">
+                        <i id="EC_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EC" name="enterprise[EC]" value="{$cert_ent_info.EC}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EC_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EG"><em>*</em>尽调报告</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="ED_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('ED')">
+                        <i id="ED_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="ED" name="enterprise[ED]" value="{$cert_ent_info.ED}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','ED_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EE"><em>*</em>内部决议</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EE_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EE')">
+                        <i id="EE_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EE" name="enterprise[EE]" value="{$cert_ent_info.EE}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EE_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EG"><em>*</em>贷款合同</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EG_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EG')">
+                        <i id="EG_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EG" name="enterprise[EG]" value="{$cert_ent_info.EG}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EG_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">注：图像大小不能超过300KB，且只能上传PDF格式！</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EF"><em>*</em>法人身份证照片正面</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EF_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EF')">
+                        <i id="EF_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EF" name="enterprise[EF]" value="{$cert_ent_info.EF}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EF_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EH"><em>*</em>法人身份证照片反面</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EH_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EH')">
+                        <i id="EH_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EH" name="enterprise[EH]" value="{$cert_ent_info.EH}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EH_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EI">公司章程</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EI_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EI')">
+                        <i id="EI_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EI" name="enterprise[EI]" value="{$cert_ent_info.EI}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EI_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EJ">采购合同</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EJ_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EJ')">
+                        <i id="EJ_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EJ" name="enterprise[EJ]" value="{$cert_ent_info.EJ}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EJ_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EK">采购合同转账凭证</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EK_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EK')">
+                        <i id="EK_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EK" name="enterprise[EK]" value="{$cert_ent_info.EK}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EK_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EL">采购发票</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EL_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EL')">
+                        <i id="EL_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EL" name="enterprise[EL]" value="{$cert_ent_info.EL}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EL_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EM">销售合同</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EM_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EM')">
+                        <i id="EM_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EM" name="enterprise[EM]" value="{$cert_ent_info.EM}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EM_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EN">基础证照复印件</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EN_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EN')">
+                        <i id="EN_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EN" name="enterprise[EN]" value="{$cert_ent_info.EN}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EN_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EO">企业征信信息</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EO_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EO')">
+                        <i id="EO_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EO" name="enterprise[EO]" value="{$cert_ent_info.EO}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EO_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EP">企业三年一期经审计财务报表</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EP_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EP')">
+                        <i id="EP_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EP" name="enterprise[EP]" value="{$cert_ent_info.EP}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EP_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EQ">公司章程</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EQ_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EQ')">
+                        <i id="EQ_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EQ" name="enterprise[EQ]" value="{$cert_ent_info.EQ}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EQ_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="ER">股东决议（每年一次）</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="ER_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('ER')">
+                        <i id="ER_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="ER" name="enterprise[ER]" value="{$cert_ent_info.ER}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','ER_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="ES"><em>*</em>主营业务介绍</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="ES_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('ES')">
+                        <i id="ES_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="ES" name="enterprise[ES]" value="{$cert_ent_info.ES}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','ES_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="ET">采购融资合作协议</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="ET_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('ET')">
+                        <i id="ET_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="ET" name="enterprise[ET]" value="{$cert_ent_info.ET}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','ET_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EU">质押协议</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EU_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EU')">
+                        <i id="EU_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EU" name="enterprise[EU]" value="{$cert_ent_info.EU}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EU_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EV">最高额保证协议</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EV_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EV')">
+                        <i id="EV_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EV" name="enterprise[EV]" value="{$cert_ent_info.EV}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EV_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EW">远期购买协议</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EW_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EW')">
+                        <i id="EW_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EW" name="enterprise[EW]" value="{$cert_ent_info.EW}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EW_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="tit">
+            <label for="EZ">其他文件</label>
+        </dt>
+        <dd class="opt">
+            <div class="input-file-show">
+                <span class="show">
+                    <a id="EZ_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('EZ')">
+                        <i id="EZ_i" class="fa fa-picture-o"></i>
+                    </a>
+                </span>
+                <span class="type-file-box">
+                    <input type="text" id="EZ" name="enterprise[EZ]" value="{$cert_ent_info.EZ}" class="type-file-text">
+                    <input type="button" name="button" value="选择上传..." class="type-file-button">
+                    <input class="type-file-file" onClick="GetUploadify(1,'','yunxin','EZ_img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                </span>
+            </div>
+            <span class="err"></span>
+            <p class="notic">图像大小不能超过300KB</p>
+        </dd>
+    </dl>
+</dl>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#LicenseStartDate').layDate();
+        $('#LicenseEndDate').layDate();
+    })
+
+    //搜索用户
+    function bankCodeSearch(){
+        var bankCodeKey = $('#bankCodeKey').val();
+        if($.trim(bankCodeKey) == '')
+            return false;
+        $.ajax({
+            type : "POST",
+            url:"/index.php?m=Admin&c=LendConf&a=bankCodeSearch",//+tab,
+            data :{search_key:bankCodeKey},// 你的formid
+            success: function(data){
+                data = data + '<option value="0">请点击搜索</option>';
+                $('#BankCode').html(data);
+            }
+        });
+    }
+
+    //行政区划搜索
+    function AreaKeySearch(){
+        var AreaKey = $('#AreaKey').val();
+        if($.trim(AreaKey) == '')
+            return false;
+        $.ajax({
+            type : "POST",
+            url:"/index.php?m=Admin&c=LendConf&a=AreaKeySearch",//+tab,
+            data :{search_key:AreaKey},// 你的formid
+            success: function(data){
+                data = data + '<option value="0">请点击搜索</option>';
+                $('#Area').html(data);
+            }
+        });
+    }
+
+    //菜单节点, 点击展开
+    function optionClicked(obj,nodeDiv){
+        var src = $(obj).find('img').attr('src');
+        $('#'+nodeDiv).toggle(function(){
+            if(src == '/public/static/images/tv-expandable.gif')
+            {
+                $(obj).find('img').attr('src','/public/static/images/tv-collapsable-last.gif');
+            }else{
+                $(obj).find('img').attr('src','/public/static/images/tv-expandable.gif');
+            }
+        });
+    }
+    function EA_img_call_back(fileurl_tmp)
+    {
+        $("#EA").val(fileurl_tmp);
+    }
+    function EB_img_call_back(fileurl_tmp)
+    {
+        $("#EB").val(fileurl_tmp);
+    }
+    function EC_img_call_back(fileurl_tmp)
+    {
+        $("#EC").val(fileurl_tmp);
+    }
+    function ED_img_call_back(fileurl_tmp)
+    {
+        $("#ED").val(fileurl_tmp);
+    }
+    function EE_img_call_back(fileurl_tmp)
+    {
+        $("#EE").val(fileurl_tmp);
+    }
+    function EF_img_call_back(fileurl_tmp)
+    {
+        $("#EF").val(fileurl_tmp);
+    }
+    function EG_img_call_back(fileurl_tmp)
+    {
+        $("#EG").val(fileurl_tmp);
+    }
+    function EH_img_call_back(fileurl_tmp)
+    {
+        $("#EH").val(fileurl_tmp);
+    }
+    function EL_img_call_back(fileurl_tmp)
+    {
+        $("#EL").val(fileurl_tmp);
+    }
+    function EM_img_call_back(fileurl_tmp)
+    {
+        $("#EM").val(fileurl_tmp);
+    }
+    function EN_img_call_back(fileurl_tmp)
+    {
+        $("#EN").val(fileurl_tmp);
+    }
+    function EO_img_call_back(fileurl_tmp)
+    {
+        $("#EO").val(fileurl_tmp);
+    }
+    function EP_img_call_back(fileurl_tmp)
+    {
+        $("#EP").val(fileurl_tmp);
+    }
+    function EQ_img_call_back(fileurl_tmp)
+    {
+        $("#EQ").val(fileurl_tmp);
+    }
+    function ER_img_call_back(fileurl_tmp)
+    {
+        $("#ER").val(fileurl_tmp);
+    }
+    function ES_img_call_back(fileurl_tmp)
+    {
+        $("#ES").val(fileurl_tmp);
+    }
+    function ET_img_call_back(fileurl_tmp)
+    {
+        $("#ET").val(fileurl_tmp);
+    }
+    function EU_img_call_back(fileurl_tmp)
+    {
+        $("#EU").val(fileurl_tmp);
+    }
+    function EV_img_call_back(fileurl_tmp)
+    {
+        $("#EV").val(fileurl_tmp);
+    }
+    function EW_img_call_back(fileurl_tmp)
+    {
+        $("#EW").val(fileurl_tmp);
+    }
+    function EZ_img_call_back(fileurl_tmp)
+    {
+        $("#EZ").val(fileurl_tmp);
+    }
+</script>

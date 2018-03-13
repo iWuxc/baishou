@@ -1,0 +1,66 @@
+table,
+table tr th,
+table tr td {
+  border: 1px solid #333;
+  height: 35px;
+  line-height: 35px;
+}
+tr:nth-child(even){
+	background-color: #fff;
+}
+table {
+  width: 100%;
+  min-height: 35px;
+  line-height: 35px;
+  text-align: center;
+  border-collapse: collapse;
+  padding: 2px;
+  margin-top: -1px;
+}
+table caption {
+  font-size: 22px;
+  line-height: 70px;
+  font-weight: bold;
+}
+table th {
+  text-align: center;
+  background: #E6E6E6;
+  color: #333;
+  font-size: 14px;
+}
+table td {
+  min-width: 50px;
+}
+table .th1 {
+  text-align: left;
+  padding-left: 20px;
+  background: #fff;
+}
+table .th2 > th {
+  text-align: left;
+}
+table span {
+  display: inline-block;
+  width: 45%;
+  margin: 0 10px;
+}
+table .left {
+  text-align: left;
+}
+table .right {
+  text-align: right;
+}
+table .yell,
+table .trbg > td,
+table .trbg > th {
+  background: #FFE699;
+}
+table .grey {
+  background: #888888;
+}
+table .bold {
+  font-weight: bold;
+}
+table .gray > td {
+  color: #888888;
+}

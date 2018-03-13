@@ -1,0 +1,178 @@
+<table>
+    <tbody>
+    <if condition="empty($clientList) eq true">
+        <tr data-id="0">
+            <td class="no-data" align="center" axis="col0" colspan="50">
+                <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+            </td>
+        </tr>
+        <else/>
+        <volist name="clientList" id="list">
+            <tr data-user-id="{$list.user_id}" id="{$list.user_id}">
+                <td class="sign" axis="col6">
+                    <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <!--<td class="handle" >-->
+                    <!--<div style="text-align:left;   min-width:50px !important; max-width:inherit !important;">-->
+                  <!--<span class="btn"><em><i class="fa fa-cog"></i>设置<i class="arrow"></i></em>-->
+                  <!--<ul>-->
+                      <!--<li><a href="{:U('Admin/Users/edit_user',array('user_id'=>$list['user_id']))}">个人信息详情</a></li>-->
+                      <!--<if condition="$list[type] eq 2">-->
+                          <!--<li><a href="{:U('Admin/Users/entList',array('user_id'=>$list['user_id']))}">预览企业</a></li>-->
+                      <!--</if>-->
+                      <!--<li><a href="{:U('Admin/Users/storeList',array('user_id'=>$list['user_id']))}">预览门店</a></li>-->
+
+                      <!--&lt;!&ndash;<li><a href="javascript:void(0);" onclick="ClearGoodsHtml('{$list[goods_id]}')">清除静态缓存</a></li> &ndash;&gt;-->
+                      <!--&lt;!&ndash;<li><a href="javascript:void(0);" onclick="ClearGoodsThumb('{$list[goods_id]}')">清除缩略图缓存</a></li>&ndash;&gt;-->
+                  <!--</ul>-->
+                  <!--</span>-->
+                    <!--</div>-->
+                <!--</td>-->
+                <td align="center" axis="col0">
+                    <div style="text-align:center;width:50px;">{$list.user_id}</div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center;width: 120px;">{$list.client_no}</div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 80px;"><a href="{:U('Admin/Users/edit_user',array('user_id'=>$list['user_id']))}">{$list.name}</a></div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 80px;">{$list.xd_name}</div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 80px;">
+                        <empty name="list.fk_name">无<else />{$list.fk_name}</empty>
+                    </div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 50px;">
+                        <if condition="$list.sex eq 1 ">
+                            男
+                            <else />
+                            女
+                        </if>
+                    </div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 50px;">
+                        <if condition="$list.type eq 1 ">
+                                <strong style="color: darkgreen">个人</strong>
+                            <else />
+                                <strong style="color: rebeccapurple"><a href="{:U('Admin/Users/entList',array('user_id'=>$list['user_id']))}">企业</a></strong>
+                        </if>
+                    </div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align:center;width: 100px;">{$list.mobile}</div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 150px;">{$list.home_address}</div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 50px;"><a href="{:U('Admin/Users/storeList',array('user_id'=>$list['user_id']))}">{$list.store_num}</a></div>
+                </td>
+                <td align="center" axis="col0">
+                    <div style="text-align: center; width: 120px;">{$list.reg_time|date='Y-m-d', ###}</div>
+                </td>
+                <!--<td align="center" axis="col0">-->
+                    <!--<div style="text-align: center; width: 100px;">-->
+                        <!--<if condition="$list.is_approval eq 0 ">-->
+                                <!--<strong style="color: black;">未审批</strong>-->
+                            <!--<elseif condition="$list.is_approval eq 1"/>-->
+                                <!--<strong style="color: teal;">审批中</strong>-->
+                            <!--<elseif condition="$list.is_approval eq 2"/>-->
+                                <!--<strong style="color: green;">审批通过</strong>-->
+                            <!--<else />-->
+                                <!--<strong style="color: red;">审批未通过</strong>-->
+                        <!--</if>-->
+                    <!--</div>-->
+                <!--</td>-->
+                <td align="left" axis="col1" class="handle" align="center">
+                    <div style="text-align: left; ">
+                        <a class="btn green" href="{:U('Admin/Users/detail',array('user_id'=>$list['user_id']))}"><i class="fa fa-list-alt"></i>查看</a>
+                        <if condition="($list['is_approval'] eq 0)">
+                            <a class="btn red" href="javascript:void(0);" data-user-id="{$list['user_id']}" onclick="del({$list['user_id']})"><i class="fa fa-trash-o"></i>删除</a>
+                        </if>
+                    </div>
+                </td>
+
+                <!--<td align="center" axis="col0">-->
+                <!--<div style="text-align: center; width: 50px;">-->
+                <!--<input type="text" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onblur="changeTableVal('goods','goods_id','{$list.goods_id}','sort',this)" size="4" value="{$list.sort}" />-->
+                <!--</div>-->
+                <!--</td>-->
+                <td align="" class="" style="width: 100%;">
+                    <div>&nbsp;</div>
+                </td>
+            </tr>
+        </volist>
+    </if>
+    </tbody>
+</table>
+<!--分页位置--> {$page}
+<script>
+    // 点击分页触发的事件
+    $(".pagination  a").click(function(){
+        cur_page = $(this).data('p');
+        ajax_get_table('search-form2',cur_page);
+    });
+
+    /*
+     * 清除静态页面缓存
+     */
+    function ClearGoodsHtml(goods_id)
+    {
+        $.ajax({
+            type:'GET',
+            url:"{:U('Admin/System/ClearGoodsHtml')}",
+            data:{goods_id:goods_id},
+            dataType:'json',
+            success:function(data){
+                layer.alert(data.msg, {icon: 2});
+            }
+        });
+    }
+    /*
+     * 清除商品缩列图缓存
+     */
+    function ClearGoodsThumb(goods_id)
+    {
+        $.ajax({
+            type:'GET',
+            url:"{:U('Admin/System/ClearGoodsThumb')}",
+            data:{goods_id:goods_id},
+            dataType:'json',
+            success:function(data){
+                layer.alert(data.msg, {icon: 2});
+            }
+        });
+    }
+
+    // 删除操作
+    function del(id) {
+        layer.confirm('确定要删除吗, 一旦删除, 用户下的所有信息将被清空?', function(){
+            $.ajax({
+                type : "POST",
+                url: "{:U('Admin/users/delete_user')}",
+                data:{user_id:id},
+                dataType:'json',
+                async:false,
+                success: function(data){
+                    if(data.status == 1){
+                        layer.alert(data.msg, {icon: 1});
+                        $('#'+id).remove();
+                    }else{
+                        layer.alert(data.msg, {icon: 2});
+                    }
+                },
+                error:function(){
+                    layer.alert('网络异常，请稍后重试',{icon: 2});
+                }
+            });
+        });
+    }
+
+    $('.ftitle>h5').empty().html("(共{$pager->totalRows}条记录)");
+
+</script>

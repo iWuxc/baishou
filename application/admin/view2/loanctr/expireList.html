@@ -1,0 +1,210 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>贷款管理</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>贷款申请列表</h3>
+                <h5>(共{$page_total}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form class="navbar-form form-inline" method="get" action="{:U('Admin/Loanctr/index')}" name="search-form2" id="search-form2">
+                <input type="hidden" name="p" value="{$_GET['p']}">
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="add_time_begin" name="add_time_begin" value="{$_GET['add_time_begin']}" class="qsbox" placeholder="申请开始时间">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="add_time_end" name="add_time_end" value="{$_GET['add_time_end']}" class="qsbox" placeholder="申请结束时间">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="loan_number" name="loan_number" value="{$_GET['loan_number']}" class="qsbox" placeholder="贷款编号">
+                    </div>
+
+                    <div class="sDiv2">
+                        <input type="submit" class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="hDiv">
+            <div class="hDivBox" id="ajax_return">
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <th axis="col0">
+                            <div style="width: 24px;"><i class="ico-check"></i></div>
+                        </th>
+                        <th align="left" abbr="order_sn" axis="col3" class="">
+                            <div style="text-align: left; width: 40px;" class="">记录ID</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 120px;" class="">申请时间</div>
+                        </th>
+                        <th align="left" abbr="consignee" axis="col4" class="">
+                            <div style="text-align: left; width: 120px;" class="">贷款编号</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 60px;" class="">客户姓名</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 60px;" class="">申请额度</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 160px;" class="">收款账号</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 60px;" class="">放款金额</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 120px;" class="">开始日期</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 120px;" class="">结束日期</div>
+                        </th>
+                        <th align="center" abbr="article_show" axis="col5" class="">
+                            <div style="text-align: center; width: 60px;" class="">授信额度</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 60px;" class="">服务率</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 60px;" class="">利率</div>
+                        </th>
+                        <th align="left" axis="col1" class="handle">
+                            <div style="text-align: left; width: 150px;">操作</div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <!--<div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton">
+                    <a href="{:U('Admin/Loanctr/addLoan')}">
+                        <div class="add" title="提交申请">
+                            <span><i class="fa fa-plus"></i>提交申请</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>-->
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+                <table>
+                    <tbody>
+                    <if condition="empty($list) eq true">
+                        <tr data-id="0">
+                            <td class="no-data" align="center" axis="col0" colspan="50">
+                                <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                            </td>
+                        </tr>
+                        <else/>
+                        <volist name="list" id="item">
+                            <tr data-order-id="{$item.id}" id="{$item.id}">
+                                <td class="sign" axis="col0">
+                                    <div style="width: 24px;"><i class="ico-check"></i></div>
+                                </td>
+                                <td align="left" abbr="order_sn" axis="col3" class="">
+                                    <div style="text-align: left; width: 40px;" class="">{$item.id}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 120px;" class="">{$item.addtime}</div>
+                                </td>
+                                <td align="left" abbr="order_sn" axis="col3" class="">
+                                    <div style="text-align: left; width: 120px;" class="">{$item.loan_number}</div>
+                                </td>
+                                <td align="center" abbr="article_show" axis="col5" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item.user_name}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item.apply_amount}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 160px;" class="">{$item['account']}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item['loan_amount']}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 120px;" class="">{$item['str_time']}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 120px;" class="">{$item['stp_time']}</div>
+                                </td>
+                                <td align="left" abbr="consignee" axis="col4" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item.credit}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item['service_rate']}</div>
+                                </td>
+                                <td align="center" abbr="article_time" axis="col6" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item['inter_rate']}</div>
+                                </td>
+                                <td align="left" axis="col1" class="handle" align="center">
+                                    <div style="text-align: left; ">
+                                        <a class="btn green" href="{:U('Admin/Loanctr/detail',array('id'=>$item['id']))}"><i
+                                                class="fa fa-eye"></i>查看</a>
+                                    </div>
+                                </td>
+                                <td style="width: 100%;">
+                                    <div></div>
+                                </td>
+                            </tr>
+                        </volist>
+                    </if>
+                    </tbody>
+                </table>
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+        {$page}<!--分页位置-->
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $('#add_time_begin').layDate();
+        $('#add_time_end').layDate();
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+        $('.ico-check ' , '.hDivBox').click(function(){
+            $('tr' ,'.hDivBox').toggleClass('trSelected' , function(index,currentclass){
+                var hasClass = $(this).hasClass('trSelected');
+                $('tr' , '#flexigrid').each(function(){
+                    if(hasClass){
+                        $(this).addClass('trSelected');
+                    }else{
+                        $(this).removeClass('trSelected');
+                    }
+                });
+            });
+        });
+    });
+
+
+</script>
+</body>
+</html>

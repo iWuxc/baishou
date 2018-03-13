@@ -1,0 +1,46 @@
+<h3>{$store.store_name}信息</h3>
+<div class="form_class">
+    <!--<a class="btn green" href="{:U('Admin/Order/editprice',array('order_id'=>$order['order_id']))}"><i class="fa fa-pencil-square-o"></i>修改费用</a>-->
+</div>
+<dl>
+    <dt> 门店权属人 ：</dt>
+    <dd> {$store.user_name} </dd>
+    <dt> 门店名称 ：</dt>
+    <dd> {$store.store_name} </dd>
+</dl>
+<dl>
+    <dt> 成立时间 ：</dt>
+    <dd> {$store.established|date="Y-m-d",###} </dd>
+    <dt> 门店地址 ：</dt>
+    <dd> {$store.address2} </dd>
+</dl>
+<dl>
+    <dt> 营业时间 : </dt>
+    <dd> {$store.opening_hours}-{$store.closeing_hours} </dd>
+    <dt> 门店电话 : </dt>
+    <dd> {$store.store_mobile} </dd>
+</dl>
+<dl>
+    <dt>门店产权 : </dt>
+    <dd> <if condition="$userInfo[sex] eq 1 ">自有<else />租赁</if> </dd>
+    <dt>租赁期限 : </dt>
+    <dd> {$store.rent_begintime}-{$store.rent_endtime} </dd>
+</dl>
+<dl>
+    <dt> 租金 : </dt>
+    <dd> {$store.rent} </dd>
+    <dt> 营业面积 : </dt>
+    <dd> {$store.business_area} </dd>
+</dl>
+<dl>
+    <dt> 主要经营产品 : </dt>
+    <dd> {$store.main_pro} </dd>
+    <dt> 门店存货件数 : </dt>
+    <dd> {$store.inventory_count} </dd>
+</dl>
+<dl>
+    <dt> 存货年平均件数：</dt>
+    <dd> {$store.inventory_year_avg} </dd>
+    <dt> 存货年平均价值：</dt>
+    <dd> {$store.inventory_year_price}万元 </dd>
+</dl>

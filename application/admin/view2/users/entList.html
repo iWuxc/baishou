@@ -1,0 +1,230 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>客户企业信息</h3>
+                <h5>客户企业信息操作页面</h5>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>客户企业信息管理操作</li>
+        </ul>
+    </div>
+    <div class="flexigrid" id="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>客户企业信息列表</h3>
+                <h5>(共{$pager->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><a href=""><i class="fa fa-refresh"></i></a></div>
+            <form class="navbar-form form-inline" id="search-form" method="get" action="{:U('index')}" onsubmit="return check_form();">
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <input type="hidden" name="order_by" value="enterprise_id">
+                        <input type="hidden" name="sort" value="desc">
+                        <input type="hidden" name="user_id" value="{$user_id}">
+                        <input type="hidden" name="ent_ids" value="">
+                        <input size="30" value="{$_GET['ent_id']}" name="keywords" placeholder="企业名称" class="qsbox" type="text">
+                        <input class="btn" value="搜索" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton">
+                    <a href="/index.php/Admin/users/addEnterprise/user_id/{$user_id}/key/1">
+                        <div class="add" title="添加企业">
+                            <span><i class="fa fa-plus"></i>添加企业</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <table width="100%" cellspacing="0" cellpadding="0" class="anothertable">
+            <thead>
+            <tr>
+                <th align="center" abbr="article_title" axis="col3" class="" style="width:60px;">
+                    <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);">
+                </th>
+                <th align="center" abbr="article_title" axis="col3" class="">
+                    序号
+                </th>
+                <th align="center" abbr="article_title" axis="col3" class="">
+                    企业名称
+                </th>
+                <th align="center" abbr="ac_id" axis="col4" class="">
+                    营业执照号码
+                </th>
+                <th align="center" abbr="ac_id" axis="col4" class="">
+                    注册资金(万)
+                </th>
+                <th align="center" abbr="article_show" axis="col5" class="">
+                    法定代表人
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    办公电话
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    注册地址
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    成立时间
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    经营年限(年)
+                </th>
+                <th align="center" axis="col1" class="handle">
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <if condition="empty($entList) eq true">
+                <tr data-id="0">
+                    <td class="no-data" align="center" axis="col0" colspan="50">
+                        <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                    </td>
+                </tr>
+                <else/>
+                <volist name="entList" id="v">
+                    <tr>
+                        <td align="center" class="">
+                            <input type="checkbox" name="selected[]" value="{$v['enterprise_id']}">
+                        </td>
+                        <td align="center" class="">
+                            {$v.enterprise_id}
+                        </td>
+                        <td align="center" class="">
+                            {$v.name}
+                        </td>
+                        <td align="center" class="">
+                            {$v.business_no}
+                        </td>
+                        <td align="center" class="">
+                            {$v.reg_capital}
+                        </td>
+                        <td align="center" class="">
+                            {$v.legal_person}
+                        </td>
+                        <td align="center" class="">
+                            {$v.work_phone}
+                        </td>
+                        <td align="center" class="">
+                            {$v.reg_address}
+                        </td>
+                        <td align="center" class="">
+                            {$v.founding_time|date="Y-m-d",###}
+                        </td>
+                        <td align="center" class="">
+                            {$v.operating_years}
+                        </td>
+                        <td align="left" class="handle">
+                            <a href="{:U('Admin/users/editEnterprise',array('ent_id'=>$v['enterprise_id'],'key'=>1))}" class="btn blue"><i class="fa fa-pencil-square-o"></i>编辑</a>
+                        </td>
+                    </tr>
+                </volist>
+            </if>
+            </tbody>
+        </table>
+        <!--分页位置-->
+        {$show}
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#create_time').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#create_time').val('');
+        }
+
+        return true;
+    }
+
+    //批量操作提交
+    function act_submit(wst) {
+        var chks = [];
+        $('input[name*=selected]').each(function(i,o){
+            if($(o).is(':checked')){
+                chks.push($(o).val());
+            }
+        })
+        if(chks.length == 0){
+            layer.alert('您好，请至少选择一项', {icon: 2});return;
+        }
+        var can_post = false;
+        var remark = "审核通过";
+        if(wst != 2 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                audit(chks , wst ,  remark);
+            });
+        }else{
+            audit(chks , wst ,  remark);
+        }
+    }
+
+    function audit(chks , wst ,  remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Credit&a=lines_update",//+tab,
+            data: {id:chks,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    layer.alert(data.msg, {
+                        icon: 1,
+                        closeBtn: 0
+                    }, function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 2,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 2,time: 3000});
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

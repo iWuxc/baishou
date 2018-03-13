@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="http://bs.bestshowgroup.com/index.php/bossapi/pawn/uploadImg" enctype="multipart/form-data" method="post">
+    <input type="text" name="pawn_id" value="18">
+    <input type="hidden" name="pawn_type" value="1">
+    <input type="file" name="image[]" /> <br>
+    <input type="file" name="image[]" /> <br>
+    <input type="file" name="image[]" /> <br>
+    <input type="file" name="image[]" /> <br>
+    <input type="submit" value="上传" />
+</form>
+<hr>
+<form action="http://bs.bestshowgroup.com/index.php/bossapi/Trust/fileUpload" enctype="multipart/form-data" method="post">
+    <input type="file" name="file" /> <br>
+    <input type="submit" value="上传" />
+</form>
+</body>
+</html>

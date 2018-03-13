@@ -1,0 +1,156 @@
+﻿<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script type="text/javascript" src="__ROOT__/public/static/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/public/static/css/jquery.dataTables.css">
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>巡店管理</h3> 
+                <!-- {$a} -->
+            </div>
+        </div>
+    </div>
+
+        <table cellspacing="0" cellpadding="0" class="anothertable">
+            <thead>
+            <tr>
+                <th align="center" abbr="article_title" axis="col3" class="">ID</th>
+                <th align="center" abbr="article_title" axis="col3" class="">店员姓名
+                </th>
+                <th align="center" abbr="article_show" axis="col5" class="">巡查店名</th> 
+                <th align="center" abbr="article_show" axis="col5" class="">巡店时间</th> 
+                <th align="center" abbr="article_show" axis="col5" class="">任务结果</th> 
+            </tr>
+            </thead>
+            <tbody>
+            <if condition="empty($data) eq true">
+                <tr data-id="0">
+                    <td class="no-data" align="center" axis="col0" colspan="50">
+                        <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                    </td>
+                </tr>
+                <else/>
+                <volist name="data" id="v">
+                    <tr>
+                        <td align="center" class="">
+                                {$v.id}
+                        </td>
+                        <td align="center" class="">
+                                {$v.check_user_name}
+                        </td>
+                        <td align="center" class="">
+                                {$v.store_name}
+                        </td>                            
+                        <td align="center" class="">{$v.time|date="Y-m-d H:i:s",###}
+                        </td>
+                        <td align="center" class="">
+                        	<if condition="$v.result eq 2">
+                        	   <span style="color:green">正常</span>
+                            </if>
+							<if condition="$v.result eq 1"> 
+							     <a href="{:U('Admin/StoreCheck/bad_list',array('store_id'=>$v['store_id']))}"><span style="color:red">异常</span></a>
+							</if>
+                        </td>
+                    </tr>
+                </volist>
+            </if>
+            </tbody>
+        </table>
+            <!--分页位置-->
+        {$show} </div>
+</div>
+
+<script>
+    $(function(){
+        //实例化datatables
+        $('table').dataTable({
+            "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] }] ,
+            "aaSorting": [[ 1, "desc" ]]  
+        });
+    });
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#create_time').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#create_time').val('');
+        }
+
+        return true;
+    }
+
+    //批量操作提交
+    function act_submit(wst) {
+        var chks = [];
+        $('input[name*=selected]').each(function(i,o){
+            if($(o).is(':checked')){
+                chks.push($(o).val());
+            }
+        })
+        if(chks.length == 0){
+            layer.alert('您好，请至少选择一项', {icon: 2});return;
+        }
+        var can_post = false;
+        var remark = "审核通过";
+        if(wst != 2 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                audit(chks , wst ,  remark);
+            });
+        }else{
+            audit(chks , wst ,  remark);
+        }
+    }
+
+    function audit(chks , wst ,  remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Credit&a=lines_update",//+tab,
+            data: {id:chks,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    layer.alert(data.msg, {
+                        icon: 1,
+                        closeBtn: 0
+                    }, function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 2,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 2,time: 3000});
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

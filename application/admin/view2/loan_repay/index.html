@@ -1,0 +1,183 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>还款记录</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>还款记录列表</h3>
+                <h5>(共{$page_total}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form class="navbar-form form-inline" method="get" action="{:U('Admin/LoanRepay/index')}" name="search-form2" id="search-form2">
+                <input type="hidden" name="p" value="{$_GET['p']}">
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="add_time_begin" name="add_time_begin" value="{$_GET['add_time_begin']}" class="qsbox" placeholder="起始时间">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="add_time_end" name="add_time_end" value="{$_GET['add_time_end']}" class="qsbox" placeholder="结束时间">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="user_name" name="user_name" value="{$_GET['user_name']}" class="qsbox" placeholder="客户姓名">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="submit" class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="hDiv">
+            <div class="hDivBox" id="ajax_return">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th axis="col0">
+                            <div style="width: 24px;"><i class="ico-check"></i></div>
+                        </th>
+                        <th align="left" axis="col3" class="">
+                            <div style="text-align: left; width: 40px;" class="">记录ID</div>
+                        </th>
+                        <th align="center" axis="col6" class="">
+                            <div style="text-align: center; width: 60px;" class="">客户姓名</div>
+                        </th>
+                        <th align="left" axis="col4" class="">
+                            <div style="text-align: center; width: 80px;" class="">应还款金额</div>
+                        </th>
+                        <th align="left" axis="col4" class="">
+                            <div style="text-align: center; width: 120px;" class="">应还款日期</div>
+                        </th>
+                        <th align="left" axis="col4" class="">
+                            <div style="text-align: center; width: 80px;" class="">实际还款金额</div>
+                        </th>
+                        <th align="left" axis="col4" class="">
+                            <div style="text-align: center; width: 120px;" class="">实际还款日期</div>
+                        </th>
+                        <th align="left" axis="col4" class="">
+                            <div style="text-align: center; width: 60px;" class="">还款操作</div>
+                        </th>
+                        <th align="left" axis="col4" class="">
+                            <div style="text-align: center; width: 160px;" class="">银行类型</div>
+                        </th>
+                        <th align="center" axis="col6" class="">
+                            <div style="text-align: center; width: 200px;" class="">还款账号</div>
+                        </th>
+                        <th align="left" axis="col1" class="handle">
+                            <div style="text-align: left;" class="">操作</div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+                <table width="100%">
+                    <tbody>
+                    <if condition="empty($list) eq true">
+                        <tr data-id="0">
+                            <td class="no-data" align="center" axis="col0" colspan="50">
+                                <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                            </td>
+                        </tr>
+                        <else/>
+                        <volist name="list" id="item">
+                            <tr data-order-id="{$item.id}" id="{$item.id}">
+                                <td class="sign" axis="col0">
+                                    <div style="width: 24px;"><i class="ico-check"></i></div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 40px;" class="">{$item.id}</div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item.user_name}</div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 80px;" class="">{$item.repay_amount}</div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 120px;" class="">{$item.repay_date}</div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 80px;" class="">{$item.actual_amount}</div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 120px;" class="">{$item.actual_date}</div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 60px;" class="">{$item.types}</div>
+                                </td>
+                                <td align="left" axis="col3" class="">
+                                    <div style="text-align: center; width: 160px;" class="">{$item.bank_name}</div>
+                                </td>
+                                <td align="center" axis="col6" class="">
+                                    <div style="text-align: center; width: 200px;" class="">{$item['account']}</div>
+                                </td>
+                                <td style="width: 100%;" align="left" axis="col1" class="handle" align="center">
+                                    <div style="text-align: left;">
+                                        <a class="btn green" href="{:U('Admin/LoanRepay/detail',array('id'=>$item['id']))}"><i
+                                                class="fa fa-eye"></i>查看</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </volist>
+                    </if>
+                    </tbody>
+                </table>
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+        {$page}<!--分页位置-->
+    </div>
+</div>
+<script type="text/javascript">
+    // 删除操作
+    function del(id)
+    {
+        if(!confirm('确定要删除吗?'))
+            return false;
+
+        location.href = $(id).data('href');
+    }
+    $(document).ready(function(){
+        $('#add_time_begin').layDate();
+        $('#add_time_end').layDate();
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+        $('.ico-check ' , '.hDivBox').click(function(){
+            $('tr' ,'.hDivBox').toggleClass('trSelected' , function(index,currentclass){
+                var hasClass = $(this).hasClass('trSelected');
+                $('tr' , '#flexigrid').each(function(){
+                    if(hasClass){
+                        $(this).addClass('trSelected');
+                    }else{
+                        $(this).removeClass('trSelected');
+                    }
+                });
+            });
+        });
+    });
+
+
+</script>
+</body>
+</html>

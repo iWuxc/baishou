@@ -1,0 +1,99 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<style type="text/css">
+    html, body {
+        overflow: visible;
+    }
+
+    a.btn {
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #f5f5f5;
+        border-radius: 4px;
+        color: #999;
+        cursor: pointer !important;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+        height: 20px;
+        letter-spacing: normal;
+        line-height: 20px;
+        margin: 0 5px 0 0;
+        padding: 1px 6px;
+        vertical-align: top;
+    }
+
+    a.red:hover {
+        background-color: #e84c3d;
+        border-color: #c1392b;
+        color: #fff;
+    }
+
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>添加巡店员</h3>
+                <h5>添加巡店员</h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" action="{:U('StoreCheck/add')}" id="monitoring-add" method="post">
+        <div class="ncap-form-default"> 
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>巡店员名</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="check_name" id="check_name" class="input-txt" value="" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>证件类型</label>
+                </dt>
+                <dd class="opt">
+                    居民身份证<input type="radio" name="credential_type" value="1" checked >
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>身份证号</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" style="width:80%" name="id_number" id="id_number" class="input-txt" value="" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>手机号码</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="mobile" id="mobile" class="input-txt" value="" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>密码</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="password" id="password" class="input-txt" value="" />
+                </dd>
+            </dl>
+            <div class="bot">
+            <input type="submit" class="ncap-btn-big ncap-btn-green" id="submitBtn"></input>
+            <!-- <a href="JavaScript:void(0);" onClick="checkSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a> -->
+            </div>
+        </div>
+
+    </form>
+</div>
+<script> 
+</script>
+</body>
+</html>

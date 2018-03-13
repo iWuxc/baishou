@@ -1,0 +1,379 @@
+<include file="public/layout" />
+<style>
+    .span_1 {
+        float: left;
+        margin-left: 0px;
+        height: 130px;
+        line-height: 130px;
+    }
+
+    .span_1 ul {
+        list-style: none;
+        padding: 0px;
+    }
+
+    .span_1 ul li {
+        border: 1px solid #CCC;
+        height: 40px;
+        padding: 0px 10px;
+        margin-left: -1px;
+        margin-top: -1px;
+        line-height: 40px;
+    }
+</style>
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>授信额度审结论表</h3>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" id="editForm" method="post">
+        <input type="hidden" name="id" value="{$data.id}">
+        <input type="hidden" name="user_id" value="{$data.user_id}">
+        <input type="hidden" id="status" name="status" value="{$data[status]}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label>授信编号</label>
+                </dt>
+                <dd class="opt">
+                    <!--<a class="open" href="{:U('Admin/credit/edit_credit_conclusion',array('id'=>$data[id]))}">-->
+                        {$data[id]}
+                        <!--<i class="fa fa-external-link " title="新窗口打开"></i>-->
+                    <!--</a>-->
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>信贷经理</label>
+                </dt>
+                <dd class="opt">
+                    {$adminName[$data[xd_id]]}
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>客户名称</label>
+                </dt>
+                <dd class="opt">
+                        {$data[user_name]}
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>授信额度</label>
+                </dt>
+                <dd class="opt"><strong class="red">{$data.credit}</strong>元</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>审批抵押率</label>
+                </dt>
+                <dd class="opt"><strong class="red">{$data.check_rate}</strong>%</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>额度期限</label>
+                </dt>
+                <dd class="opt"><strong class="red">{$data.term}</strong>月</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>是否循环时候用</label>
+                </dt>
+                <dd class="opt"><strong class="red">
+                    <if condition="$data['is_loop'] eq 1 ">是<else />否</if>
+                </strong></dd>
+            </dl>
+            <!--<dl class="row">-->
+                <!--<dt class="tit">-->
+                    <!--<label>额度期限</label>-->
+                <!--</dt>-->
+                <!--<dd class="opt"><strong class="red">-->
+                    <!--{$data.str_time|date='Y-m-d',###} - {$data.stp_time|date='Y-m-d',###}-->
+                <!--</strong></dd>-->
+            <!--</dl>-->
+            <dl class="row">
+                <dt class="tit">
+                    <label>单笔贷款用款期限</label>
+                </dt>
+                <dd class="opt"><strong class="red">
+                    {$data.draw_strtime|date='Y-m-d',###} - {$data.draw_stptime|date='Y-m-d',###}
+                </strong></dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>用途</label>
+                </dt>
+                <dd class="opt">{$data.purpose}</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>服务费率</label>
+                </dt>
+                <dd class="opt"><strong class="red">{$data.service_rate}</strong>(%,年)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>利率</label>
+                </dt>
+                <dd class="opt"><strong class="red">{$data.inter_rate}</strong>(%,年)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>价格</label>
+                </dt>
+                <dd class="opt"><strong class="red">{$data.price_rate}</strong>(%,年)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>利率和费用收取方式</label>
+                </dt>
+                <dd class="opt">{$data.charge_mode}</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>抵押门店数量</label>
+                </dt>
+                <dd class="opt"><strong>{$data.store_sum}</strong>个</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>担保方式</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$data[assurer_mode] eq 1">
+                        新增保证人
+                    <elseif condition="$data[assurer_mode] eq 2"/>
+                        房产抵押
+                    <else />
+                        其他担保方式
+                    </if>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>担保内容</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$data[assurer_mode] eq 1">
+                        {$data.assurer_name}
+                        <elseif condition="$data[assurer_mode] eq 2"/>
+                        {$data.house_pawn}
+                        <else />
+                        {$data.other_methods}
+                    </if>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>还款方式</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$data[repayment] eq 1">
+                        按月付息到期还本
+                        <elseif condition="$data[repayment] eq 2"/>
+                        额度内随借随还
+                        <else />
+                        按月付息按还款计划还本
+                    </if>
+                </dd>
+            </dl>
+            <volist name="$data[loan_con]" id="loan_con" key="k">
+                <dl class="row">
+                    <dt class="tit">
+                        <label>贷前条件 {$k}</label>
+                    </dt>
+                    <dd class="opt">{$loan_con}</dd>
+                </dl>
+            </volist>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>贷后管理</label>
+                </dt>
+                <dd class="opt">{$data.loan_admin}</dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>添加时间</label>
+                </dt>
+                <dd class="opt">{$data.add_time|date="Y-m-d H:i",###}</dd>
+            </dl>
+            <dl class="row">
+                <if condition="$data[money_plan]">
+                    <dt class="tit">
+                        <label>还款计划</label>
+                    </dt>
+                    <dd class="opt">
+                        <volist name="$data[money_plan]" id="money_plan">
+                            {$money_plan.start_time} - {$money_plan.stop_time} : {$money_plan.use_amount}元
+                            <div style="clear:both;"></div>
+                        </volist>
+                    </dd>
+                </if>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>状态</label>
+                </dt>
+                <dd class="opt">
+                    <strong class="red">
+                        <if condition="$data[status] eq 1">待复核</if>
+                        <if condition="$data[status] eq 2">复核通过</if>
+                        <if condition="$data[status] eq 3">被驳回</if>
+                    </strong>
+                </dd>
+            </dl>
+
+            <if condition="$data.com_remarks">
+                <dl class="row">
+                    <dt class="tit">复核备注结果</dt>
+                    <dd class="opt">
+                        <textarea class="input-txt" rows="4" cols="60" id="com_remarks" name="com_remarks" disabled>{$data.com_remarks}</textarea>
+                        <span class="err"></span>
+                        <p class="notic"></p>
+                    </dd>
+                </dl>
+            </if>
+            <!--<dl class="row">-->
+                <!--<dt class="tit">-->
+                    <!--<label>提现流程</label>-->
+                <!--</dt>-->
+                <!--<dd class="opt">-->
+                    <!--1:用户前台申请提现<br/>-->
+                    <!--2:管理员审核生成转账记录 ( 生成时自动扣除用户平台余额 ) <br/>-->
+                    <!--3:财务转账给用户<br/>-->
+                    <!--或 2 , 3步可以调换,先转账后生成记录.<br/>-->
+                <!--</dd>-->
+            <!--</dl>-->
+            <!--<if condition="$t eq 1">-->
+
+                <!--<else />-->
+                <!--<div class="bot">-->
+                    <!--<a href="JavaScript:void(0);" onclick="credit_status();" class="ncap-btn-big ncap-btn-green" id="credit_status"><if condition="$data[status] eq 1">提交复核</if><if condition="$data[status] eq 2">复核中</if><if condition="$data[status] eq 3">复核通过</if><if condition="$data[status] eq 4">复核驳回</if></a>-->
+                <!--</div>-->
+            <!--</if>-->
+
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+
+    //提交审核操作
+    function credit_status(){
+        var str = $('#credit_status').html();
+        if(str == '提交复核'){
+            $.ajax({
+                    type: 'POST',
+                    url: "/index.php/Admin/Credit/set_credit_conclu_status/is_ajax/1",
+                    data: {'status': 2, 'id': {$data.id}},
+                success: function(res){
+                var v =  eval('('+res+')');
+                if(v.hasOwnProperty('status')){
+                    if(v.status == 1){
+                        $('#credit_status').html('复核中');
+                        layer.msg(v.msg, {
+                            icon: 1,   // 成功图标
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.location.reload();
+                        });
+                    }
+                    else
+                    {
+                        layer.msg(v.msg, {
+                            icon: 0,   // 失败图标
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+            },
+            error: function(request){
+                layer.msg('提交失败请重新尝试提交', {
+                    icon: 0,   // 成功图标
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                });
+            }
+        });
+        }else{
+            layer.msg('该用户信息已提交审核, 不能重复提交', {
+                icon: 4,   // 成功图标
+                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+            });
+        }
+
+    }
+
+    // 审核通过
+    function confirm_withdrawals()
+    {
+        if ($.trim($('#remark').val()).length == 0) {
+            layer.alert('请填写转账备注', {icon: 2});
+            return false;
+        }
+        layer.confirm('确定将从平台扣除用户余额￥{$data.money},确定吗?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                // 确定
+                $('#status').val('1');
+                $.ajax({
+                    type : "POST",
+                    url:"{:U('Admin/User/withdrawals_update')}",
+                    data : $('#editForm').serialize(),
+                    dataType: "json",
+                    success: function(data){
+                        if(data.status == 1){
+                            layer.alert(data.msg, {icon: 1});
+                            location.reload();
+                        }else{
+                            layer.alert(data.msg, {icon: 2});
+                        }
+                    }
+                });
+            }, function (index) {
+                layer.close(index);
+            }
+        );
+    }
+    // 拒绝提现
+    function cancel_withdrawals() {
+        if ($.trim($('#remark').val()).length == 0) {
+            layer.alert('请填写拒绝备注', {icon: 2});
+            return false;
+        }
+        layer.confirm('确定要拒绝用户提现吗?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                // 确定
+                $('#status').val('2');
+                $.ajax({
+                    type : "POST",
+                    url:"{:U('Admin/User/withdrawals_update')}",
+                    data : $('#editForm').serialize(),
+                    dataType: "json",
+                    success: function(data){
+                        if(data.status == 1){
+                            layer.alert(data.msg, {icon: 1});
+                            location.reload();
+                        }else{
+                            layer.alert(data.msg, {icon: 2});
+                        }
+                    }
+                });
+            }, function (index) {
+                layer.close(index);
+            }
+        );
+
+    }
+</script>
+</body>
+</html>

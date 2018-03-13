@@ -1,0 +1,454 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>客户信息设置</h3>
+                <h5>客户信息内容基本选项设置</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                    <foreach name="group_list" item="v" key="k">
+                    <li><a href="{:U('Users/addUsers',['inc_type'=> $k])}" <if condition="$k==$inc_type">class="current"</if>><span>{$v}</span></a></li>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>客户信息提交之后自动生成客户编号</li>
+        </ul>
+    </div>
+    <form method="post" id="handlepost" action="{:U('Users/handle')}" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="form_submit" value="ok" />
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label><b>基本信息</b></label>
+                </dt>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="sex">客户类型</label>
+                </dt>
+                <dd class="opt">
+                    <input id="type" name="type" type="radio" value="1" checked="">个人  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="type" type="radio" value="2">企业
+                    <p class="notic">当选择企业客户时, 企业信息为必填项</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="invoice_title">企业信息</label>
+                </dt>
+                <dd class="opt">
+                    <a href="javascript:void(0);" onclick="addEnterprise()" class="ncap-btn ncap-btn-green"><i class="fa fa-search"></i>企业信息填写入口</a>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="name">客户姓名</label>
+                </dt>
+                <dd class="opt">
+                    <input id="name" name="name" value="{$users.name}" class="input-txt" type="text" />
+                    <p class="notic">客户姓名不能包括特殊字符</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="mobile">手机号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="mobile" name="mobile" value="{$users.mobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="sex">证件类型</label>
+                </dt>
+                <dd class="opt">
+                    <input id="credential_type" name="credential_type" type="radio" value="1" checked="">公民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="2">港澳台居民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="3">护照  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="4">其他
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="id_number">证件号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="id_number" name="id_number" value="{$users.id_number}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="sex">性别</label>
+                </dt>
+                <dd class="opt">
+                    <input id="sex" name="sex" type="radio" value="1">男  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="sex" type="radio" value="2">女
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="education">学历</label>
+                </dt>
+                <dd class="opt">
+                    <input id="education" name="education" type="radio" value="1" checked="">专科以下  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="education" type="radio" value="2">专科  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="education" type="radio" value="3">本科  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="education" type="radio" value="4">硕士以上
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="work_seniority">从业年限</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="work_seniority" value="" name="work_seniority" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 年
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>户口地址</label>
+                </dt>
+                <dd class="opt">
+                    <select onblur="get_city(this)" id="account_province" name="account_province"  title="请选择所在省份">
+                        <option value="">选择省份</option>
+                        <volist name="province" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[account_province] eq $vo[id]">selected</if> >{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select onblur="get_area(this)" id="account_city" name="account_city" title="请选择所在城市">
+                        <option value="">选择城市</option>
+                        <volist name="city" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[account_city] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select id="account_district" name="account_district" title="请选择所在区县">
+                        <option value="">选择区域</option>
+                        <volist name="area" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[account_district] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <input type="text" name="account_address" id="account_address" value="{$users.account_address}" class="input-txt"   placeholder="详细地址"/>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="home_zipcode">邮政编码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="home_zipcode" name="home_zipcode" value="{$users.home_zipcode}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee_address">收件地址</label>
+                </dt>
+                <dd class="opt">
+                    <input id="consignee_address" name="consignee_address" value="{$users.consignee_address}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="home_tel">家庭电话</label>
+                </dt>
+                <dd class="opt">
+                    <input id="home_tel" name="consignee_address" value="{$users.home_tel}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="company_tel">办公电话</label>
+                </dt>
+                <dd class="opt">
+                    <input id="company_tel" name="company_tel" value="{$users.company_tel}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="marriage">婚姻状态</label>
+                </dt>
+                <dd class="opt">
+                    <input id="marriage" name="marriage" type="radio" value="1" checked="">已婚有子女  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="marriage" type="radio" value="2">已婚无子女  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="marriage" type="radio" value="3">未婚  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="marriage" type="radio" value="4">其他
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="front_face">身份证正面</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="front_face_a" class="nyroModal" rel="gal" href="{$users.front_face}">
+                                <i id="front_face_i" class="fa fa-picture-o" onmouseover="layer.tips('<img src={$users.front_face}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="front_face" name="front_face" value="{$config.front_face}" class="type-file-text">
+                            <input type="button" name="button" id="button1" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify(1,'','logo','img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">默认网站首页LOGO,通用头部显示，最佳显示尺寸为240*60像素</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="back_face">身份证反面</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="back_face_a" class="nyroModal" rel="gal" href="{$users.front_face}">
+                                <i id="back_face_i" class="fa fa-picture-o" onmouseover="layer.tips('<img src={$users.front_face}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="back_face" name="back_face" value="{$config.back_face}" class="type-file-text">
+                            <input type="button" name="button" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify(1,'','logo','img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">默认网站首页LOGO,通用头部显示，最佳显示尺寸为240*60像素</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label onClick="optionClicked(this,'assets-option')">
+                        <img fieldid="2" src="/public/static/images/tv-expandable.gif">
+                        <b>资产信息</b>
+                    </label>
+                </dt>
+            </dl>
+
+            <div id="assets-option" style="display: none;">
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="own_property">自有房产</label>
+                    </dt>
+                    <dd class="opt">
+                        <textarea rows="10" cols="30" name="own_property" class="input-txt" style="height:70px;"></textarea>
+                        <span id="own_property" class="err" style="color:#F00; display:none;"></span>
+                        <p class="notic">共__套；其中：红本__套,按揭__套,其他形式__（注：有数学公式，共 套=其中各项相加）</p>
+                    </dd>
+                </dl>
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="own_vehicle">自有车辆</label>
+                    </dt>
+                    <dd class="opt">
+                        <textarea rows="5" cols="30" name="own_vehicle" class="input-txt" style="height:50px;"></textarea>
+                        <span id="own_vehicle" class="err" style="color:#F00; display:none;"></span>
+                        <p class="notic">共__辆；其中:无抵押__辆,按揭__辆__（注：有数学公式，共 辆=其中各项相加）</p>
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="total_asset">家庭总资产</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" id="total_asset" value="" name="total_asset" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="personal_income">本人收入</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" id="personal_income" value="" name="personal_income" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="total_liabilities">家庭总负债</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" id="total_liabilities" value="" name="total_liabilities" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="home_income">家庭收入</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" id="home_income" value="" name="home_income" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+                    </dd>
+                </dl>
+            </div>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label onClick="optionClicked(this,'spouse-option')">
+                        <img fieldid="2" src="/public/static/images/tv-expandable.gif">
+                        <b>配偶信息</b>
+                    </label>
+                </dt>
+            </dl>
+
+            <div id="spouse-option" style="display: none;">
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_name">配偶姓名</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_name" name="sp_name" value="{$spouse.sp_name}" class="input-txt" type="text" />
+                        <p class="notic">客户姓名不能包括特殊字符</p>
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_education">学历</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_education" name="sp_education" type="radio" value="1" checked="">专科以下  &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="sp_education" type="radio" value="2">专科  &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="sp_education" type="radio" value="3">本科  &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="sp_education" type="radio" value="4">硕士以上
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_mobile">手机号码</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_mobile" name="sp_mobile" value="{$spouse.sp_mobile}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_credential_type">证件类型</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_credential_type" name="sp_credential_type" type="radio" value="1" checked="">公民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="sp_credential_type" type="radio" value="2">港澳台居民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="sp_credential_type" type="radio" value="3">护照  &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="sp_credential_type" type="radio" value="4">其他
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_id_number">证件号码</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_id_number" name="sp_id_number" value="{$spouse.sp_id_number}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="work_unit">工作单位</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="work_unit" name="work_unit" value="{$spouse.work_unit}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="duty">职务</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="duty" name="duty" value="{$spouse.duty}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_icnome">月收入</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" id="sp_icnome" value="" name="sp_icnome" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+                    </dd>
+                </dl>
+            </div>
+            <div class="bot">
+                <input type="hidden" name="inc_type" value="{$inc_type}">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+
+<script type="text/javascript">
+    //添加企业信息入口
+    function addEnterprise(){
+        var url = "{:U('Admin/Users/addEnterprise')}";
+        layer.open({
+            type: 2,
+            title: '企业信息填写入口',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['80%', '80%'],
+            content: url,
+        });
+    }
+    //网站首页logo
+    function img_call_back(fileurl_tmp)
+    {
+        $("#store_logo").val(fileurl_tmp);
+        $("#img_a").attr('href', fileurl_tmp);
+        $("#img_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    }
+    //网站用户中心logo
+    function user_img_call_back(fileurl_tmp)
+    {
+        $("#store_user_logo").val(fileurl_tmp);
+        $("#userimg_a").attr('href', fileurl_tmp);
+        $("#userimg_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    }
+
+    //菜单节点, 点击展开
+    function optionClicked(obj,nodeDiv){
+        var src = $(obj).find('img').attr('src');
+        $('#'+nodeDiv).toggle(function(){
+            if(src == '/public/static/images/tv-expandable.gif')
+            {
+                $(obj).find('img').attr('src','/public/static/images/tv-collapsable-last.gif');
+            }else{
+                $(obj).attr('src','/public/static/images/tv-expandable.gif');
+            }
+        });
+
+    }
+</script>
+</html>

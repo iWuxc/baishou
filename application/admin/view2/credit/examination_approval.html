@@ -1,0 +1,273 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>授信额度复核</h3>
+                <h5>授信额度复核与管理</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <li><a <if condition="$status eq 0">class="current"</if> href="{:U('examination_approval',array('status'=>0))}"><span>全部</span></a></li>
+                <li><a <if condition="$status eq 1">class="current"</if> href="{:U('examination_approval',array('status'=>1))}"><span>待复核</span></a></li>
+                <li><a <if condition="$status eq 2">class="current"</if> href="{:U('examination_approval',array('status'=>2))}"><span>复核通过</span></a></li>
+                <li><a <if condition="$status eq 3">class="current"</if> href="{:U('examination_approval',array('status'=>3))}"><span>已否决</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>1. 信贷经理提交客户信息后, 由风控或者是更高管理员进行审核</li>
+            <li>2. 客户信息审核通过后, 由风控添加审批结论, 然后由其他风控及更高的管理员进行复核</li>
+            <li>3. 审批结论复核通过后, 客户信息正式通过审核, 可申请借贷</li>
+        </ul>
+    </div>
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>授信额度复核管理列表</h3>
+                <h5>(共<span id="total"></span>条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form class="navbar-form form-inline" id="remittance-form" method="get" action="{:U('examination_approval')}" onsubmit="return check_form();">
+                <input type="hidden" name="create_time" id="create_time" value="{$create_time}">
+                <div class="sDiv">
+                    <!--<div class="sDiv2" style="margin-right: 10px;">-->
+                    <!--<input type="text" size="30" id="start_time" value="{$start_time}" placeholder="起始时间" class="qsbox">-->
+                    <!--<input type="button" class="btn" value="起始时间">-->
+                    <!--</div>-->
+                    <!--<div class="sDiv2" style="margin-right: 10px;">-->
+                    <!--<input type="text" size="30" id="end_time" value="{$end_time}" placeholder="截止时间" class="qsbox">-->
+                    <!--<input type="button" class="btn" value="截止时间">-->
+                    <!--</div>-->
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input size="30" id="user_name" placeholder="用户名称" value="{$_GET[user_name]}" name="user_name" class="qsbox" type="text">
+                    </div>
+                    <!--<div class="sDiv2" style="margin-right: 10px;">-->
+                    <!--<input size="30" placeholder="审批人id" value="{$_GET[approver]}" name="approver" class="qsbox" type="text">-->
+                    <!--</div>-->
+                    <div class="sDiv2">
+                        <input size="30" placeholder="审批人姓名" value="{$_GET[approver_name]}" name="approver_name" class="qsbox" type="text">
+                        <!--<input type="hidden" name="export" id="export" value="0">-->
+                        <input type="hidden" name="status"  value="{$status}">
+                        <input class="btn" value="搜索" type="button" onclick="form_submit(0)">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" class="anothertable">
+            <thead>
+            <tr>
+                <th class="sign" axis="col0">
+                    <i class="ico-check"></i>
+                </th>
+                <th align="center" axis="col3" class="">
+                    记录ID
+                </th>
+                <th align="center"  axis="col5" class="">
+                    客户名称
+                </th>
+                <th align="center"  axis="col6" class="">
+                    授信额度(元)
+                </th>
+                <th align="center" axis="col6" class="">
+                    额度期限(月)
+                </th>
+                <th align="center" axis="col6" class="">
+                    抵押门店数量
+                </th>
+                <th align="center" axis="col6" class="">
+                    担保方式
+                </th>
+                <th align="center" axis="col6" class="">
+                    授信添加人
+                </th>
+                <if condition="$status eq 2">
+                    <th align="center" axis="col6" class="">
+                        复核人
+                    </th>
+                </if>
+                <th align="center" axis="col6" class="">
+                    添加时间
+                </th>
+                <th align="center" axis="col6" class="">
+                    状态
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="list" id="v">
+                <tr>
+                    <td class="sign" axis="col0">
+                        <i class="ico-check"></i>
+                    </td>
+                    <td align="center" axis="col3" class="">
+                        <a class="open" href="{:U('credit_conclusion_detail',array('user_id'=>$v[user_id],'t' => 1))}">
+                            {$v.id}<i class="fa fa-external-link " title="新窗口打开"></i>
+                        </a>
+                    </td>
+                    <td align="center" class="">
+                        {$v.user_name}
+                    </td>
+                    <td align="center" class="">
+                        {$v.credit}
+                    </td>
+                    <td align="center" class="">
+                        {$v.term}
+                    </td>
+                    <td align="center" class="">
+                        {$v.store_sum}
+                    </td>
+                    <td align="center" class="">
+                        <if condition="$v[assurer_mode] eq 1">新增担保人</if>
+                        <if condition="$v[assurer_mode] eq 2">新增房产抵押</if>
+                        <if condition="$v[assurer_mode] eq 3">其他担保方式</if>
+                    </td>
+                    <td align="center" class="">
+                        {$allAdminName[$v.fk_id]}
+                    </td>
+                    <if condition="$status eq 2">
+                        <td>
+                            {$v.fh_name}
+                        </td>
+                    </if>
+                    <td align="center" class="">
+                        {$v.add_time|date="Y-m-d H:i",###}
+                    </td>
+                    <td align="center" class="">
+                        <if condition="$v[status] eq 1">待复核</if>
+                        <if condition="$v[status] eq 2">复核通过</if>
+                        <if condition="$v[status] eq 3">复核驳回</if>
+                    </td>
+                    <td align="left" class="handle">
+                        <a href="{:U('Admin/credit/credit_fh_detail',array('user_id'=>$v[user_id], 't' => 1))}" class="btn blue"><i class="fa fa-eye"></i>客户详情</a>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+        <!--分页位置-->
+        {$show}
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('.ico-check ' , '.hDivBox').click(function(){
+            $('tr' ,'.hDivBox').toggleClass('trSelected' , function(index,currentclass){
+                var hasClass = $(this).hasClass('trSelected');
+                $('tr' , '#flexigrid').each(function(){
+                    if(hasClass){
+                        $(this).addClass('trSelected');
+                    }else{
+                        $(this).removeClass('trSelected');
+                    }
+                });
+            });
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#create_time').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#create_time').val('');
+        }
+    }
+
+    //批量操作提交
+    function act_submit(wst) {
+        var selected=$('input:radio[name="selected"]:checked');
+        // console.log(val.length);
+        if(selected.length == 0){
+            layer.alert('您好，请至少选择一项', {icon: 2});return;
+        }
+        var can_post = false;
+        var remark = "复核通过";
+        if(wst != 3 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                credit(selected.val() , wst ,  remark);
+            });
+        }else{
+            credit(selected.val() , wst ,  remark);
+        }
+    }
+    function act_submit(wst) {
+        var chks = [];
+        $('input[name*=selected]').each(function(i,o){
+            if($(o).is(':checked')){
+                chks.push($(o).val());
+            }
+        })
+        if(chks.length == 0){
+            layer.alert('您好，请至少选择一项', {icon: 2});return;
+        }
+        var can_post = false;
+        var remark = "复核通过";
+        if(wst != 3 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                credit(chks , wst ,  remark);
+            });
+        }else{
+            credit(chks , wst ,  remark);
+        }
+    }
+
+    function credit(chks , wst ,  remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Credit&a=conclusion_update",//+tab,
+            data: {id:chks,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    layer.alert(data.msg, {
+                        icon: 1,
+                        closeBtn: 0
+                    }, function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 2,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 2,time: 3000});
+            }
+        });
+    }
+
+    function form_submit(v){
+        $('#remittance-form').submit();
+    }
+</script>
+</body>
+</html>

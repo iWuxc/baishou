@@ -1,0 +1,139 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>贷款管理</h3>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation"
+         style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>操作个人信用表生成的日志明细</li>
+        </ul>
+    </div>
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>个人信用日志</h3>
+                <h5>(共{$page->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form class="navbar-form form-inline" method="get" action="{:U('Loanctr/userCreditlog')}" name="search-form2"
+                  id="search-form2">
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <input type="text" size="30" name="user_id" class="qsbox" placeholder="客户ID" value="{$_GET['user_id']}">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="timegap_begin" name="start_time" value="{$_GET['start_time']}"
+                               class="qsbox" placeholder="开始时间">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" id="timegap_end" name="end_time" value="{$_GET['end_time']}"
+                               class="qsbox" placeholder="截止时间">
+                    </div>
+                    <div class="sDiv2">
+                        <select name="log_user">
+                            <option value="0">选择管理员</option>
+                            <foreach name="admin" item="vv" key="key">
+                                <option value="{$key}" <eq name="key" value="$_GET['log_user']">selected</eq> >{$vv}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <input type="submit" class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <table cellspacing="0" cellpadding="0" class="anothertable">
+            <thead>
+            <tr>
+                <th align="center" abbr="article_title" axis="col3" class="">ID</th>
+                <th align="center" abbr="article_title" axis="col3" class="">客户ID</th>
+                <th align="center" abbr="article_show" axis="col5" class="">客户姓名</th>
+                <th align="center" abbr="article_show" axis="col5" class="">操作员</th>
+                <th align="center" abbr="article_show" axis="col5" class="">操作动作</th>
+                <th align="center" abbr="article_show" axis="col5" class="">操作时间</th>
+                <th align="center" abbr="article_show" axis="col5" class="">操作详情</th>
+            </tr>
+            </thead>
+            <if condition="empty($list) eq true">
+                <tr data-id="0">
+                    <td class="no-data" align="center" axis="col0" colspan="50">
+                        <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                    </td>
+                </tr>
+                <else/>
+                <volist name="list" id="item">
+                    <tr>
+                        <td align="center" class="">{$item.id}</td>
+                        <td align="center" class="">{$item.user_id}</td>
+                        <td align="center" class="">{$item.username}</td>
+                        <td align="center" class="">
+                            {$item.admin_name}
+                        </td>
+                        <td align="center" class="">{$item.act_desc}</td>
+                        <td align="center" class="">{$item.log_time|date='Y-m-d H:i',###}</td>
+                        <td align="center" class="">{$item.log_note}</td>
+                    </tr>
+                </volist>
+            </if>
+        </table>
+        <!--分页位置-->
+        {$page}
+    </div>
+</div>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        $('#timegap_begin').layDate();
+        $('#timegap_end').layDate();
+
+        // 点击刷新数据
+        $('.fa-refresh').click(function () {
+            location.href = location.href;
+        });
+
+        $('.ico-check ', '.hDivBox').click(function () {
+            $('tr', '.hDivBox').toggleClass('trSelected', function (index, currentclass) {
+                var hasClass = $(this).hasClass('trSelected');
+                $('tr', '#flexigrid').each(function () {
+                    if (hasClass) {
+                        $(this).addClass('trSelected');
+                    } else {
+                        $(this).removeClass('trSelected');
+                    }
+                });
+            });
+        });
+
+        $('.ftitle>h5').empty().html("(共{$pager->totalRows}条记录)");
+    });
+
+    // 点击排序
+    function sort(field) {
+        $("input[name='order_by']").val(field);
+        var v = $("input[name='sort']").val() == 'desc' ? 'asc' : 'desc';
+        $("input[name='sort']").val(v);
+        ajax_get_table('search-form2', cur_page);
+    }
+
+
+</script>
+</body>
+</html>

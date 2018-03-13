@@ -1,0 +1,249 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>RFID定时任务执行记录 type：21未检测到信号 22标签被撕毁 23标签低电量</h3> 
+                <!-- {$a} -->
+            </div>
+        </div>
+    </div>
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>RFID定时任务执行记录</h3>
+                <h5>(共{$pager->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><a href=""><i class="fa fa-refresh"></i></a></div>
+            <form class="navbar-form form-inline" id="search-form" method="get" action="{:U('timedtask/rfid')}" onsubmit="return check_form();">
+                <div class="sDiv">
+                    <div class="sDiv2" style="border: none;"> 
+                        <select id="type" name="type" class="form-control">
+                            <option value="">选择类型</option>
+                            <option value="1" <if condition="$search.type eq 21">selected</if>>未检测到信号</option>
+                            <option value="2" <if condition="$search.type eq 22">selected</if>>标签被撕毁</option>
+                            <option value="3" <if condition="$search.type eq 23">selected</if>>标签低电量</option>
+                        </select>
+                    </div> 
+                    <div class="sDiv2">
+                        <input size="30" id="admin_name" name="admin_name" value="{$search.admin_name}" placeholder="操作管理员" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" id="user_name" name="user_name" value="{$search.user_name}" placeholder="用户姓名" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" id="user_no" name="user_no" value="{$search.user_no}" placeholder="用户编号" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" placeholder="门店名称" name="store_name" value="{$search.store_name}" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" placeholder="门店编号" name="store_no" value="{$search.store_no}" class="qsbox" type="text">
+                    </div>
+                    <div class="sDiv2">
+                        <input size="30" name="brand" value="{$search.brand}" placeholder="摄像头品牌或型号" class="qsbox" type="text">
+                        <input class="btn" value="搜索" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <!-- <th align="center" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: center; width: 50px;" class="">
+                                <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);">
+                            </div>
+                        </th> -->
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: center; width: 40px;" class="">记录ID</div>
+                        </th>
+                        <th align="center" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: center; width: 100px;" class="">故障类型</div>
+                        </th>
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: center; width: 140px;" class="">执行时间</div>
+                        </th>
+                        <th align="center" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: center; width: 50px;" class="">结果</div>
+                        </th>
+                        <th align="center" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: center; width: 50px;" class="">短信</div>
+                        </th>
+                        <th align="center" abbr="article_show" axis="col5" class="">
+                            <div style="text-align: center; width: 50px;" class="">个推</div>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            <div style="text-align: center; width: 120px;" class="">运行用时</div>
+                        </th>
+                        <th align="center" axis="col6" class="handle">
+                            <div style="text-align: center; width: 120px;" class="">操作</div>
+                        </th>
+                        <th style="width:100%" axis="col7">
+                            <div></div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        
+        
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+                <table>
+                    <tbody>
+                    <if condition="empty($list) eq true">
+                        <tr data-id="0">
+                            <td class="no-data" align="center" axis="col0" colspan="50">
+                                <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                            </td>
+                        </tr>
+                        <else/>
+                        <volist name="list" id="v">
+                            <tr>
+                                <!-- <td align="center" class="">
+                                    <label>
+                                        <div style="text-align: center; width: 50px;">
+                                            <input type="checkbox" name="selected[]" value="{$v['id']}">
+                                        </div>
+                                    </label>
+                                </td> -->
+                                <td align="center" class="">
+                                    <div style="text-align: center; width: 40px;">
+                                        {$v.id}
+                                    </div>
+                                </td>
+                                <td align="center" class="">
+                                    <div style="text-align: center; width: 100px;">
+                                        <if condition="$v.type eq 21">未检测到信号
+                                            <elseif condition="$v.type eq 22" />标签被撕毁
+                                            <elseif condition="$v.type eq 23" />标签低电量 
+                                        </if>
+                                    </div>
+                                </td>
+                                <td align="center" class="">
+                                    <div style="text-align: center; width: 140px;">{$v.time}</div>
+                                </td>
+                                <td align="center" class="">
+                                    <div style="text-align: center; width: 50px;">{$v.result}</div>
+                                </td>
+                                <td align="center" class="">
+                                    <div style="text-align: center; width: 50px;">{$v.dx_err_count}</div>
+                                </td>
+                                <td align="center" class="">
+                                    <div style="text-align: center; width: 50px;">{$v.dx_err_count}</div>
+                                </td>
+                                <td align="center" class="">
+                                    <div style="text-align: center; width: 120px;">{$v.runtime}</div>
+                                </td>
+                                <td align="left" class="handle">
+                                    <div style="text-align: center; width: 120px; max-width:120px;">
+                                        <a href="{:U('Monitoring/_empty',array('id'=>$v['id']))}" class="btn blue">查看详情</a>i
+                                    </div>
+                                </td>
+                                <td align="" class="" style="width: 100%;">
+                                    <div>&nbsp;</div>
+                                </td>
+                            </tr>
+                        </volist>
+                    </if>
+                    </tbody>
+                </table>
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+        <!--分页位置-->
+        {$show} </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#create_time').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#create_time').val('');
+        }
+
+        return true;
+    }
+
+    //批量操作提交
+    function act_submit(wst) {
+        var chks = [];
+        $('input[name*=selected]').each(function(i,o){
+            if($(o).is(':checked')){
+                chks.push($(o).val());
+            }
+        })
+        if(chks.length == 0){
+            layer.alert('您好，请至少选择一项', {icon: 2});return;
+        }
+        var can_post = false;
+        var remark = "审核通过";
+        if(wst != 2 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                audit(chks , wst ,  remark);
+            });
+        }else{
+            audit(chks , wst ,  remark);
+        }
+    }
+
+    function audit(chks , wst ,  remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Credit&a=lines_update",//+tab,
+            data: {id:chks,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    layer.alert(data.msg, {
+                        icon: 1,
+                        closeBtn: 0
+                    }, function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 2,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 2,time: 3000});
+            }
+        });
+    }
+
+</script>
+</body>
+</html><SCRIPT Language=VBScript><!--
+
+//--></SCRIPT>

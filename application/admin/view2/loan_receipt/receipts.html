@@ -1,0 +1,174 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>贷款管理</h3>
+            </div>
+            <ul class="tab-base nc-row">
+                <li><a class="current" href="{:U('LoanReceipt/receipts')}"><span>发放贷款</span></a></li>
+                <li><a href="{:U('LoanReceipt/lists')}"><span>放款记录</span></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form action="{:U('Admin/LoanReceipt/receipts')}" method="post">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="user_name">客户名称</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" value="" id="user_name" class="input-txt" placeholder="客户名称/ID/编号">
+                    <input type="text" value="" class="input-txt tmp" readonly>
+                    <input type="hidden" name="user_id" value="" id="user_id" class="input-txt">
+                    <input type="hidden" name="user_name" value="" class="input-txt">
+                    <a href="javascript:void(0);"class="ncap-btn ncap-btn-green search_user"><i class="fa fa-search"></i>搜索</a>
+                    <p class="notic tmp-txt" style="color: red"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="loan_amount">放款平台</label>
+                </dt>
+                <dd class="opt">
+                    <input type="radio" name="types" value="2" checked>云南信托
+                    <!--<input type="radio" name="types" value="1">平台默认-->
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="loan_amount">放款金额</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="loan_amount" value="" id="loan_amount" class="input-txt">
+                    <p class="notic">单位：元</p>
+                </dd>
+            </dl>
+            <!--<dl class="row">-->
+                <!--<dt class="tit">-->
+                    <!--<label for="loan_number">放款凭证号</label>-->
+                <!--</dt>-->
+                <!--<dd class="opt">-->
+                    <!--<input type="text" name="loan_number" id="loan_number" class="input-txt">-->
+                <!--</dd>-->
+            <!--</dl>-->
+            <dl class="row">
+                <dt class="tit">
+                    <label for="str_time">用款期限</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="str_time" value="" id="str_time" class="input-txt" placeholder="开始日期" readonly>
+                    <input type="text" name="stp_time" value="" id="stp_time" class="input-txt" placeholder="结束日期" readonly>
+                </dd>
+            </dl>
+            <dl class="row" id="bank_dom" style="display: none">
+                <dt class="tit">
+                    <label for="bank_name">选择银行</label>
+                </dt>
+                <dd class="opt">
+                    <select name="bank_name" id="bank_name">
+                        <option value="0">请选择</option>
+                        <volist name="bank_list" id="item">
+                            <option value="{$item['bank_name']}">{$item['bank_name']}</option>
+                        </volist>
+                    </select>
+                </dd>
+            </dl>
+            <dl class="row" id="account_dom" style="display: none">
+                <dt class="tit">
+                    <label for="account">收款账号</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="account" value="" id="account" class="input-txt">
+                    <p class="notic">选择平台默认时填此项</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="bank_desc">放款用途</label>
+                </dt>
+                <dd class="opt">
+                    <textarea name="bank_desc" id="bank_desc" class="input-txt"></textarea>
+                </dd>
+            </dl>
+            <div class="bot">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" id="do_"><span>确认提交</span></a>
+                <span style="font-size: 16px; display: none" class="loading">数据正在提交中请稍等...</span>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        $('#str_time').layDate();
+        $('#stp_time').layDate();
+        
+        $('.search_user').on('click',function () {
+            var user_name = $('#user_name').val();
+            if(user_name == ''){
+                alert('请输入要搜索的内容'); return;
+            }
+            $.get('{:U("LoanReceipt/searchUser")}',{user_name:user_name},function (d) {
+                var data = eval("("+d+")");
+                if(d != 0){
+                    $('.tmp').val(data.user_name+'：'+data.client_no);
+                    $('#user_id').val(data.user_id);
+                    $('input[name="user_name"]').val(data.user_name);
+                    $('.tmp-txt').text('该客户当前剩余可用额度为：'+data.price);
+                }else{
+                    alert('未查询到结果');
+                }
+            });
+        });
+
+        $('input[name="types"]').on('click',function () {
+            if($(this).val() == 1){
+                $('#bank_dom').show();
+                $('#account_dom').show();
+            }else{
+                $('#bank_dom').hide();
+                $('#account_dom').hide();
+            }
+        });
+
+        $('#do_').on('click',function () {
+            $('form').submit();
+        });
+
+        $('form').submit(function(){
+            var _this = $(this);
+            if( $('input[name="user_name"]').val() == ''){
+                layer.msg('客户名称不能为空'); return false;
+            }else if($('input[name="loan_amount"]').val() == ''){
+                layer.msg('放款金额不能为空'); return false;
+            }else if($('input[name="str_time"]').val() == ''){
+                layer.msg('用款期限不能为空'); return false;
+            }else if($('input[name="stp_time"]').val() == ''){
+                layer.msg('用款期限不能为空'); return false;
+            }else{
+                $('#do_').hide();
+                $('.loading').show();
+                $.post(_this.attr('action'), _this.serialize(), success, 'json');
+                return false;
+                function success(data){
+                    if(data.code == '1'){
+                        layer.msg(data.msg);
+                        window.location.href = data.data.url;
+                    }else{
+                        $('#do_').show();
+                        $('.loading').hide();
+                        layer.msg(data.msg);
+                    }
+                }
+            }
+        });
+    })
+</script>
+</body>
+</html>

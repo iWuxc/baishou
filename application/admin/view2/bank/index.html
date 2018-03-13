@@ -1,0 +1,109 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>贷款管理</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>银行卡列表</h3>
+                <h5>(共{$page_total}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton">
+                    <a href="{:U('Bank/add')}">
+                        <div class="add" title="添加">
+                            <span><i class="fa fa-plus"></i>添加</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <table cellspacing="0" cellpadding="0" class="anothertable">
+            <thead>
+            <tr>
+                <th align="center" abbr="article_title" axis="col3" class="">ID</th>
+                <th align="center" abbr="article_title" axis="col3" class="">银行卡名称</th>
+                <th align="center" abbr="article_show" axis="col5" class="">添加时间</th>
+                <th align="center" abbr="article_show" axis="col5" class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <if condition="empty($list) eq true">
+                <tr data-id="0">
+                    <td class="no-data" align="center" axis="col0" colspan="50">
+                        <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                    </td>
+                </tr>
+                <else/>
+                <volist name="list" id="item">
+                    <tr>
+                        <td align="center" class="">{$item.id}</td>
+                        <td align="center" class="">{$item.bank_name}</td>
+                        <td align="center" class="">{$item.add_time}</td>
+                        <td align="center" class="">
+                            <a class="btn green" href="{:U('Admin/Bank/edit',array('id'=>$item['id']))}"><i
+                                    class="fa fa-eye"></i>编辑</a>
+                            <a class="btn red del" href="javascript:;" onclick="del('.del')" data-href="{:U('Admin/Bank/del',array('id'=>$item['id']))}"><i
+                                    class="fa fa-eye"></i>删除</a>
+                        </td>
+                    </tr>
+                </volist>
+            </if>
+            </tbody>
+        </table>
+        {$page}<!--分页位置-->
+    </div>
+</div>
+<script type="text/javascript">
+    // 删除操作
+    function del(id)
+    {
+        if(!confirm('确定要删除吗?'))
+            return false;
+
+        location.href = $(id).data('href');
+    }
+    $(document).ready(function(){
+        $('#add_time_begin').layDate();
+        $('#add_time_end').layDate();
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+        $('.ico-check ' , '.hDivBox').click(function(){
+            $('tr' ,'.hDivBox').toggleClass('trSelected' , function(index,currentclass){
+                var hasClass = $(this).hasClass('trSelected');
+                $('tr' , '#flexigrid').each(function(){
+                    if(hasClass){
+                        $(this).addClass('trSelected');
+                    }else{
+                        $(this).removeClass('trSelected');
+                    }
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>贷款管理</h3>
+            </div>
+        </div>
+    </div>
+
+    <form action="{:U('Admin/Bank/add')}" method="post" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="id" value="{$_GET['id']}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="bank_name">银行卡名称</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="bank_name" value="{$row['bank_name']}" id="bank_name" class="input-txt">
+                </dd>
+            </dl>
+            <div class="bot"><a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()"><span>确认提交</span></a></div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        //$('#str_time').layDate();
+        //$('#stp_time').layDate();
+    })
+</script>
+</body>
+</html>

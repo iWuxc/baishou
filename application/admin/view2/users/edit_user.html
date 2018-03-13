@@ -1,0 +1,681 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<script src="__PUBLIC__/js/bs_common.js"></script>
+<script src="__PUBLIC__/js/card.js"></script>
+<!-- <script src="__PUBLIC__/static/js/jquery.formance.min.js"></script> -->
+<script type="text/javascript" src="__PUBLIC__/static/js/jquery.cookie.js"></script>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>客户信息设置</h3>
+                <h5>客户信息内容基本选项设置</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <foreach name="group_list" item="v" key="k">
+                    <li>
+                        <a href="{:U('Users/add_user',['inc_type'=> $k])}" <if condition="$k==$inc_type">class="current"</if>>
+                    </li>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>客户信息提交之后自动生成客户编号</li>
+        </ul>
+    </div>
+    <form method="post" id="edit_user" action="{:U('Users/edit_user')}" enctype="multipart/form-data" name="form1">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label><b>基本信息</b></label>
+                </dt>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="sex">客户类型</label>
+                </dt>
+                <dd class="opt">
+                    <input id="type1" disabled name="type" type="radio" value="1" <if condition="$users['type'] eq 1">checked='checked'</if>>个人  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input id="type2" disabled name="type" type="radio" value="2" <if condition="$users['type'] eq 2">checked='checked'</if>>企业
+                    <p class="notic">一旦选择,不可更改!</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>客户编号</label>
+                </dt>
+                <dd class="opt">
+                    <input id="client_no" name="client_no" value="{$users.client_no}" class="input-txt" type="text" disabled />
+                    <p class="notic">客户编号一旦生成,不可更改!</p>
+                </dd>
+            </dl>
+            <!--<dl class="row">-->
+                <!--<dt class="tit">-->
+                    <!--<label for="invoice_title">企业信息</label>-->
+                <!--</dt>-->
+                <!--<dd class="opt">-->
+                    <!--<a href="javascript:void(0);" onclick="addEnterprise()" class="ncap-btn ncap-btn-green"><i class="fa fa-search"></i>企业信息填写入口</a>-->
+                    <!--<input type="hidden" name="ent_id" id="ent_id" value="" />-->
+                <!--</dd>-->
+            <!--</dl>-->
+            <dl class="row">
+                <dt class="tit">
+                    <label for="name"><em>*</em>客户姓名</label>
+                </dt>
+                <dd class="opt">
+                    <input id="name" name="name" value="{$users.name}" class="input-txt" type="text" />
+                    <p class="notic">客户姓名不能包括特殊字符</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="mobile"><em>*</em>手机号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="mobile" name="mobile" value="{$users.mobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="sex">证件类型</label>
+                </dt>
+                <dd class="opt">
+                    <input id="credential_type" name="credential_type" type="radio" value="1" <if condition="$users['credential_type'] eq 1">checked='checked'</if>>公民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <!-- <input name="credential_type" type="radio" value="2" <if condition="$users['credential_type'] eq 2">checked='checked'</if>>港澳台居民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="3" <if condition="$users['credential_type'] eq 3">checked='checked'</if>>护照  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="credential_type" type="radio" value="4" <if condition="$users['credential_type'] eq 4">checked='checked'</if>>其他 -->
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="id_number"><em>*</em>证件号码</label>
+                </dt>
+                <dd class="opt">
+                    <input id="id_number" name="id_number" value="{$users.id_number}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+
+            <!--<dl class="row">-->
+                <!--<dt class="tit">-->
+                    <!--<label for="creditcard">收款账号</label>-->
+                <!--</dt>-->
+                <!--<dd class="opt">-->
+                    <!--<input id="creditcard" name="creditcard" value="{$users.creditcard}" pattern="\d*" x-autocompletetype="cc-number" class="input-txt credit_card_number" type="text" required />-->
+                    <!--<p class="notic">客户在提款申请时提供的收款账号</p>-->
+                <!--</dd>-->
+            <!--</dl>-->
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="sex">性别</label>
+                </dt>
+                <dd class="opt">
+                    <input id="sex" name="sex" type="radio" value="1" <if condition="$users['sex'] eq 1">checked='checked'</if>>男  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="sex" type="radio" value="2" <if condition="$users['sex'] eq 2">checked='checked'</if>>女
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="education">学历</label>
+                </dt>
+                <dd class="opt">
+                    <input id="education" name="education" type="radio" value="1" <if condition="$users['education'] eq 1">checked='checked'</if>>专科以下  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="education" type="radio" value="2" <if condition="$users['education'] eq 2">checked='checked'</if>>专科  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="education" type="radio" value="3" <if condition="$users['education'] eq 3">checked='checked'</if>>本科  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="education" type="radio" value="4" <if condition="$users['education'] eq 4">checked='checked'</if>>硕士以上
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>户口地址</label>
+                </dt>
+                <dd class="opt">
+                    <select onChange="get_city(this)" id="province" name="account_province"  title="请选择所在省份">
+                        <option value="">选择省份</option>
+                        <volist name="a_province" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[account_province] eq $vo[id]">selected</if> >{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select onChange="get_area(this)" id="city" name="account_city" title="请选择所在城市">
+                        <option value="">选择城市</option>
+                        <volist name="a_city" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[account_city] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select id="district" name="account_district" title="请选择所在区县">
+                        <option value="">选择区域</option>
+                        <volist name="a_area" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[account_district] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <input type="text" name="account_address" id="address" value="{$users.account_address}" class="input-txt"   placeholder="详细地址"/>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="work_seniority">当地居住年限</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="live_year" value="{$users.live_year}" name="live_year" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 年
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="work_seniority">从业年限</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="work_seniority" value="{$users.work_seniority}" name="work_seniority" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 年
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="home_consignee"><em>*</em>家庭住址</label>
+                </dt>
+                <dd class="opt">
+                    <!--<input type="checkbox" name="home_info" value="1" /> 同户口地址&nbsp;&nbsp;-->
+                    <select onChange="get_i_city(this, 'home_city', 'home_district')" id="home_province" name="home_province"  title="请选择所在省份">
+                        <option value="">选择省份</option>
+                        <volist name="h_province" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[home_province] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select onChange="get_i_area(this, 'home_district')" id="home_city" name="home_city" title="请选择所在城市">
+                        <option value="">选择城市</option>
+                        <volist name="h_city" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[home_city] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select id="home_district" name="home_district" title="请选择所在区县">
+                        <option value="">选择区域</option>
+                        <volist name="h_area" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[home_district] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <input type="text" name="home_address" id="home_address" value="{$users.home_address}" class="input-txt"   placeholder="详细地址"/>
+                    <p class="notic">当选择同户口地址时, 将默认使用上面填写的户口地址</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>收件住址</label>
+                </dt>
+                <dd class="opt">
+                    <!--<input type="checkbox" name="mails_info" value="1" /> 同户口地址&nbsp;&nbsp;-->
+                    <select onChange="get_i_city(this, 'mails_city', 'mails_district')" id="mails_province" name="mails_province"  title="请选择所在省份">
+                        <option value="">选择省份</option>
+                        <volist name="m_province" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[mails_province] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select onChange="get_i_area(this, 'mails_district')" id="mails_city" name="mails_city" title="请选择所在城市">
+                        <option value="">选择城市</option>
+                        <volist name="m_city" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[mails_city] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select id="mails_district" name="mails_district" title="请选择所在区县">
+                        <option value="">选择区域</option>
+                        <volist name="m_area" id="vo">
+                            <option value="{$vo.id}" <if condition="$users[mails_district] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <input type="text" name="mails_address" id="mails_address" value="{$users.mails_address}" class="input-txt"   placeholder="详细地址"/>
+                    <p class="notic">当选择同户口地址时, 将默认使用上面填写的户口地址</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="home_tel">家庭电话</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="home_qh" value="{$users.home_qh}" size="3" onkeyup="moveNext(this)">-
+                    <input id="home_tel" name="home_tel" maxlength="8" value="{$users.home_tel}" size="12" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="company_tel">办公电话</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="company_qh" value="{$users.company_qh}" size="3" onkeyup="moveNext(this)">-
+                    <input id="company_tel" name="company_tel" maxlength="8" value="{$users.company_tel}" size="12" type="text" />
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="marriage">婚姻状态</label>
+                </dt>
+                <dd class="opt">
+                    <input id="marriage" name="marriage" type="radio" value="1" onclick="selectType(this,'select_kids')" <if condition="$users['marriage'] eq 1">checked='checked'</if>>已婚有子女  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="marriage" type="radio" value="2" onclick="selectType(this,'select_kids')" <if condition="$users['marriage'] eq 2">checked='checked'</if>>已婚无子女  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="marriage" type="radio" value="3" onclick="selectType(this,'select_kids')" <if condition="$users['marriage'] eq 3">checked='checked'</if>>未婚  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="marriage" type="radio" value="4" onclick="selectType(this,'select_kids')" <if condition="$users['marriage'] eq 4">checked='checked'</if>>其他
+                </dd>
+            </dl>
+
+            <if condition="$users.marriage eq 2">
+                <div id="select_kids" style="display: block">
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="kids">子女数目</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="kids" name="kids" value="{$users.kids}" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" type="text" /> 人
+                    </dd>
+                </dl>
+                </div>
+            <else />
+                <div id="select_kids" style="display: none">
+                    <dl class="row">
+                        <dt class="tit">
+                            <label for="kids">子女数目</label>
+                        </dt>
+                        <dd class="opt">
+                            <input id="kids" name="kids" value="{$users.kids}" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" type="text" /> 人
+                        </dd>
+                    </dl>
+                </div>
+            </if>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="front_face">身份证正面</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="front_face_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('front_face')">
+                                <!--<i id="front_face_i" class="fa fa-picture-o" onmouseover="layer.tips('<img src={$users.front_face}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();"></i>-->
+                                <i id="front_face_i" class="fa fa-picture-o"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="front_face" name="front_face" value="{$users.front_face}" class="type-file-text">
+                            <input type="button" name="button" id="button1" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify(1,'','bs','img_call_back1')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">默认网站首页LOGO,通用头部显示，最佳显示尺寸为像素</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="back_face">身份证反面</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="back_face_a" class="nyroModal" rel="gal" href="javascript:void(0);" onclick="preview('back_face')">
+                                <!--<i id="back_face_i" class="fa fa-picture-o" onmouseover="layer.tips('<img src={$users.front_face}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();"></i>-->
+                                <i id="back_face_i" class="fa fa-picture-o"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="back_face" name="back_face" value="{$users.back_face}" class="type-file-text">
+                            <input type="button" name="button" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify(1,'','bs','img_call_back2')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">默认网站首页LOGO,通用头部显示，最佳显示尺寸为240*60像素</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label onClick="optionClicked(this,'spouse-option')">
+                        <img fieldid="2" src="/public/static/images/tv-collapsable-last.gif">
+                        <b>配偶信息</b>
+                    </label>
+                </dt>
+            </dl>
+
+            <div id="spouse-option" style="display: block;">
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_name">配偶姓名</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_name" name="sp_name" value="{$spouse.sp_name}" class="input-txt" type="text" />
+                        <p class="notic">客户姓名不能包括特殊字符</p>
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_education">学历</label>
+                    </dt>
+                    <dd class="opt">
+                        <empty name="spouse">
+                            <input id="sp_education" name="sp_education" type="radio" value="1" checked="">专科以下  &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="sp_education" type="radio" value="2">专科  &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="sp_education" type="radio" value="3">本科  &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="sp_education" type="radio" value="4">硕士以上
+                        <else />
+                            <input id="sp_education" name="sp_education" type="radio" value="1" <if condition="$spouse['sp_education'] eq 1">checked='checked'</if>>专科以下  &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="sp_education" type="radio" value="2" <if condition="$spouse['sp_education'] eq 2">checked='checked'</if>>专科  &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="sp_education" type="radio" value="3" <if condition="$spouse['sp_education'] eq 3">checked='checked'</if>>本科  &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="sp_education" type="radio" value="4" <if condition="$spouse['sp_education'] eq 4">checked='checked'</if>>硕士以上
+                        </empty> 
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_mobile">手机号码</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_mobile" name="sp_mobile" value="{$spouse.sp_mobile}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_credential_type">证件类型</label>
+                    </dt>
+                    <dd class="opt">
+                        <empty name="spouse">
+                            <input id="sp_credential_type" name="sp_credential_type" type="radio" value="1" checked="">公民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                        <else /> 
+                            <input id="sp_credential_type" name="sp_credential_type" type="radio" value="1" <if condition="$spouse['sp_credential_type'] eq 1">checked='checked'</if>>公民身份证  &nbsp;&nbsp;&nbsp;&nbsp;
+                        </empty> 
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_id_number">证件号码</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="sp_id_number" name="sp_id_number" value="{$spouse.sp_id_number}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="work_unit">工作单位</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="work_unit" name="work_unit" value="{$spouse.work_unit}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="duty">职务</label>
+                    </dt>
+                    <dd class="opt">
+                        <input id="duty" name="duty" value="{$spouse.duty}" class="input-txt" type="text" />
+                    </dd>
+                </dl>
+
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="sp_icnome">月收入</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" id="sp_icnome" value="{$spouse.sp_icnome}" name="sp_icnome" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 元
+                    </dd>
+                </dl>
+            </div>
+            <div class="bot">
+                <!--<input type="hidden" name="inc_type" value="{$inc_type}">-->
+                <input type="hidden" name="user_id" value="{$users.user_id}">
+                <input type="hidden" name="sp_id" value="{$spouse.sp_id}">
+                <a href="JavaScript:void(0);" onClick="checkSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- <div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div> -->
+</body>
+
+<script type="text/javascript">
+
+    //选择产业分类
+    $(function(){
+        $(document).on("change",'#industries',function(){
+            get_industries_city($(this).val(), 'industries_city', '0');
+            $('#industries_city').empty().html("<option value='0'>选择城市</option>");
+        })
+    })
+
+    $(function () {
+        $("#add_user").validate({
+            debug: false, //调试模式取消submit的默认提交功能
+            focusInvalid: false, //当为false时，验证无效时，没有焦点响应
+            onkeyup: false,
+            ignore:":button",	//不验证的元素
+            rules:{
+                type:{
+                    required:true
+                },
+                industries:{
+                    required:true
+                },
+                industries_province:{
+                    required:true
+                },
+                industries_city:{
+                    required:true
+                },
+                name:{
+                    required:true
+                },
+                mobile:{
+                    required:true,
+                    mobile:true,
+                    uniqueTel:true
+                },
+                id_number:{
+                    required:true,
+                    isIdCardNo:true
+                },
+                account_province:{
+                    required:true
+                },
+                account_city:{
+                    required:true
+                },
+                account_district:{
+                    required:true
+                },
+                account_address:{
+                    required:true
+                },
+                home_province:{
+                    required:true
+                },
+                home_city:{
+                    required:true
+                },
+                home_district:{
+                    required:true
+                },
+                home_address:{
+                    required:true
+                },
+                home_tel:{
+                    required:false,
+                    isTel:true
+                },
+                company_tel:{
+                    required:false,
+                    isTel:true
+                },
+                creditcard:{
+                    required:false,
+                    creditcard:false
+                },
+                sp_mobile:{
+                    mobile:true,
+                },
+                sp_id_number:{
+                    isIdCardNo:true
+                },
+            },
+            messages:{
+                type:{
+                    required:"客户类型必选"
+                },
+                industries:{
+                    required:"产业类型必填"
+                },
+                industries_province:{
+                    required:"产业省市必填"
+                },
+                industries_city:{
+                    required:"产业城市必填"
+                },
+                name:{
+                    required:"客户名称必填"
+                },
+                mobile:{
+                    required:"手机号码必填"
+                },
+                id_number:{
+                    required:"证件类型必填"
+                },
+                account_province:{
+                    required:"户口省份必填"
+                },
+                account_city:{
+                    required:"户口城市必填"
+                },
+                account_district:{
+                    required:"户口区县必填"
+                },
+                account_address:{
+                    required:"详情地址必填"
+                },
+                home_province:{
+                    required:"家庭住址省必填"
+                },
+                home_city:{
+                    required:"家庭住址城市必填"
+                },
+                home_district:{
+                    required:"家庭住址地区必填"
+                },
+                home_address:{
+                    required:"家庭住址详细地址必填"
+                },
+                home_tel:{
+                    required:"家庭电话必填",
+                    isTel:"座机号码格式错误"
+                },
+                company_tel:{
+                    required:"办公电话必填",
+                    isTel:'座机号码格式错误'
+                },
+                creditcard:{
+                    required:'测试'
+                },
+                sp_mobile:{
+                    mobile:'手机号格式错误',
+                },
+                sp_id_number:{
+                    isIdCardNo:'证件号码格式错误'
+                },
+            }
+        });
+    });
+
+    function selectType(obj, id){
+        if(obj.value == 3){
+            $("#optionClickedImg").attr('src','/public/static/images/tv-expandable.gif');
+            $("#spouse-option").hide();
+        }
+        if(obj.value == 2){
+            $("#"+id).show();
+            return false;
+        }
+        $("#"+id).hide();
+    }
+
+    function checkSubmit(){
+        $('#edit_user').submit(); 
+    }
+
+    //身份证正面
+    function img_call_back1(fileurl_tmp)
+    {
+        $("#front_face").val(fileurl_tmp);
+        // $("#front_face_a").attr('href', fileurl_tmp);
+        // $("#front_face_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    }
+    //身份证反面
+    function img_call_back2(fileurl_tmp)
+    {
+        $("#back_face").val(fileurl_tmp);
+        // $("#back_face_a").attr('href', fileurl_tmp);
+        // $("#back_face_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    }
+
+    //菜单节点, 点击展开
+    function optionClicked(obj,nodeDiv){
+        var src = $(obj).find('img').attr('src');
+        $('#'+nodeDiv).toggle(function(){
+            if(src == '/public/static/images/tv-expandable.gif')
+            {
+                $(obj).find('img').attr('src','/public/static/images/tv-collapsable-last.gif');
+            }else{
+                $(obj).find('img').attr('src','/public/static/images/tv-expandable.gif');
+            }
+        });
+    }
+
+    // 企业信息填写完成返回操作
+    function call_back(entinfo){
+
+        $('#ent_id').val(entinfo.ent_id);
+
+        layer.closeAll('iframe');
+    }
+
+    //表单自动跳转
+    function moveNext(object){
+
+        if(object.value.length == 4){
+
+            $(object).next().focus();
+        }
+    }
+
+    function preview(id){
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: false,
+            // area: ['400px', '300px'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: "<img width='300' height='300' src='"+$('#'+id).val()+"'>"
+        });
+    }
+</script>
+</html>

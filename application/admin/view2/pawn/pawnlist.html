@@ -1,0 +1,662 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+            <h3>抵押品管理</h3>
+                <!-- <if condition="$status eq -3">
+                    <h3>待评估列表</h3>
+                </if>
+                <if condition="$status eq 0">
+                    <h3>待审核列表</h3>
+                </if>
+                <if condition="$status eq -1">
+                    <h3>审核否决</h3>
+                </if>
+                <if condition="$status eq -2">
+                    <h3>无效作废</h3>
+                </if> -->
+                <h5></h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <li><a <if condition="$status eq -3">class="current"</if> href="{:U('pawnlist',array('status'=>-3))}"><span>待评估列表</span></a></li>
+                <li><a <if condition="$status eq 0 ">class="current"</if> href="{:U('pawnlist',array('status'=>0))}"><span>待审核列表</span></a></li>
+                <li><a <if condition="$status eq -1">class="current"</if> href="{:U('pawnlist',array('status'=>-1))}"><span>审核否决列表</span></a></li>
+                <li><a <if condition="$status eq -2">class="current"</if> href="{:U('pawnlist',array('status'=>-2))}"><span>无效作废列表</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <if condition="$status eq -3">
+                <li>评估申请提交后的抵押品会进入待审核列表</li>
+            </if>
+            <if condition="$status eq 0">
+                <li>评估审核通过的抵押品会进入抵押品列表</li>
+                <li>评估审核否决的抵押品会进入审核否决列表</li>
+                <li>无效作废的抵押品会进入无效作废列表</li>
+            </if>
+            <if condition="$status eq -1">
+                <li>评估审核否决的抵押品,再次评估申请提交后会进入待审核列表</li>
+            </if>
+            <if condition="$status eq -2">
+                <li>无效作废的抵押品</li>
+            </if>   
+        </ul>
+    </div>
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <if condition="$status eq -3">
+                    <h3>待评估列表</h3>
+                </if>
+                <if condition="$status eq 0">
+                    <h3>待审核列表</h3>
+                </if>
+                <if condition="$status eq -1">
+                    <h3>审核否决列表</h3>
+                </if>
+                <if condition="$status eq -2">
+                    <h3>无效作废列表</h3>
+                </if>
+                <h5>(共<font color="red">{$pager->totalRows}</font>条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <!-- 评估待审核列表才显示添加家具和导入家具和导出家具按钮  -->
+            <if condition="$status eq -3">
+                    <!-- 评估师看不到  -->
+                    <if condition="$role_id egt 4">
+                        <div class="fbutton"> 
+                          <a href="{:U('Admin/Pawn/add_pawn')}">
+                              <div class="add" title="添加家具">
+                                <span><i class="fa fa-plus"></i>添加家具</span>
+                              </div>
+                            </a> 
+                        </div>           
+                        <div class="fbutton"> 
+                          <a href="{:U('Admin/Pawn/importpawn')}">
+                              <div class="add" title="导入家具">
+                                <span><i class="fa fa-plus"></i>导入家具</span>
+                              </div>
+                            </a> 
+                        </div> 
+                        
+                        <div class="fbutton"> 
+                          <a href="{$download}">
+                              <div class="add" title="家具模板">
+                                <span><i class="fa fa-plus"></i>下载模板</span>
+                              </div>
+                            </a> 
+                        </div> 
+
+
+                        <!-- <div class="fbutton"> 
+                        <a href="javascript:;" onclick="form_submit(1)">
+                            <div class="add" title="导出家具">
+                                <span><i class="fa fa-plus"></i>导出家具</span>
+                            </div>
+                        </a> 
+                        </div> -->
+
+                    </if>
+            </if>
+            <form class="navbar-form form-inline" id="search-form" method="get" action="{:U('Admin/Pawn/pawnlist')}" onsubmit="return check_form();" style="float: left;">
+                
+                <input type="hidden" name="timegap" id="timegap" value="{$timegap}"
+                <input type="hidden" name="order_ids" value="">
+                <div class="sDiv">
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input type="text" size="30" id="start_time" value="{$start_time}" placeholder="起始时间" class="qsbox">
+                        <input type="button" class="btn" value="起始时间">
+                    </div>
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input type="text" size="30" id="end_time" value="{$end_time}" placeholder="截止时间" class="qsbox">
+                        <input type="button" class="btn" value="截止时间">
+                    </div>
+
+                    <!-- <div class="sDiv2" style="margin-right: 10px;border: none;">
+                        <select id="status" name="status" class="form-control">
+                            <option value="">状态</option>
+                            <option value="-3" 
+                            <if condition="$_REQUEST['status'] eq -3">selected</if>>待评估
+                            </option>
+                            <option value="0" 
+                            <if condition="$_REQUEST['status'] eq 0">selected</if>>待审核
+                            </option>
+                            <option value="-1" 
+                            <if condition="$_REQUEST['status'] eq -1">selected</if>>审核否决
+                            </option>
+                            <option value="-2" 
+                            <if condition="$_REQUEST['status'] eq -2">selected</if>>无效作废
+                            </option>
+                        </select>
+                    </div> -->
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input size="30" id="user_no" name="user_no" value="{$_GET[user_no]}" placeholder="客户编号" class="qsbox" type="text">
+                    </div>
+                   <!--  <div class="sDiv2" style="margin-right: 10px;">
+                        <input size="30" id="store_no" name="store_no" value="{$_GET[store_no]}" placeholder="门店编号" class="qsbox" type="text">
+                    </div> -->
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input size="30" id="store_name" name="store_name" value="{$_GET[store_name]}" placeholder="门店名称" class="qsbox" type="text">
+                    </div>
+                    <!-- <if condition="$status neq -3">
+                        <div class="sDiv2" style="margin-right: 10px;">
+                            <input size="30" id="pawn_rfid" name="pawn_rfid" value="{$_GET[pawn_rfid]}" placeholder="RFID" class="qsbox" type="text">
+                        </div>
+                    </if> -->
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input size="30" placeholder="家具名称" value="{$_GET[pawn_name]}" name="pawn_name" class="qsbox" type="text">
+                        <input type="hidden" name="export" id="export" value="">
+                        <input type="hidden" name="status"  value="{$status}">
+                        <input class="btn" value="搜索" type="submit"  >
+                    </div>
+                </div>
+            </form>
+        </div> 
+                <table cellspacing="0" cellpadding="0" class="anothertable">
+                    <thead>
+                    <tr>
+                    <!-- 信贷经理评估师看不到  -->
+                 <!--    <if condition="$role_id lt 3">
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: center; width: 20px;" class="">
+                                <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);">
+                            </div>
+                        </th>
+                    </if> -->
+
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            家具ID
+                        </th>
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            客户编号
+                        </th>
+                        <th align="center" abbr="article_show" axis="col5" class="">
+                            门店编号
+                        </th>
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            客户名称
+                        </th>
+                        <th align="center" abbr="article_show" axis="col5" class="">
+                            门店名称
+                        </th>
+                        <th align="center" abbr="article_show" axis="col5" class="">
+                            家具名称
+                        </th>
+                        <th align="center" abbr="article_show" axis="col3" class="">
+                            套件数量
+                        </th>
+                        <th align="center" abbr="article_show" axis="col5" class="">
+                            所用材料
+                        </th>
+                        <!-- <th align="center" abbr="article_show" axis="col5" class="">
+                            
+                            <div style="text-align: center; width: 80px;" class="">
+                                <if condition="$status eq -3">
+                                    规格型号
+                                </if>
+                                <if condition="$status neq -3">
+                                    RFID
+                                </if>
+                               
+                            </div>
+                            
+                        </th> -->
+
+                        <!-- <th align="center" abbr="article_show" axis="col5" class="">
+                           
+                                <div style="text-align: center; width: 60px;" class="">初始评估值</div>
+                           
+                        </th> -->
+                        <!-- <th align="center" abbr="article_show" axis="col5" class="">
+                            <if condition="$status eq -3">
+                                <div style="text-align: center; width: 60px;" class="">所用材料</div>
+                            </if>
+                            <if condition="$status neq -3">
+                                <div style="text-align: center; width: 60px;" class="">最新评估值</div>
+                            </if>
+                        </th>
+                        <th align="center" abbr="article_show" axis="col5" class="">
+                            <if condition="$status eq -3">
+                                <div style="text-align: center; width: 60px;" class="">产地</div>
+                            </if>
+                            <if condition="$status neq -3">
+                                <div style="text-align: center; width: 60px;" class="">预警值</div>
+                            </if>
+                        </th> -->
+                       <!--  <th align="center" abbr="article_show" axis="col5" class="">
+                            <if condition="$status eq -3">
+                                <div style="text-align: center; width: 80px;" class="">数量</div>
+                            </if>
+                            <if condition="$status neq -3">
+                                <div style="text-align: center; width: 80px;" class="">评估值</div>
+                            </if>
+                        </th> -->
+                        <!-- <th align="center" abbr="article_show" axis="col5" class="">
+                            <if condition="$status eq -3">
+                                <div style="text-align: center; width: 80px;" class="">定价</div>
+                            </if>
+                            <if condition="$status neq -3">
+                                <div style="text-align: center; width: 80px;" class="">报警状态</div>
+                            </if>
+                        </th> -->
+                        
+                        <th align="center" axis="col6" class="">
+                            
+                                
+                                <if condition="$status eq -3">添加时间</if>
+                                <if condition="$status eq -2">无效作废时间</if>
+                                <if condition="$status eq -1">审核否决时间</if>
+                                <if condition="$status eq 0">评估时间</if>
+                        </th>
+                        <th align="center" abbr="article_time" axis="col6" class="">
+                            状态
+                        </th>
+                        <th align="left" axis="col1" class="handle">
+                           操作
+                        </th>
+                    </tr>
+                    </thead>
+
+    <!-- 评估待审核列表才显示审核通过和审核否决和无效作废按钮  -->
+    <!-- <if condition="$status eq 0"> -->
+            <!-- 评估师,信贷经理看不到  -->
+            <!-- <if condition="$role_id lt 3"> -->
+
+                <!-- 批量审核 -->
+
+<!--                 <div class="fbutton">
+                    <a onclick="act_submit(1)">
+                        <div class="add" title="审核通过">
+                            <span><i class="fa fa-check"></i>审核通过</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="fbutton">
+                    <a onclick="act_submit(-1)">
+                        <div class="add" title="审核否决">
+                            <span><i class="fa fa-ban"></i>审核否决</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="fbutton">
+                    <a onclick="act_submit(-2)">
+                        <div class="add" title="无效作废">
+                            <span><i class="fa fa-close"></i>无效作废</span>
+                        </div>
+                    </a>
+                </div>
+            </if>
+    </if> -->
+
+                    <tbody>
+                    <if condition="empty($list) eq true">
+				 		<tr data-id="0">
+					        <td class="no-data" align="center" axis="col0" colspan="50">
+					        	<i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+					        </td>
+					     </tr>
+					<else/>
+                    <volist name="list" id="v">
+                        <tr>
+                        <!-- 信贷经理评估师看不到  -->
+                      <!--   <if condition="$role_id lt 3">
+                            <td align="center" class="">
+                                <label>
+                                <div style="text-align: center; width: 20px;">
+                                    <if condition="$v['status'] eq 0"><input type="checkbox" name="selected[]" value="{$v['pawn_id']}"></if>
+                                </div></label>
+                            </td>
+                        </if> -->
+
+                            <td align="center" class="">
+                                
+                                    <!-- <a class="open" href="{:U('Admin/Pawn/detail',array('pawn_id'=>$v[pawn_id]))}" > -->
+                                        {$v.pawn_id}
+                                    <!-- </a> -->
+                            </td>
+
+                            <td align="center" class="">
+                                    <!--  <a class="open" href="{:U('Admin/Users/edit_user',array('user_id'=>$v[user_id]))}" > -->
+                                        {$v.user_no}
+                                    <!-- </a> -->
+                            </td>
+                             <td align="center" class="">
+                                   <!--  <a class="open" href="{:U('Admin/Users/edit_store',array('store_id'=>$v[store_id]))}" > -->
+                                        {$v.store_no}
+                                    <!-- </a> -->
+                            </td>
+                            <td align="center" class="">
+                                <!-- 评估师看不到  -->
+                                <if condition="$role_id neq 3">
+                                    <a class="open" href="{:U('Admin/Users/edit_user',array('user_id'=>$v[user_id]))}" >
+                                        {$v.user_name}
+                                    </a>
+                                </if>
+                                <if condition="$role_id eq 3">
+                                {$v.user_name}
+                                </if>
+                            </td>
+                           
+                            <td align="center" class="">
+                                <!-- 评估师看不到  -->
+                                <if condition="$role_id neq 3">
+                                    <a class="open" href="{:U('Admin/Users/edit_store',array('store_id'=>$v[store_id]))}" >
+                                        {$v.store_name}
+                                    </a>
+                                </if>
+                                <if condition="$role_id eq 3">
+                                 {$v.store_name}
+                                </if>
+                            </td>
+                            <td align="center" class="">
+                                    <a class="open" href="{:U('Admin/Pawn/detail',array('pawn_id'=>$v[pawn_id]))}" >
+                                        {$v.pawn_name}
+                                    </a>
+                            </td>
+                            <td align="center" class="">
+                                     <a class="open" href="{:U('Admin/Pawn/onelist',array('pawn_id'=>$v[pawn_id]))}" >
+                                         <if condition="$v[one_count] elt 0">
+                                            0
+                                        </if>
+                                            {$v.one_count}
+                                     </a>   
+                            </td>
+                             <td align="center" class="">
+                                        {$v.wood_name}
+                            </td> 
+                            <!-- <td align="center" class="">
+                                <div style="text-align: center; width: 80px;">
+                                    <if condition="$v[status] eq -3">
+                                        {$v.pawn_model}
+                                    </if>
+                                    <if condition="$v[status] neq -3">
+                                        {$v.pawn_rfid}
+                                    </if>
+                                   
+                                </div>
+                            </td> -->
+                           <!--  <td align="center" class="">
+                                <div style="text-align: center; width: 60px;">
+                                    
+                                        {$v.pawn_value}
+                                    
+                                </div>
+                            </td> -->
+                          <!--   <td align="center" class="">
+                                <div style="text-align: center; width: 60px;">
+                                    <if condition="$v[status] eq -3">
+                                        {$v.wood_name}
+                                    </if>
+                                    <if condition="$v[status] neq -3">
+                                        {$v.new_value}
+                                    </if>
+                                </div>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 60px;">
+                                    <if condition="$v[status] eq -3">
+                                        {$v.pawn_area}
+                                    </if>
+                                    <if condition="$v[status] neq -3">
+                                        {$v.alarm_value}%
+                                    </if>
+                                </div>
+                            </td> -->
+                            <!-- <td align="center" class="">
+                                <div style="text-align: center; width: 80px;">
+                                    <if condition="$v[status] eq -3">
+                                        {$v.pawn_num}
+                                    </if>
+                                    <if condition="$v[status] neq -3">
+                                        {$v.new_value}
+                                    </if>
+                                </div>
+                            </td> -->
+
+                            <!-- <td align="center" class="">
+                                <div style="text-align: center; width: 80px;">
+                                   <if condition="$v[status] eq -3">
+                                        {$v.pawn_price}
+                                    </if>
+                                    <if condition="$v[status] neq -3">
+                                        <if condition="$v[alarm_status] eq 1">
+                                            <font color="green">正常</font>
+                                        </if>
+                                        <if condition="$v[alarm_status] eq 2">
+                                            <font color="red">报警</font>
+                                        </if>
+                                    </if>
+                                </div>
+                            </td> -->
+                            
+                           
+                            <td align="center" class="">
+                                    <if condition="$v[status] eq -3">{$v.addtime|date="Y-m-d H:i",###}
+                                    </if>
+                                    <if condition="$v[status] eq -2">{$v.crefuse_time|date="Y-m-d H:i",###}
+                                    </if>
+                                    <if condition="$v[status] eq -1">{$v.crefuse_time|date="Y-m-d H:i",###}
+                                    </if>
+                                    <if condition="$v[status] eq 0">{$v.pg_time|date="Y-m-d H:i",###}
+                                    </if>
+                            </td>
+                            <td align="center" class="">
+                                    <if condition="$v[status] eq -3">待评估</if>
+                                    <if condition="$v[status] eq 0"><font color="blue">待审核</font></if>
+                                    <if condition="$v[status] eq 1"><font color="green">审核通过</font></if>
+                                    <if condition="$v[status] eq -1"><font color="red">审核否决</font></if>
+                                    <if condition="$v[status] eq -2">无效作废</if>
+                            </td>
+                            <td align="left" class="handle">
+                                    <a href="{:U('detail',array('pawn_id'=>$v['pawn_id'],'p'=>$_GET[p]))}" class="btn blue"><i class="fa fa-eye"></i>查看</a>
+                                   
+                                    <!-- 单个审核,评估师和信贷看不到 -->
+                                    <!-- <if condition="$role_id lt 3">
+                                      
+                                        <if condition="$v[status] eq 0">
+                                            <a onclick="act_submit(1)">
+                                                <font color="green"><span><i class="fa fa-check"></i>审核通过</span></font>
+                                            </a>
+                                        </if>
+                                    </if> -->
+
+                                   <!--  <if condition="$v[status] elt -1">
+                                        <a class="btn red"  href="javascript:void(0)" data-id="{$v[pawn_id]}" onclick="delpawn(this)" data-url="{:U('delPawn')}"><i class="fa fa-trash-o"></i>删除</a>
+                                    </if> -->
+
+                            </td>
+                        </tr>
+                    </volist>
+                    </if>
+                    </tbody>
+                </table>
+        <!--分页位置-->
+        {$show} </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+    
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#timegap').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#timegap').val('');
+        }
+
+        return true;
+    }
+
+    //批量操作提交
+    function act_submit(wst) {
+        var chks = [];
+        $('input[name*=selected]').each(function(i,o){
+            if($(o).is(':checked')){
+                chks.push($(o).val());
+            }
+        })
+        if(chks.length == 0){
+            layer.alert('请至少选择一项', {icon: 2});return;
+        }
+        var can_post = false;
+        var remark = "评估审核通过";
+        if(wst != 1 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                audit(chks , wst ,  remark);
+            });
+        }else{
+            audit(chks , wst ,  remark);
+        }
+    }        
+    function audit(chks , wst ,  remark){
+    	$.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Pawn&a=pg_check",//+tab,
+            data: {id:chks,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    layer.alert(data.msg, {
+                        icon: 1,
+                        closeBtn: 0
+                    }, function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 2,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 2,time: 3000});
+            }
+        });
+    }
+    //导入导出
+    function exportReport(){
+        var selected_ids = '';
+        $('.trSelected' , '#flexigrid').each(function(i){
+            selected_ids += $(this).data('order-id')+',';
+        });
+        if(selected_ids != ''){
+            $('input[name="order_ids"]').val(selected_ids.substring(0,selected_ids.length-1));
+        }
+        $('#search-form2').submit();
+    }
+
+    $(document).ready(function(){   
+       
+        $('#add_time_begin').layDate(); 
+        $('#add_time_end').layDate();
+        
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+        
+        ajax_get_table('search-form2',1);
+        
+        $('.ico-check ' , '.hDivBox').click(function(){
+            $('tr' ,'.hDivBox').toggleClass('trSelected' , function(index,currentclass){
+                var hasClass = $(this).hasClass('trSelected');
+                $('tr' , '#flexigrid').each(function(){
+                    if(hasClass){
+                        $(this).addClass('trSelected');
+                    }else{
+                        $(this).removeClass('trSelected');
+                    }
+                });  
+            });
+        });
+         
+    });
+    
+    function delfunc(obj){
+      layer.confirm('确认删除？', {
+                btn: ['确定','取消'] //按钮
+              }, function(){
+                // 确定
+                $.ajax({
+                  type : 'post',
+                  url : $(obj).attr('data-url'),
+                  data : {act:'del',del_id:$(obj).attr('data-id')},
+                  dataType : 'json',
+                  success : function(data){
+                    layer.closeAll();
+                    if(data.status==1){
+                      layer.msg(data.msg, {icon: 1});
+                      $(obj).parent().parent().parent('tr').remove();
+                    }else{
+                      layer.msg(data.msg, {icon: 2,time: 2000});
+                    }
+                  }
+                })
+              }, function(index){
+                layer.close(index);
+              }
+      );
+    }
+    
+    // 删除操作
+    function delpawn(obj) {
+        layer.confirm('确定要删除吗?', function(){
+            var id=$(obj).data('data-id');
+            $.ajax({
+                type : "POST",
+                url: "{:U('Admin/Pawn/delpawn')}",
+                data:{order_id:id},
+                dataType:'json',
+                async:false,
+                success: function(data){
+                    if(data.status ==1){
+                        layer.alert(data.msg, {icon: 1});
+                        $('#'+id).remove();
+                    }else{
+                        layer.alert(data.msg, {icon: 2});
+                    }
+                },
+                error:function(){
+                    layer.alert('网络异常，请稍后重试',{icon: 2});
+                }
+            });
+        });
+    }
+    
+    function form_submit(v){
+        $('#export').val(v);
+        $('#search-form').submit();
+    }   
+</script>
+</body>
+</html>

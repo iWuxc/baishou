@@ -1,0 +1,296 @@
+<include file="public/layout" />
+<style>
+.ncm-goods-gift {
+	text-align: left;
+}
+.ncm-goods-gift ul {
+    display: inline-block;
+    font-size: 0;
+    vertical-align: middle;
+}
+.ncm-goods-gift li {
+    display: inline-block;
+    letter-spacing: normal;
+    margin-right: 4px;
+    vertical-align: top;
+    word-spacing: normal;
+}
+.ncm-goods-gift li a {
+    background-color: #fff;
+    display: table-cell;
+    height: 30px;
+    line-height: 0;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    width: 30px;
+}
+.ncm-goods-gift li a img {
+    max-height: 30px;
+    max-width: 30px;
+}
+
+a.green{
+	
+	background: #fff none repeat scroll 0 0;
+    border: 1px solid #f5f5f5;
+    border-radius: 4px;
+    color: #999;
+    cursor: pointer !important;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: normal;
+    height: 20px;
+    letter-spacing: normal;
+    line-height: 20px;
+    margin: 0 5px 0 0;
+    padding: 1px 6px;
+    vertical-align: top;
+}
+
+a.green:hover { color: #FFF; background-color: #1BBC9D; border-color: #16A086; }
+
+.ncap-order-style .ncap-order-details{
+	margin:20px auto;
+}
+.contact-info h3,.contact-info .form_class{
+  display: inline-block;
+  vertical-align: middle;
+}
+.form_class i.fa{
+  vertical-align: text-bottom;
+}
+</style>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title"><a class="back" href="javascript:history.go(-1)" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+      <div class="subject">
+        <h3>单件家具详情</h3>
+      </div>
+      <div class="subject" style="width:62%">
+
+      </div> 
+    </div>
+      
+  </div>
+  <div class="ncap-order-style">
+    
+ 
+    <div class="ncap-order-details" id="printDiv">
+      <form id="order-action">
+        <div class="tabs-panels" >
+            <div class="misc-info">
+            
+                <h3>单件家具详情</h3>
+                 <!-- 评估待审核列表才显示添加家具和导入家具和导出家具按钮  -->
+                <if condition="$status eq -3">
+                <!-- 评估师看不到  -->
+                    <if condition="$role_id eq 4">
+                        <div class="form_class" >
+                                <a class="btn green" href="{:U('Admin/Pawn/edit_one',array('one_id'=>$one_id))}"><i class="fa fa-pencil-square-o"></i>修改单件家具</a>
+                        </div>
+                    </if>
+                </if> 
+
+                <dl>
+                    <dt>家具 ID：</dt>
+                    <dd>{$list.one_id}</dd>
+                    <dt>家具名称：</dt>
+                    <dd>{$list.pawn_name}</dd>
+                </dl>
+                <dl>
+                    <dt>RFID：</dt>
+                    <dd>{$list.pawn_rfid}</dd>
+                    <dt>添加时间:</dt>
+                    <dd>{$list.addtime|date="Y-m-d H:i",###}</dd>
+                    
+                </dl>
+                <dl>
+                    <dt>安全状态:</dt>
+                    <dd>
+                     <if condition="($list.rfid_tearup eq 0 )"><font color="green">正常</font></if>
+                    <if condition="($list.rfid_tearup eq 1 )"><font color="red">撕毁</font></if> 
+                    </dd>
+                    <dt>电量状态：</dt>
+                    <dd>
+                     <if condition="($list.rfid_energy eq 01 )"><font color="green">电量正常</font></if>
+                     <if condition="($list.rfid_energy eq 00 )"><font color="red">低电量</font></if>
+                     </dd>
+                </dl>
+                <dl>
+                    <dt>家具备注：</dt>
+                    <dd>{$list.pawn_remarks}</dd>
+                </dl>
+            </div>
+
+            
+            <div class="contact-info">
+              <h3>单件家具相册</h3>  
+                <dd class="opt" style="margin-left:10px">
+                      <foreach name="pawnimgs" item="vo" key="k" >
+                          <div style="width:100px; text-align:center; margin: 5px; display:inline-block;" class="goods_xc">
+                              <input type="hidden" value="{$vo['img_url']}" name="pawn_imgs[]">
+                              <div class='img-container'>
+                                 <img width="100" height="100" src="{$vo['img_url']}">
+                              </div>
+                              
+                          </div>
+                      </foreach>
+                </dd>
+                </dl> 
+            </div>
+     
+       
+        
+
+
+        
+      </div>
+      </form>     
+  	</div>
+  </div>
+<!-- 评估师看不到--> 
+<!-- <if condition="$role_id neq  3">
+    <div style="width:1000px" class="no-print">
+      <a href="javascript:printDiv();" style="float:center" class="ncap-btn-big ncap-btn-green" ><i class="fa fa-print"></i>导出抵押品</a>
+  </div>
+</if> -->
+</div>
+<script type="text/javascript">
+function printDiv()
+{
+    var oldStr = document.body.innerHTML;
+    $('.no-print').hide();
+    window.print();
+    document.body.innerHTML = oldStr;
+}
+
+function delfun() {
+	// 删除按钮
+	layer.confirm('确认删除？', {
+		btn: ['确定'] //按钮
+	}, function () {
+		console.log("确定");
+	}, function () {
+		console.log("取消");
+	});
+}
+    //评估审核
+    function pg_actsubmit(wst, id) {
+        var remark = "审核通过";
+        var ids = [];
+        ids.push(id);
+        if(wst != 1 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                pg_audit(wst, ids, remark);
+            });
+        }else{
+            pg_audit(wst, ids, remark);
+        }
+    }
+
+    function pg_audit(wst, ids, remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Pawn&a=pg_check",//+tab,
+            data: {id:ids,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    // console.log(data);
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 2000,
+                        closeBtn: 0
+                    }, function(){
+                        if(data.res == 1){
+                            $("#btn1").hide();
+                            $("#btn1").find('a').html("审核已通过");
+                        }
+                        if(data.res == -1){
+                            $("#btn2").hide();
+                            $("#btn2").find('a').html("审核已否决");
+                        }
+                        if(data.res == -2){
+                            $("#btn3").hide();
+                            $("#btn3").find('a').html("无效作废");
+                        }
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 1,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 1,time: 3000});
+            }
+        });
+    }
+
+    //解押审核
+    function green_actsubmit(wst, id) {
+        var remark = "人工解押通过";
+        var ids = [];
+        ids.push(id);
+        if(wst != 3 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                green_audit(wst, ids, remark);
+            });
+        }else{
+            green_audit(wst, ids, remark);
+        }
+    }
+
+    function green_audit(wst, ids, remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Pawn&a=green_check",//+tab,
+            data: {id:ids,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    // console.log(data);
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 2000,
+                        closeBtn: 0
+                    }, function(){
+                        if(data.res == 3){
+                            $("#btn1").hide();
+                            $("#btn2").find('a').html("人工解押已通过");
+                        }
+                        if(data.res == 4){
+                            $("#btn2").hide();
+                            $("#btn1").find('a').html("人工解押已否决");
+                        }
+        
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 1,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 1,time: 3000});
+            }
+        });
+    }
+</script>
+
+<!-- 图片查看 -->
+<script 
+src="__PUBLIC__/plugins/jquery-image-show/js/postbird-img-glass.js">
+</script>
+<script>
+    PostbirdImgGlass.init({
+        domSelector:".img-container img",
+        animation:true
+    });
+</script>
+
+</body>
+</html>

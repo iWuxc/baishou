@@ -1,0 +1,263 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>客户信息列表</h3>
+            </div>
+            <ul class="tab-base nc-row">
+                <li><a <if condition="$is_approval eq 9">class="current"</if> href="{:U('Admin/Users/index',array('is_approval'=>9))}"><span>全部</span></a></li>
+                <li><a <if condition="$is_approval eq 0">class="current"</if> href="{:U('Admin/Users/index',array('is_approval'=>0))}"><span>未授信</span></a></li>
+                <li><a <if condition="$is_approval eq 1">class="current"</if> href="{:U('Admin/Users/index',array('is_approval'=>1))}"><span>审核中</span></a></li>
+                <li><a <if condition="$is_approval eq 2">class="current"</if> href="{:U('Admin/Users/index',array('is_approval'=>2))}"><span>已授信</span></a></li>
+                <li><a <if condition="$is_approval eq 3">class="current"</if> href="{:U('Admin/Users/index',array('is_approval'=>3))}"><span>被否决</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style=" width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>客户信息一旦提交审核成功不可更改,请慎重填写</li>
+            <li>客户信息及企业门店信息管理</li>
+            <li>当客户类型是企业客户时, 在录入完个人信息时, 请及时录入企业信息, 否则无法提交审核!</li>
+        </ul>
+    </div>
+    <div class="flexigrid" id="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>客户信息列表</h3>
+                <h5>(共{$pager->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><a href=""><i class="fa fa-refresh"></i></a></div>
+            <form class="navbar-form form-inline"  method="post" action="{:U('Admin/Users/index')}" name="search-form2" id="search-form2">
+                <input type="hidden" name="order_by" value="user_id">
+                <input type="hidden" name="sort" value="desc">
+                <input type="hidden" name="admin_id" value="{$admin_info.admin_id}">
+                <input type="hidden" name="user_ids" value="">
+
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <select name="type" class="select sDiv3" >
+                            <option value="">客户类型</option>
+                            <option value="1">个人客户</option>
+                            <option value="2">企业客户</option>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <select name="is_approval" class="select sDiv3" >
+                            <option value="">全部</option>
+                            <option value="0">未授信</option>
+                            <option value="1">审核中</option>
+                            <option value="2">以授信</option>
+                            <option value="3">被驳回</option>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <select  name="keytype" class="select">
+                            <option value="0">搜索方式</option>
+                            <option value="name">按客户名称</option>
+                            <option value="client_no">按客户编号</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" name="keywords" class="qsbox" placeholder="搜索相关数据...">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="hidden" name="export" value="">
+                        <input type="submit" class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <if condition="$is_export eq 1">
+                    <div class="fbutton">
+                        <a href="javascript:exportReport()">
+                            <div class="add" title="选定行数据导出excel文件,如果不选中行，将导出列表所有数据">
+                                <span><i class="fa fa-plus"></i>导出数据</span>
+                            </div>
+                        </a>
+                    </div>
+                </if>
+                <if condition="$admin_info[role_id] neq 2">
+                    <div class="fbutton">
+                        <a href="{:U('Admin/users/add_user')}">
+                            <div class="add" title="添加客户">
+                                <span><i class="fa fa-plus"></i>添加客户</span>
+                            </div>
+                        </a>
+                    </div>
+                </if>
+
+                <div class="fbutton">
+                    <a href="{:U('Admin/users/tabulation')}">
+                        <div class="add" title="测试客户">
+                            <span><i class="fa fa-plus"></i>测试页面</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <table width="100%" cellspacing="0" cellpadding="0" class="anothertable">
+            <thead>
+            <tr>
+                <if condition="$is_export eq 1">
+                    <th class="sign" axis="col6" style="width: 60px;" onclick="checkAllSign(this)">
+                        <i class="ico-check"></i>
+                    </th>
+                </if>
+                <th align="center" abbr="article_title" axis="col3" class="">
+                    客户编号
+                </th>
+                <th align="center" abbr="ac_id" axis="col4" class="">
+                    客户名称
+                </th>
+                <th align="center" abbr="ac_id" axis="col4" class="">
+                    客户经理
+                </th>
+                <th align="center" abbr="ac_id" axis="col4" class="">
+                    审批经理
+                </th>
+                <th align="center" abbr="article_show" axis="col6" class="">
+                    客户类型
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    联系电话
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    门店数量
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    添加时间
+                </th>
+                <th align="center" axis="col1" class="handle">
+                    信息操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <if condition="empty($clientList) eq true">
+                <tr data-id="0">
+                    <td class="no-data" align="center" axis="col0" colspan="50">
+                        <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                    </td>
+                </tr>
+                <else/>
+                <volist name="clientList" id="list">
+                    <tr data-user-id="{$list.user_id}" id="{$list.user_id}">
+                        <if condition="$is_export eq 1">
+                            <td class="sign" axis="col6">
+                                <i class="ico-check"></i>
+                            </td>
+                        </if>
+                        <td align="center" axis="col0">
+                            {$list.client_no}
+                        </td>
+                        <td align="left" axis="col0">
+                            <a href="{:U('Admin/Users/edit_user',array('user_id'=>$list['user_id']))}">
+                                {$list.name}
+                            </a>
+                        </td>
+                        <td align="center" axis="col0">
+                            {$allAdminName[$list.xd_id]}
+                        </td>
+                        <td align="center" axis="col0">
+                            <empty name="list.fk_id">无<else />{$allAdminName[$list.fk_id]}</empty>
+
+                        </td>
+                        <td align="center" axis="col0">
+                            <if condition="$list.type eq 1 ">
+                                个人
+                                <else />
+                                <a href="{:U('Admin/Users/entList',array('user_id'=>$list['user_id']))}">
+                                    企业
+                                </a>
+                            </if>
+                        </td>
+                        <td align="center" axis="col0">
+                            {$list.mobile}
+                        </td>
+                        <td align="center" axis="col0">
+                            <a href="{:U('Admin/Users/storeList',array('user_id'=>$list['user_id']))}">
+                                {$list.store_num}
+                            </a>
+                        </td>
+                        <td align="center" axis="col0">
+                            {$list.reg_time|date='Y-m-d', ###}
+                        </td>
+                        <td align="left" axis="col1" class="handle" align="center">
+                            <a class="btn green" href="{:U('Admin/Users/detail',array('user_id'=>$list['user_id']))}"><i class="fa fa-list-alt"></i>客户详情</a>
+                            <if condition="($list['is_approval'] eq 0)">
+                                <a class="btn red" href="javascript:void(0);" data-user-id="{$list['user_id']}" onClick="del({$list['user_id']})"><i class="fa fa-trash-o"></i>删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                </volist>
+            </if>
+            </tbody>
+        </table>
+        <!--分页位置-->
+        {$show}
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    // 表格行点击选中切换
+    $(document).ready(function(){
+        $('#flexigrid > table > tbody > tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+    });
+
+    function exportReport(){
+        var selected_ids = '';
+        $('.trSelected' , '#flexigrid').each(function(i){
+            selected_ids += $(this).data('user-id')+',';
+        });
+        if(selected_ids != ''){
+            $('input[name="user_ids"]').val(selected_ids.substring(0,selected_ids.length-1));
+        }
+        $('input[name="export"]').val(1);
+        $('#search-form2').submit();
+    }
+
+    // 删除操作
+    function del(id) {
+        layer.confirm('确定要删除吗, 一旦删除, 用户下的所有信息将被清空?', function(){
+            $.ajax({
+                type : "POST",
+                url: "{:U('Admin/users/delete_user')}",
+                data:{user_id:id},
+                dataType:'json',
+                async:false,
+                success: function(data){
+                    if(data.status == 1){
+                        layer.alert(data.msg, {icon: 1});
+                        $('#'+id).remove();
+                    }else{
+                        layer.alert(data.msg, {icon: 2});
+                    }
+                },
+                error:function(){
+                    layer.alert('网络异常，请稍后重试',{icon: 2});
+                }
+            });
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,469 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script src="__ROOT__/public/js/bs/enterprisr.js"></script>
+
+<style type="text/css">
+    html, body {
+        overflow: visible;
+    }
+
+    a.btn {
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #f5f5f5;
+        border-radius: 4px;
+        color: #999;
+        cursor: pointer !important;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+        height: 20px;
+        letter-spacing: normal;
+        line-height: 20px;
+        margin: 0 5px 0 0;
+        padding: 1px 6px;
+        vertical-align: top;
+    }
+
+    a.red:hover {
+        background-color: #e84c3d;
+        border-color: #c1392b;
+        color: #fff;
+    }
+
+    .addprine{display: inline; }
+    .alisth{margin-top: 10px}
+    .p_plus strong{cursor: pointer;margin-left: 4px;}
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <!--<a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>-->
+            <div class="subject">
+                <h3>额度审批结论</h3>
+                <h5>审批人员及更高管理员填写</h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" id="creditAdd" method="post">
+    <!--<form class="form-horizontal" id="creditAdd" action="{:U('Credit/credit_conclu_handle')}" method="post">-->
+        <div class="ncap-form-default">
+            <!--<dl class="row">-->
+            <!--<dt class="tit">-->
+            <!--<label><em></em>用户名</label>-->
+            <!--</dt>-->
+            <!--<dd class="opt">-->
+            <!--<input type="text" name="user_name" id="user_name" class="input-txt" placeholder="手机或邮箱搜索" />-->
+            <!--<select name="user_id" id="user_id" >-->
+            <!--<option value="0">匿名用户</option>-->
+            <!--</select>-->
+            <!--<a href="javascript:void(0);" onclick="search_user();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>搜索</a>-->
+            <!--</dd>-->
+            <!--</dl>-->
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>信贷经理负责人</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="xd_name" id="xd_name" class="input-txt" value="{$xd_name}" disabled />
+                    <input type="hidden" name="xd_id" class="input-txt" value="{$xd_id}"/>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>贷款申请人</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="user_name" id="user_name" class="input-txt" value="{$user_name}" disabled />
+                    <input type="hidden" name="user_name" class="input-txt" value="{$user_name}"/>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="credit">授信额度</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="credit" name="credit" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+                    <p class="notice">额度限制，为最高提款额，授信额度>=单笔提款和</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="check_rate">审批抵押率</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="check_rate" name="check_rate" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> (%)
+                    <p class="notice"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="term">额度期限</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="term" name="term" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 月
+                    <p class="notice"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="is_loop">是否循环使用</label>
+                </dt>
+                <dd class="opt">
+                    <input id="type1" name="is_loop" type="radio" value="1" checked="">是  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input id="type2" name="is_loop" type="radio" value="2">否
+                    <p class="notice"></p>
+                </dd>
+            </dl>
+            <!--
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>指定额度期限具体时间</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" class="input-txt" id="str_time" name="str_time">
+                    <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                
+                    <input type="text" class="input-txt" id="stp_time" name="stp_time">
+                    <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                    <p class="notic">可不填写</p>
+
+                </dd>
+            </dl> -->
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>单笔贷款用款期限</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" class="input-txt" id="draw_strtime" name="draw_strtime">
+                    <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                    -
+                    <input type="text" class="input-txt" id="draw_stptime" name="draw_stptime">
+                    <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                    <p class="notice">客户提款期限只能在此期限内，同时在额度期限内，额度期限生效日以首次放款日为准</p>
+                </dd>
+            </dl>
+            <script>
+                $("#draw_stptime").on('focus',function () {
+                    var term = $("#term").val();
+                    var draw_strtime = $("#draw_strtime").val();
+                    var d = (Date.parse(new Date(draw_strtime))) / 1000 ;
+                    if(term != ''){
+                        var temp_time = 3600 * 24 * 31 * term;
+                        d = d + temp_time;
+                        var date = new Date(d * 1000);//如果date为13位不需要乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                        var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                        var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+                        $("#draw_stptime").val(Y+M+D+h+m+s);
+                    }
+                })
+            </script>
+            <dl class="row">
+                <dt class="tit">用途</dt>
+                <dd class="opt">
+                    <textarea class="tarea" style="width:440px; height:150px;" name="purpose" id="purpose"></textarea>
+                    <span class="err"></span>
+                    <p class="notice"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="term"><em>*</em>服务费率</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="service_rate" value="" name="service_rate" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> (%，年)
+                    <p class="notice"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="term"><em>*</em>利率</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="inter_rate" value="" name="inter_rate" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> (%，年)
+                    <p class="notice"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="term"><em>*</em>价格</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="price_rate" value="" name="price_rate" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> (%，年)
+                    <p class="notice">价格=服务费率+利率</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="pawn_store"><em>*</em>抵押门店</label>
+                </dt>
+                <dd class="opt">
+                    <label class=""><input type="checkbox" onClick="choosebox(this)" value="1" cka="mod-{$kk}">全选</label>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="shipping"></label>
+                </dt>
+                <dd class="opt">
+                    <volist name="stores" id="list">
+                        <input type="checkbox" name="storeid[]" value="{$list.store_id}" />{$list.store_name} &nbsp;&nbsp;
+                    </volist>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="assurer_mode"><em>*</em>担保方式</label>
+                </dt>
+                <dd class="opt">
+                    <select id="assurer_mode" name="assurer_mode"  onchange="selectMode(this)">
+                        <option value="0">---选择担保方式---</option>
+                        <option value="1" >新增保证人</option>
+                        <option value="2" >新增房产抵押</option>
+                        <option value="3" >其他担保方式</option>
+                    </select>
+                </dd>
+            </dl>
+            <div id="sel1" style="display: none">
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="assurer_id">保证人</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" name="assurer_name" id="assurer_name" class="input-txt" placeholder="手机或邮箱搜索" />
+                        <select name="assurer_id" id="assurer_id" >
+                            <option value="0">搜索保证人</option>
+                        </select>
+                        <a href="javascript:void(0);" onclick="search_user();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>搜索</a>
+                    </dd>
+                </dl>
+            </div>
+            <div id="sel2" style="display: none">
+                <dl class="row">
+                    <dt class="tit">新增房产抵押</dt>
+                    <dd class="opt">
+                        <textarea class="tarea" style="width:440px; height:150px;" name="house_pawn" id="house_pawn"></textarea>
+                        <span class="err"></span>
+                        <p class="notice"></p>
+                    </dd>
+                </dl>
+            </div>
+            <div id="sel3" style="display: none">
+                <dl class="row">
+                    <dt class="tit">其他担保方式</dt>
+                    <dd class="opt">
+                        <textarea class="tarea" style="width:440px; height:150px;" name="other_methods" id="other_methods"></textarea>
+                        <span class="err"></span>
+                        <p class="notic"></p>
+                    </dd>
+                </dl>
+            </div>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="repayment"><em>*</em>还款方式</label>
+                </dt>
+                <dd class="opt">
+                    <select id="repayment" name="repayment"  >
+                        <option value="">---请选择还款方式---</option>
+                        <option value="1" >按月付息，到期还本</option>
+                        <option value="2" >额度内随借随还</option>
+                        <option value="3" >按月付息，按还款计划还本</option>
+                    </select>
+                </dd>
+            </dl>
+            <!--<dl class="row">-->
+                <!--<dt class="tit">用款计划</dt>-->
+                <!--<dd class="opt">-->
+                    <!--<textarea class="tarea" style="width:440px; height:150px;" name="money_plan" id="money_plan"></textarea>-->
+                    <!--<span class="err"></span>-->
+                    <!--<p class="notice">若有,请严格按照: "年月日-贷款金额" 的格式填写,多条用款计划请用逗号隔开</p>-->
+                <!--</dd>-->
+            <!--</dl>-->
+            <dl class="row">
+                <dt class="tit">
+                    <label>用款计划</label>
+                </dt>
+                <dd class="opt">
+                    <div class="alisth0" id="alisth_0">
+                        开始时间 <input type="date" class="" id="start_time[]" name="start_time[]" <if condition="$start_time['price_ladder']">value="{$goodsInfo['price_ladder'][0]['amount']}"</if> style="width: 100px;" >&nbsp;&nbsp;
+                        结束时间 <input type="date" class="flatpickr" name="stop_time[]" <if condition="$start_time['price_ladder']">value="{$goodsInfo['price_ladder'][0]['amount']}"</if> style="width: 100px;" >&nbsp;&nbsp;
+                        用款金额 <input type="text" class="addprine" name="use_amount[]"  <if condition="$start_time['price_ladder']">value="{$goodsInfo['price_ladder'][0]['price']}"</if>  style="width: 100px;" > 万元
+                        <a class="p_plus" href="javascript:;"><strong>[+]</strong></a>
+                    </div>
+                    <volist name="goodsInfo['price_ladder']" id="vo" offset="1">
+                        <div class="alisth">
+                            开始时间 <input type="text" class="flatpickr" name="start_time[]" value="{$vo['start_time']}" style="width: 100px;" >&nbsp;&nbsp;
+                            结束时间 <input type="date" class="flatpickr" name="stop_time[]" value="{$vo['stop_time']}" style="width: 100px;" >&nbsp;&nbsp;
+                            用款金额 <input type="date" class="addprine" name="use_amount[]"  <if condition="$start_time['price_ladder']">value="{$goodsInfo['price_ladder'][0]['price']}"</if>  style="width: 100px;" > 万元
+                            <a class="p_plus" onclick='$(this).parent().remove();'><strong>[-]</strong></a>
+                        </div>
+                    </volist>
+                    <!--<span class="err" style="color:#F00;"></span>-->
+                </dd>
+                <script>
+                    $(function(){
+                        $('.p_plus').click(function() {
+                            var html = "<div class='alisth'>"
+                                + "开始时间"
+                                + "&nbsp;<input type='date' class='flatpickr' name='start_time[]' style='width: 100px;' value=''/>"
+                                + "&nbsp;&nbsp;&nbsp;结束时间"
+                                + "&nbsp;<input type='date' class='flatpickr' name='stop_time[]' style='width: 100px;' value=''>"
+                                + "&nbsp;&nbsp;&nbsp;用款金额"
+                                + "&nbsp;<input type='text' class='addprine' name='use_amount[]' style='width: 100px;' value=''>"
+                                +" 万元"
+                                + "<a class='p_plus' onclick='$(this).parent().remove();'>&nbsp;<strong>[-]</strong></a>"
+                                + "</div>";
+                            $('#alisth_0').after(html);
+                        });
+                    })
+                </script>
+            </dl>
+            <!--<dl class="row">-->
+                <!--<dt class="tit">贷前条件</dt>-->
+                <!--<dd class="opt">-->
+                    <!--<textarea class="tarea" style="width:440px; height:150px;" name="loan_con" id="loan_con"></textarea>-->
+                    <!--<span class="err"></span>-->
+                    <!--<p class="notice"></p>-->
+                <!--</dd>-->
+            <!--</dl>-->
+            <dl class="row">
+                <dt class="tit">
+                    <label>贷前条件</label>
+                </dt>
+                <dd class="opt">
+                    <div class="loan_con0" id="loan_con0">
+                        <textarea class="tarea" style="width:400px; height:20px;" name="loan_con[]" id="loan_con"></textarea>
+                        <a class="p_loan_con" href="javascript:;"><strong>[+]</strong></a>
+                    </div>
+                    <volist name="goodsInfo['price_ladder']" id="vo" offset="1">
+                        <div class="alisth">
+                            <textarea class="tarea" style="width:400px; height:20px;" name="loan_con[]"></textarea>
+                            <a class="p_loan_con" onclick='$(this).parent().remove();'><strong>[-]</strong></a>
+                        </div>
+                    </volist>
+                    <!--<span class="err" style="color:#F00;"></span>-->
+                </dd>
+                <script>
+                    $(function(){
+                        $('.p_loan_con').click(function() {
+                            var html = "<div class='loan_con'>"
+                                + "<textarea class='tarea' style='width:400px; height:20px;' name='loan_con[]'></textarea>"
+                                + "<a class='p_loan_con' onclick='$(this).parent().remove();'>&nbsp;<strong>[-]</strong></a>"
+                                + "</div>";
+                            $('#loan_con0').after(html);
+                        });
+                    })
+                </script>
+            </dl>
+            <dl class="row">
+                <dt class="tit">贷后管理</dt>
+                <dd class="opt">
+                    <textarea class="tarea" style="width:440px; height:150px;" name="loan_admin" id="loan_admin"></textarea>
+                    <span class="err"></span>
+                    <p class="notice"></p>
+                </dd>
+            </dl>
+            <input type="hidden" name="user_id" value="{$user_id}">
+            <div class="bot">
+                <!--<a href="JavaScript:void(0);" onClick="credit_submit_form('creditAdd','{:U(\'Credit/credit_conclu_handle?is_ajax=1\')}')" class="ncap-btn-big ncap-btn-green" id="submitBtn">提交并申请复核</a>-->
+                <a href="JavaScript:void(0);" onClick="credit_handle('creditAdd','{:U(\'Credit/credit_conclu_handle?is_ajax=1\')}','submitBtn')" class="ncap-btn-big ncap-btn-green" id="submitBtn">提交并申请复核</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#draw_strtime').layDate();
+        $('#draw_stptime').layDate();
+
+    })
+
+    //选择产业分类
+    $(function(){
+        $(document).on("blur",'#inter_rate',function(){
+            var service_rate = $('#service_rate').val();
+            var inter_rate = $('#inter_rate').val();
+            if(service_rate == ''){
+                service_rate = 0;
+            }
+            if(inter_rate == ''){
+                inter_rate = 0;
+            }
+            $('#price_rate').val(parseFloat(service_rate) + parseFloat(inter_rate));
+        })
+    })
+
+    //担保方式选择
+    function selectMode(obj){
+        var val = $(obj).val();
+        $("#sel1, #sel2, #sel3").hide();
+        $("#sel"+val).show();
+    }
+
+    // 物流设置相 关
+    function choosebox(o){
+        var vt = $(o).is(':checked');
+        if(vt){
+            $('input[type=checkbox]').prop('checked',vt);
+        }else{
+            $('input[type=checkbox]').removeAttr('checked');
+        }
+    }
+
+    //搜索用户
+    function search_user(){
+        var assurer_name = $('#assurer_name').val();
+        if($.trim(assurer_name) == '')
+            return false;
+        $.ajax({
+            type : "POST",
+            url:"/index.php?m=Admin&c=Credit&a=search_user",//+tab,
+            data :{search_key:assurer_name},// 你的formid
+            success: function(data){
+                data = data + '<option value="0">匿名用户</option>';
+                $('#assurer_id').html(data);
+            }
+        });
+    }
+
+    //选择商品
+    function selectGoods(){
+        var url = "{:U('Admin/Order/search_goods')}";
+        layer.open({
+            type: 2,
+            title: '选择商品',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['60%', '60%'],
+            content: url,
+        });
+    }
+
+    function delRow(obj){
+        $(obj).parent().parent().parent().remove();
+    }
+</script>
+</body>
+</html>

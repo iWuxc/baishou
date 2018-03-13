@@ -1,0 +1,561 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script src="__PUBLIC__/js/bs_common.js"></script>
+
+<style type="text/css">
+    html, body {
+        overflow: visible;
+    }
+
+    a.btn {
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #f5f5f5;
+        border-radius: 4px;
+        color: #999;
+        cursor: pointer !important;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+        height: 20px;
+        letter-spacing: normal;
+        line-height: 20px;
+        margin: 0 5px 0 0;
+        padding: 1px 6px;
+        vertical-align: top;
+    }
+
+    a.red:hover {
+        background-color: #e84c3d;
+        border-color: #c1392b;
+        color: #fff;
+    }
+
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>添加门店</h3>
+                <h5>门店操作谨慎处理</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <li><a href="javascript:void(0);" data-index='1' class="tab current"><span>通用信息</span></a></li>
+                <li><a href="javascript:void(0);" data-index='2' class="tab"><span>门店相册</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>产业类型/城市为必填项, 此为生成门店编号的唯一凭证</li>
+            <li>门店编号一旦生成无法修改</li>
+            <li>门店信息在用户信息提交之后无法修改删除</li>
+        </ul>
+    </div>
+    <form class="form-horizontal" action="{:U('Admin/Users/add_store_handle')}" id="store-add" method="post">
+        <div class="ncap-form-default tab_div_1">
+            <if condition="$user_id eq 0">
+                <dl class="row">
+                    <dt class="tit">
+                        <label><em></em>门店权属人</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" name="user_name" id="user_name" class="input-txt" placeholder="手机号码或客户编号或姓名" />
+                        <select name="search_user_id" id="search_user_id" >
+                            <option value="0">请搜索用户</option>
+                        </select>
+                        <a href="javascript:void(0);" onclick="search_user();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>搜索</a>
+                    </dd>
+                </dl>
+            </if>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>个人/企业产业类型</label>
+                </dt>
+                <dd class="opt">
+                    <select id="industries" name="industries">
+                        <option value="0">请选择产业类型</option>
+                        <volist name="industriesType" id="vo">
+                            <option value="{$vo.id}">{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select id="industries_province" onChange="get_industries_city(this.value, 'industries_city', '0')" name="industries_province">
+                        <option value="">选择城市</option>
+                        <volist name="industriesProvince" id="vo">
+                            <option value="{$vo.id}">{$vo.province}</option>
+                        </volist>
+                    </select>
+                    <select onblur="" id="industries_city" name="industries_city" title="请选择所在区域">
+                        <option value="">选择区域</option>
+                        <volist name="industrieCity" id="vo">
+                            <option value="{$vo.city_id}">{$vo.city_name}</option>
+                        </volist>
+                    </select>
+                    <p class="notice">产业类型必须选择,此为生成客户编号的唯一凭证</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="store_name"><em>*</em>门店名称</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="store_name" id="store_name" class="input-txt" placeholder="门店名称" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>创办时间</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" class="input-txt" id="established" name="established">
+                    <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="consignee"><em>*</em>门店地址</label>
+                </dt>
+                <dd class="opt">
+                    <select onChange="get_city(this)" id="province" name="province"  title="请选择所在省份">
+                        <option value="">选择省份</option>
+                        <volist name="province" id="vo">
+                            <option value="{$vo.id}" <if condition="$store[account_province] eq $vo[id]">selected</if> >{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select onChange="get_area(this)" id="city" name="city" title="请选择所在城市">
+                        <option value="">选择城市</option>
+                        <volist name="city" id="vo">
+                            <option value="{$vo.id}" <if condition="$store[city] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select id="district" name="district" title="请选择所在区县">
+                        <option value="">选择区域</option>
+                        <volist name="area" id="vo">
+                            <option value="{$vo.id}" <if condition="$store[district] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <input type="text" name="address" id="address" value="{$store.address}" class="input-txt" placeholder="详细地址"/>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit"><em>*</em>巡店模式</dt>
+                <select id="cruise_shop_mode" name="cruise_shop_mode"  title="请选择巡店模式">
+                    <option value="1">无源（手持）</option>
+                    <option value="2">有源（实时）</option>
+                    <option value="3">有源 + 无源 </option>
+                </select>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="business_area"><em>*</em>门店面积</label>
+                </dt>
+                <dd class="opt">
+                    <input name="construction_area_cb" onclick="test(this, 'construction_area')" id="construction_area_cb" type="checkbox" value="1"> 建筑面积 <input type="text" id="construction_area" name="construction_area" size="8" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" /> 平方米&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="business_area_cb" onclick="test(this, 'business_area')" id="business_area_cb" type="checkbox" value="2"> 营业面积 <input type="text" id="business_area" name="business_area" size="8" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" /> 平方米
+                </dd>
+            </dl>
+            <script>
+                function test(obj, id){
+                    if($(obj).is(":checked")){
+                        return;
+                    }
+                    $("#"+id).val('')
+                }
+            </script>
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>营业时间</label>
+                </dt>
+                <dd class="opt">
+                    <input type="time" name="opening_hours" id="opening_hours" />
+                    至
+                    <input type="time" name="closeing_hours" id="closeing_hours" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="store_mobile"><em>*</em>门店电话</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="store_mobile_qh" maxlength=4 size="6" onkeyup="moveNext(this)">-
+                    <input type="text" name="store_mobile" maxlength="8" id="store_mobile" size="12" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="property_right">产权</label>
+                </dt>
+                <dd class="opt">
+                    <input id="property_right" name="property_right" type="radio" value="1" checked="" onclick="selectType(this)">自有  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="property_right" type="radio" value="2" onclick="selectType(this)">租赁
+                </dd>
+            </dl>
+            <div style="display: none" id="rent_select">
+                <dl class="row">
+                    <dt class="tit">
+                        <label><em>*</em>租赁期限</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" class="input-txt" id="rent_begintime" name="rent_begintime"  value="">
+                        <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                        -
+                        <input type="text" class="input-txt" id="rent_endtime" name="rent_endtime"  value="">
+                        <span class="add-on input-group-addon">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </span>
+                        <p class="notice"></p>
+                    </dd>
+                </dl>
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="rent"><em>*</em>租金</label>
+                    </dt>
+                    <dd class="opt">
+                        <input type="text" id="rent" value="" name="rent" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元 &nbsp;&nbsp;&nbsp;
+                        时长: <select name="rent_long"  title="请选择租金支付时长">
+                                <option value="0">请选择租金时长</option>
+                                <option value="1">一个月</option>
+                                <option value="2">一年</option>
+                            </select> &nbsp;&nbsp;&nbsp;
+                        备注: <input type="text" class="input-txt" name="rent_note">
+                    </dd>
+                </dl>
+            </div>
+            <dl class="row">
+                <dt class="tit">主要经营产品</dt>
+                <dd class="opt">
+                    <textarea class="tarea" style="width:440px; height:150px;" name="main_pro" id="main_pro"></textarea>
+                    <span class="err"></span>
+                    <p class="notic">主要经营产品(包括不限于原材料、产地、家具风格)(500字以内)</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="inventory_count"><em>*</em>门店存货件数</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="inventory_count" value="" name="inventory_count" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 套
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="inventory_year_avg"><em>*</em>门店存货年平均件数</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="inventory_year_avg" value="" name="inventory_year_avg" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 套
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="inventory_year_price"><em>*</em>门店存货年平均价值</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" id="inventory_year_price" value="" name="inventory_year_price" class="t_mane" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"> 万元
+                </dd>
+            </dl>
+        </div>
+        <!-- 门店相册-->
+        <div class="ncap-form-default tab_div_2" style="display:none;">
+            <dl class="row">
+                <div class="tab-pane" id="tab_goods_images">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <foreach name="goodsImages" item="vo" key="k" >
+                                    <div style="width:100px; text-align:center; margin: 5px; display:inline-block;" class="goods_xc">
+                                        <input type="hidden" value="{$vo['image_url']}" name="goods_images[]">
+                                        <a onClick="" href="{$vo['image_url']}" target="_blank"><img width="100" height="100" src="{$vo['image_url']}"></a>
+                                        <br>
+                                        <a href="javascript:void(0)" onClick="ClearPicArr2(this,'{$vo['image_url']}')">删除</a>
+                                    </div>
+                                </foreach>
+
+                                <div class="goods_xc" style="width:100px; text-align:center; margin: 5px; display:inline-block;">
+                                    <input type="hidden" name="goods_images[]" value="" />
+                                    <a href="javascript:void(0);" onClick="GetUploadify(10,'','store','call_back2');"><img src="/public/images/add-button.jpg" width="100" height="100" /></a>
+                                    <br/>
+                                    <a href="javascript:void(0)">&nbsp;&nbsp;</a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </dl>
+        </div>
+        <div class="ncap-form-default">
+            <input type="hidden" name="user_id" value="{$user_id}">
+            <div class="bot"><a href="JavaScript:void(0);" onClick="checkSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+        </div>
+        <!-- 商品相册-->
+    </form>
+</div>
+<script type="text/javascript">
+
+    // function img_call_back(fileurl_tmp)
+    // {
+    //     $("#imgs").val(fileurl_tmp);
+    //     $("#imgs_a").attr('href', fileurl_tmp);
+    //     $("#imgs_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    // }
+
+    // 上传门店相册回调函数
+    function call_back2(paths){
+
+        var  last_div = $(".goods_xc:last").prop("outerHTML");
+        for (var i=0;i<paths.length ;i++ )
+        {
+            $(".goods_xc:eq(0)").before(last_div);	// 插入一个 新图片
+            $(".goods_xc:eq(0)").find('a:eq(0)').attr('href',paths[i]).attr('onclick','').attr('target', "_blank");// 修改他的链接地址
+            $(".goods_xc:eq(0)").find('img').attr('src',paths[i]);// 修改他的图片路径
+            $(".goods_xc:eq(0)").find('a:eq(1)').attr('onclick',"ClearPicArr2(this,'"+paths[i]+"')").text('删除');
+            $(".goods_xc:eq(0)").find('input').val(paths[i]); // 设置隐藏域 要提交的值
+        }
+    }
+    /*
+     * 上传之后删除组图input
+     * @access   public
+     * @val      string  删除的图片input
+     */
+    function ClearPicArr2(obj,path)
+    {
+        $.ajax({
+            type:'GET',
+            url:"{:U('Admin/Uploadify/delupload')}",
+            data:{action:"del", filename:path},
+            success:function(){
+                $(obj).parent().remove(); // 删除完服务器的, 再删除 html上的图片
+            }
+        });
+        // 删除数据库记录
+        $.ajax({
+            type:'GET',
+            url:"{:U('Admin/Goods/del_goods_images')}",
+            data:{filename:path},
+            success:function(){
+                //
+            }
+        });
+    }
+
+    //选择产业分类
+    $(function(){
+        $(document).on("change",'#industries',function(){
+            get_industries_province($(this).val(), 'industries_province', '0');
+            $('#industries_province').empty().html("<option value='0'>选择城市</option>");
+        })
+    })
+
+    $(document).ready(function(){
+        $('#established').layDate();
+        $('#rent_begintime').layDate();
+        $('#rent_endtime').layDate();
+    })
+
+    $(function () {
+        $("#store-add").validate({
+            debug: false, //调试模式取消submit的默认提交功能
+            focusInvalid: false, //当为false时，验证无效时，没有焦点响应
+            onkeyup: false,
+            ignore:":button",	//不验证的元素
+            rules:{
+                industries:{
+                    required:true
+                },
+                industries_city:{
+                    required:true
+                },
+                industries_area:{
+                    required:true
+                },
+                store_name:{
+                    required:true
+                },
+                established:{
+                    required:true
+                },
+                province:{
+                    required:true
+                },
+                city:{
+                    required:true
+                },
+                district:{
+                    required:true
+                },
+                address:{
+                    required:true
+                },
+                store_mobile:{
+                    required:false,
+                    isTel:true
+                },
+                main_pro:{
+                    required:true,
+                },
+                inventory_count:{
+                    required:true
+                },
+                inventory_year_price:{
+                    required:true
+                },
+            },
+            messages:{
+                industries:{
+                    required:"产业类型必填"
+                },
+                industries_city:{
+                    required:"产业城市必填"
+                },
+                industries_area:{
+                    required:"产业区域必填"
+                },
+                store_name:{
+                    required:"门店名称必填"
+                },
+                established:{
+                    required:"创立时间必填"
+                },
+                province:{
+                    required:"门店地址省份必填"
+                },
+                city:{
+                    required:"门店地址城市必填"
+                },
+                district:{
+                    required:"门店地址区域必填"
+                },
+                address:{
+                    required:"门店地址(详细地址必填)"
+                },
+                store_mobile:{
+                    required:"门店电话必填",
+                    isTel:'门店电话格式错误'
+                },
+                main_pro:{
+                    required:"主要经营产品必填"
+                },
+                inventory_count:{
+                    required:"门店存货件数必填"
+                },
+                inventory_year_price:{
+                    required:"门店存货年平均价值必填"
+                },
+            }
+        });
+    });
+
+    function checkSubmit(){
+        $('#submitBtn').attr('onclick','javascript:void();');//改变提交按钮上的文字并将按钮设置为不可点击
+        var user_id = {$user_id};
+        if(user_id == 0){
+            var search_user_id = $('#search_user_id').val();
+            if(search_user_id == 0){
+                layer.msg('请指定用户',{
+                    icon: 0,   // 失败图标
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                });
+                return false;
+            }
+        }
+        $('#store-add').submit();
+        setTimeout(function(){
+            $('#submitBtn').attr('onclick',"checkSubmit()");//改变提交按钮上的文字并将按钮设置为不可点击
+        }, 3000);
+    }
+
+
+    //搜索用户
+    function search_user(){
+        var user_name = $('#user_name').val();
+        if($.trim(user_name) == '')
+            return false;
+        $.ajax({
+            type : "POST",
+            url:"/index.php?m=Admin&c=Users&a=search_user",//+tab,
+            data :{search_key:$('#user_name').val()},// 你的formid
+            success: function(data){
+                data = data + '<option value="0">匿名用户</option>';
+                $('#search_user_id').html(data);
+            }
+        });
+    }
+
+    //选择商品
+    function selectGoods(){
+        var url = "{:U('Admin/Order/search_goods')}";
+        layer.open({
+            type: 2,
+            title: '选择商品',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['60%', '60%'],
+            content: url,
+        });
+    }
+
+    // 选择商品返回
+    function call_back(table_html){
+        $('#goods_list_div').show();
+
+        $('#goods_td').find('.table-bordered').append(table_html);
+        //过滤选择重复商品
+        $('input[name*="spec"]').each(function(i,o){
+            if($(o).val()){
+                var name='goods_id['+$(o).attr('rel')+']['+$(o).val()+'][goods_num]';
+                $('input[name="'+name+'"]').parent().parent().parent().remove();
+            }
+        });
+        layer.closeAll('iframe');
+    }
+
+    function delRow(obj){
+        $(obj).parent().parent().parent().remove();
+    }
+
+    $(document).ready(function(){
+        //插件切换列表
+        $('.tab-base').find('.tab').click(function(){
+            $('.tab-base').find('.tab').each(function(){
+                $(this).removeClass('current');
+            });
+            $(this).addClass('current');
+            var tab_index = $(this).data('index');
+            $(".tab_div_1, .tab_div_2, .tab_div_3, .tab_div_4,.tab_div_5").hide();
+            $(".tab_div_"+tab_index).show();
+        });
+
+    });
+
+    function selectType(obj){
+        if(obj.value == 2){
+            $("#rent_select").show();
+            return false;
+        }
+        $("#rent_select").hide();
+    }
+
+    //表单自动跳转
+    function moveNext(object){
+
+        if(object.value.length == 4){
+
+            $(object).next().focus();
+        }
+    }
+</script>
+</body>
+</html>

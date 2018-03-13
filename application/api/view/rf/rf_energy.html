@@ -1,0 +1,21 @@
+<h5>(共{$pager->totalRows}条记录)</h5>
+
+
+<table>
+  <tr> 
+    <td>ID</td>
+    <td>rfid</td>
+    <td>操作</td>
+  </tr>
+  <foreach name="res" item="vo" key="k" >
+    <tr>
+      <td><input type="checkbox"></td>
+      <td>{$vo[pawn_id]}</td>
+      <td>{$vo[pawn_rfid]}</td>
+      <td><span>更换电池</span></td>
+    </tr>
+  </foreach>
+</table> 
+
+
+{$pager->show()}

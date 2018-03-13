@@ -1,0 +1,537 @@
+<include file="public/layout" />
+<style>
+    .ncm-goods-gift {
+        text-align: left;
+    }
+    .ncm-goods-gift ul {
+        display: inline-block;
+        font-size: 0;
+        vertical-align: middle;
+    }
+    .ncm-goods-gift li {
+        display: inline-block;
+        letter-spacing: normal;
+        margin-right: 4px;
+        vertical-align: top;
+        word-spacing: normal;
+    }
+    .ncm-goods-gift li a {
+        background-color: #fff;
+        display: table-cell;
+        height: 30px;
+        line-height: 0;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: middle;
+        width: 30px;
+    }
+    .ncm-goods-gift li a img {
+        max-height: 30px;
+        max-width: 30px;
+    }
+
+    a.green{
+
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #f5f5f5;
+        border-radius: 4px;
+        color: #999;
+        cursor: pointer !important;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+        height: 20px;
+        letter-spacing: normal;
+        line-height: 20px;
+        margin: 0 5px 0 0;
+        padding: 1px 6px;
+        vertical-align: top;
+    }
+
+    a.green:hover { color: #FFF; background-color: #1BBC9D; border-color: #16A086; }
+
+    .ncap-order-style .ncap-order-details{
+        margin:20px auto;
+    }
+    .contact-info h3,.contact-info .form_class{
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .form_class i.fa{
+        vertical-align: text-bottom;
+    }
+</style>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.go(-1)" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>额度管理</h3>
+                <h5>客户详情信息及管理</h5>
+            </div>
+            <div class="subject" style="width:62%" id="credit-btn">
+                <if condition="$credit[status] eq 1">
+                        <a href="{:U('Admin/credit/credit_conclusion_detail',array('user_id'=>$credit[user_id]))}" style="float:right;margin-right:10px;" class="ncap-btn-big ncap-btn-green" >点击查看</a>
+                        <a href="javascript:void(0);" onclick=""  style="float:right;margin-right:10px" class="ncap-btn-big ncap-btn-green" >等待复核中</a>
+                    <elseif condition="$credit[status] eq 2"/>
+                        <a href="{:U('Admin/credit/credit_conclusion_detail',array('user_id'=>$credit[user_id]))}" style="float:right;margin-right:10px;" class="ncap-btn-big ncap-btn-green" >点击查看</a>
+                        <a href="javascript:void(0);" onclick=""  style="float:right;margin-right:10px" class="ncap-btn-big ncap-btn-green" >复核通过</a>
+                    <elseif condition="$credit[status] eq 3"/>
+                        <a href="javascript:void(0);" onclick=""  style="float:right;margin-right:10px" class="ncap-btn-big ncap-btn-green" >复核被驳回</a>
+                    <elseif condition="$userInfo[is_approval] eq 3"/>
+                        <a href="javascript:void(0);" onclick=""  style="float:right;margin-right:10px" class="ncap-btn-big ncap-btn-green" >驳回</a>
+                    <else />
+                        <div id="btn1">
+                            <a href="javascript:void(0);" onclick="act_submit(3, {$userInfo['user_id']})"  style="float:right;margin-right:10px" class="ncap-btn-big ncap-btn-green" >审核驳回</a>
+                        </div>
+                        <div id="btn3" style="display:none;">
+
+                        </div>
+                        <div id="btn2">
+                            <a href="javascript:void(0);" onclick="add_credit({$userInfo['user_id']})"  style="float:right;margin-right:10px" class="ncap-btn-big ncap-btn-green" >添加额度</a>
+                        </div>
+                </if>
+            </div>
+        </div>
+    </div>
+    <div class="ncap-order-style">
+        <div class="titile">
+            <h3></h3>
+        </div>
+
+        <div class="ncap-order-details">
+            <form id="order-action">
+                <div class="tabs-panels">
+                    <div class="contact-info">
+                        <h3>基本信息</h3>
+                        <if condition="$userInfo[is_approval] eq 0">
+                            <div class="form_class">
+                                <a class="btn green" href="{:U('Admin/Users/edit_user',array('user_id'=>$userInfo['user_id']))}"><i class="fa fa-pencil-square-o"></i>修改信息</a>
+                            </div>
+                        </if>
+                        <dl>
+                            <dt> 客户编号 ：</dt>
+                            <dd> {$userInfo.client_no} </dd>
+                            <dt> 姓名 ：</dt>
+                            <dd> {$userInfo.name} </dd>
+
+                        </dl>
+                        <dl>
+                            <dt> 客户类型 : </dt>
+                            <dd>
+                                <if condition="$userInfo[sex] eq 1">个人<else /> 企业</if>
+                            </dd>
+                            <dt> 性别 ：</dt>
+                            <dd> <if condition="$userInfo[sex] eq 1 ">男<else />女</if> </dd>
+                        </dl>
+                        <dl>
+
+                            <dt> 学历 ：</dt>
+                            <dd> <if condition="$userInfo[education] eq 1">专科以下<elseif condition="$userInfo[education] eq 2"/>专科<elseif condition="$userInfo[education] eq 3"/>本科<else />硕士以上</if></dd>
+                            <dt> 当地居住年限 ：</dt>
+                            <dd> 10年 </dd>
+                        </dl>
+                        <dl>
+                            <dt> 从业年限：</dt>
+                            <dd> {$userInfo.work_seniority}年 </dd>
+                            <dt> 户口所在地：</dt>
+                            <dd> {$userInfo.account_address2} </dd>
+                        </dl>
+                        <dl>
+
+                            <dt>手机号码：</dt>
+                            <dd> {$userInfo.mobile} </dd>
+                            <dt>家庭住址：</dt>
+                            <dd> {$userInfo.home_address2} </dd>
+                        </dl>
+                        <dl>
+                            <dt>收件地址：</dt>
+                            <dd> {$userInfo.mails_address2} </dd>
+                            <dt>住宅电话：</dt>
+                            <dd> {$userInfo.home_tel} </dd>
+                        </dl>
+                        <dl>
+                            <dt>证件类型：</dt>
+                            <dd> <if condition="$userInfo[credential_type] eq 1">公民身份证<elseif condition="$userInfo[credential_type] eq 2"/>港澳台居民身份证<elseif condition="$userInfo[credential_type] eq 3"/>护照<else />其他</if></dd>
+                            <dt>证件号码：</dt>
+                            <dd> {$userInfo.id_number} </dd>
+                        </dl>
+                        <dl>
+
+                            <dt>婚姻状况：</dt>
+                            <dd> <if condition="$userInfo[marriage] eq 1">已婚有子女<elseif condition="$userInfo[marriage] eq 2"/>已婚无子女<elseif condition="$userInfo[marriage] eq 3"/>未婚<else />其他</if></dd>
+                            <if condition="$userInfo[marriage] eq 1">
+                                <dt>子女数目：</dt>
+                                <dd> {$userInfo.kids} </dd>
+                            </if>
+                        </dl>
+                    </div>
+                    <if condition="$credit">
+                        <div class="contact-info">
+                            <h3>授信信息</h3>
+                            <!--<div class="form_class">-->
+                            <!--<a class="btn green" href="{:U('Admin/Users/edit_user',array('user_id'=>$userInfo['user_id']))}"><i class="fa fa-pencil-square-o"></i>修改信息</a>-->
+                            <!--</div>-->
+                            <dl>
+                                <dt> 客户经理 ： </dt>
+                                <dd> {$allAdminName[$credit.xd_id]} </dd>
+                                <dt> 审批经理 ： </dt>
+                                <dd> {$allAdminName[$credit.fk_id]} </dd>
+                            </dl>
+                            <dl>
+                                <dt> 授信额度 ： </dt>
+                                <dd> {$credit.credit}万元 </dd>
+                                <dt> 额度期限 ： </dt>
+                                <dd> {$credit.term}月 </dd>
+                            </dl>
+                            <dl>
+                                <dt> 审批抵押率 ： </dt>
+                                <dd> {$credit.check_rate}% </dd>
+                                <dt> 是否循环使用 ： </dt>
+                                <dd> <if condition="$credit.is_loop eq 1">是<else />否</if></dd>
+                            </dl>
+                            <dl>
+                                <dt> 提款期限 ： </dt>
+                                <dd> {$credit.draw_strtime|date='Y-m-d',###}-{$credit.draw_stptime|date='Y-m-d',###} </dd>
+                                <dt> 利率 ： </dt>
+                                <dd> {$credit.inter_rate}% </dd>
+                            </dl>
+                            <dl>
+                                <dt>服务费率 ： </dt>
+                                <dd> {$credit.service_rate}% </dd>
+                                <dt>抵押门店数量 ： </dt>
+                                <dd> {$credit.store_sum} </dd>
+                            </dl>
+                            <dl>
+                                <dt>担保方式 ： </dt>
+                                <dd> <if condition="$credit[assurer_mode] eq 1">新增保证人<elseif condition="$credit[assurer_mode] eq 2"/>新增房产抵押<else />其他担保方式</if> </dd>
+                                <dt> <if condition="$credit[assurer_mode] eq 1">保证人<elseif condition="$credit[assurer_mode] eq 2"/>房产抵押内容<else />担保方式详情</if> : </dt>
+                                <dd> <if condition="$credit[assurer_mode] eq 1">{$credit.assurer_name}<elseif condition="$credit[assurer_mode] eq 2"/>{$credit.house_pawn}<else />{$credit.other_methods}</if></dd>
+                            </dl>
+                            <dl>
+                                <dt>货后管理 ： </dt>
+                                <dd> {$credit.loan_admin} </dd>
+                                <dt>还款方式 ： </dt>
+                                <dd> <if condition="$credit[repayment] eq 1">按月付息到期还本<elseif condition="$credit[repayment] eq 2"/>额度内随借随还<else />按月付息按还款计划还本</if> </dd>
+                            </dl></div>
+                            <div class="goods-info">
+                                <h4>贷前条件</h4>
+                                <!--<div class="form_class">-->
+                                <!--&lt;!&ndash;<a class="btn green" href="{:U('Admin/users/editEnterprise',array('ent_id'=>$order['order_id']))}"><i class="fa fa-pencil-square-o"></i>修改费用</a>&ndash;&gt;-->
+                                <!--</div>-->
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>贷前条件</th>
+                                        <th>内容</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <volist name="$credit.loan_con" id="loan_con" key="k">
+                                        <tr>
+                                            <td class="w10">{$k}</td>
+                                            <td class="w80">{$loan_con}</td>
+                                        </tr>
+                                    </volist>
+                                </table>
+                            
+                        </div>
+                        <if condition="$credit[money_plan]">
+                            <div class="goods-info">
+                                <h4>还款计划</h4>
+                                <!--<div class="form_class">-->
+                                <!--&lt;!&ndash;<a class="btn green" href="{:U('Admin/users/editEnterprise',array('ent_id'=>$order['order_id']))}"><i class="fa fa-pencil-square-o"></i>修改费用</a>&ndash;&gt;-->
+                                <!--</div>-->
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>起始时间</th>
+                                        <th>结束时间</th>
+                                        <th>用款金额(元)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <volist name="$credit[money_plan]" id="money_plan">
+                                        <tr>
+                                            <td class="w80">{$money_plan.start_time}</td>
+                                            <td class="w80">{$money_plan.stop_time}</td>
+                                            <td class="w80">{$money_plan.use_amount}</td>
+                                        </tr>
+                                    </volist>
+                                </table>
+                            </div>
+                        </if>
+                    </if>
+                    <if condition="$spouse">
+                        <div class="contact-info">
+                            <h3>配偶信息</h3>
+                            <dl>
+                                <dt> 配偶姓名 : </dt>
+                                <dd> {$spouse.sp_name} </dd>
+                                <dt> 学历 : </dt>
+                                <dd> <if condition="$spouse[sp_education] eq 1">专科以下<elseif condition="$spouse[sp_education] eq 2"/>专科<elseif condition="$spouse[sp_education] eq 3"/>本科<else />硕士以上</if></dd>
+
+                            </dl>
+                            <dl>
+                                <dt> 手机号码 : </dt>
+                                <dd> {$spouse.sp_mobile} </dd>
+                                <dt> 性别 : </dt>
+                                <dd> <if condition="$userInfo[sex] eq 1 ">男<else />女</if> </dd>
+                            </dl>
+                            <dl>
+                                <dt> 学历 : </dt>
+                                <dd> <if condition="$userInfo[education] eq 1">专科以下<elseif condition="$userInfo[education] eq 2"/>专科<elseif condition="$userInfo[education] eq 3"/>本科<else />硕士以上</if></dd>
+                                <dt> 当地居住年限 : </dt>
+                                <dd> 10年</dd>
+                            </dl>
+                            <dl>
+                                <dt>证件类型 : </dt>
+                                <dd> <if condition="$spouse[sp_credential_type] eq 1">公民身份证<elseif condition="$spouse[sp_credential_type] eq 2"/>港澳台居民身份证<elseif condition="$spouse[sp_credential_type] eq 3"/>护照<else />其他</if></dd>
+                                <dt>证件号码 : </dt>
+                                <dd> {$spouse.sp_id_number} </dd>
+                            </dl>
+                            <dl>
+                                <dt>月收入 : </dt>
+                                <dd> {$spouse.sp_icnome}万/月 </dd>
+                                <dt> 工作单位 : </dt>
+                                <dd> {$spouse.work_unit}年 </dd>
+                            </dl>
+                            <dl>
+                                <dt> 职务：</dt>
+                                <dd> {$spouse.duty} </dd>
+                            </dl>
+                        </div>
+                    </if>
+                    <if condition="$ent">
+                        <volist name="ent" id="vo">
+                            <div class="contact-info">
+                                <h3>企业信息 - {$vo.name}</h3>
+                                <if condition="$userInfo[is_approval] eq 0">
+                                    <div class="form_class">
+                                        <a class="btn green" href="{:U('Admin/users/editEnterprise',array('ent_id'=>$vo['enterprise_id']))}"><i class="fa fa-pencil-square-o"></i>修改企业信息</a>
+                                    </div>
+                                </if>
+                                <dl>
+                                    <dt> 企业名称 : </dt>
+                                    <dd> {$vo.name} </dd>
+                                    <dt> 注册资金 : </dt>
+                                    <dd> {$vo.reg_capital}万 </dd>
+                                </dl>
+                                <dl>
+                                    <dt> 注册地址 : </dt>
+                                    <dd> {$vo.reg_address} </dd>
+                                    <dt> 营业执照号码 : </dt>
+                                    <dd> {$vo.business_no} </dd>
+                                </dl>
+                                <dl>
+                                    <dt> 成立时间 : </dt>
+                                    <dd> {$vo.founding_time|date='Y-m-d', ###} </dd>
+                                    <dt> 持续经营年限 : </dt>
+                                    <dd> {$vo.operating_years}年 </dd>
+                                </dl>
+                                <dl>
+                                    <dt>法定代表人 : </dt>
+                                    <dd> {$vo.legal_person} </dd>
+                                    <dt>手机号码 : </dt>
+                                    <dd> {$vo.mobile} </dd>
+                                </dl>
+                                <dl>
+                                    <dt>办公电话 : </dt>
+                                    <dd> {$vo.work_phone} </dd>
+                                    <dt>证件类型 : </dt>
+                                    <dd><if condition="$vo[credential_type] eq 1">公民身份证<elseif condition="$vo[credential_type] eq 2"/>港澳台居民身份证<elseif condition="$vo[credential_type] eq 3"/>护照<else />其他</if></dd>
+                                </dl>
+                                <dl>
+                                    <dt>证件号码 : </dt>
+                                    <dd> {$vo.id_number} </dd>
+                                    <dt>添加时间 : </dt>
+                                    <dd> {$vo.addtime|date='Y-m-d', ###} </dd>
+                                </dl>
+                                <dl>
+                                    <dt>主营业务 : </dt>
+                                    <dd> {$vo.main_business} </dd>
+                                </dl>
+                            </div>
+                            <if condition="vo.stockHolder">
+                                <div class="goods-info" >
+                                    <h4>企业股权信息</h4>
+                                    <!--<div class="form_class">-->
+                                    <!--&lt;!&ndash;<a class="btn green" href="{:U('Admin/users/editEnterprise',array('ent_id'=>$order['order_id']))}"><i class="fa fa-pencil-square-o"></i>修改费用</a>&ndash;&gt;-->
+                                    <!--</div>-->
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th>出资人</th>
+                                            <th>出资额(万元)</th>
+                                            <th>股权百分比</th>
+                                            <th>股东关系</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <volist name="vo.stockHolder" id="stock">
+                                            <tr>
+                                                <td class="w80">{$stock.investor}</td>
+                                                <td class="w80">{$stock.invest_amo}</td>
+                                                <td class="w80">{$stock.percentage}</td>
+                                                <td class="w80">{$stock.relation}</td>
+                                            </tr>
+                                        </volist>
+                                    </table>
+                                </div>
+                            </if>
+                        </volist>
+                    </if>
+                    <div class="goods-info">
+                        <h4>门店信息</h4>
+
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>门店编号</th>
+                                <th>门店名称</th>
+                                <th>查看详细信息</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="store" id="list">
+                                <tr>
+                                    <td class="w80">{$list.store_no}</td>
+                                    <td class="w80">{$list.store_name}</td>
+                                    <td class="w80">
+                                        <div class="form_class">
+                                            <a class="btn blue" href="javascript:;" onClick="getStoreInfo({$list.store_id})"><i class="fa fa-pencil-square-o"></i>查看</a>
+                                            <a class="btn blue" href="{:U('Admin/users/edit_store',array('store_id'=>$list['store_id']))}"><i class="fa fa-pencil-square-o"></i>详情修改</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </table>
+                        <div id="storeList"></div>
+                    </div>
+                    <if condition="$remark neq '' ">
+                        <div class="contact-info">
+                            <h3>审批备注信息</h3>
+                            <dl class="row">
+                                <dt class="tit">
+                                    <label for="note">备注反馈</label>
+                                </dt>
+                                <dd class="opt" style="margin-left:10px">
+                                    <textarea id="note" name="note" style="width:600px" rows="6"  class="tarea">{$remark}</textarea>
+                                </dd>
+                            </dl>
+                        </div>
+                    </if>
+
+                    <if condition="$credit[com_remarks] neq ''">
+                        <div class="contact-info">
+                            <h3>审批结论反馈备注</h3>
+                            <dl class="row">
+                                <dt class="tit">
+                                    <label for="note">备注反馈</label>
+                                </dt>
+                                <dd class="opt" style="margin-left:10px">
+                                    <textarea name="note" style="width:600px" rows="6"  class="tarea">{$credit.com_remarks}</textarea>
+                                </dd>
+                            </dl>
+                        </div>
+                    </if>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function call_back(user_id){
+        layer.closeAll('iframe');
+        window.location.reload();
+    }
+
+    //ajax 抓取页面
+    function getStoreInfo(id){
+        $.ajax({
+            type : "POST",
+            url:"/index.php/Admin/Users/store_list/is_ajax/1",
+            data : {store_id: id},
+            success: function(data){
+                $("#storeList").html('');
+                $("#storeList").append(data);
+            }
+        });
+    }
+
+    //批量操作提交
+    function act_submit(wst, user_id) {
+        var str = $('#btn1').find('a').html();
+        if(str == '驳回'){
+            layer.msg('禁止重复提交', {
+                icon: 2,   // 成功图标
+                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+            });
+            return false;
+        }
+        var remark = "审核通过";
+        if(wst != 2 ){
+            layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+                layer.close(index);
+                remark = text;
+                audit(wst, user_id, remark);
+            });
+        }else{
+            audit(wst, ids, remark);
+        }
+    }
+
+    function audit(wst, user_id, remark){
+        $.ajax({
+            type: "POST",
+            url: "/index.php?m=Admin&c=Credit&a=credit_update",//+tab,
+            data: {id:user_id,status:wst,remark:remark},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1){
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 2000,
+                        closeBtn: 0
+                    }, function(){
+                        if(data.res == 2){
+                            $("#btn1").hide();
+                            $("#btn2").find('a').html("审核已通过");
+                        }else{
+                            $("#btn2").hide();
+                            $("#btn1").find('a').html("驳回");
+                        }
+                        // window.location.reload();
+                    });
+                }else{
+                    layer.alert(data.msg, {icon: 2,time: 3000});
+                }
+            },
+            error:function(){
+                layer.alert('网络异常', {icon: 2,time: 3000});
+            }
+        });
+    }
+
+    function add_credit(id){
+        var str = $('#btn2').find('a').html();
+        if(str == '等待复核中'){
+            layer.msg('禁止重复提交', {
+                icon: 2,   // 成功图标
+                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+            });
+            return false;
+        }
+        var user_id = id;
+        var url = "/index.php/Admin/Credit/add_credit_conclusion/user_id/"+user_id;
+        layer.open({
+            type: 2,
+            title: '授信额度添加入口',
+            shadeClose: false,
+            shade: 0.8,
+            area: ['80%', '80%'],
+            content: url,
+        });
+    }
+</script>
+</body>
+</html>

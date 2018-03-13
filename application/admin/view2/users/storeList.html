@@ -1,0 +1,197 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>门店列表</h3>
+                <h5>查看用户门店详细信息</h5>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style=" width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>查看操作可以查看门店详情</li>
+            <li>用户信息一旦进行提交操作, 门店信息将无法进行修改和删除</li>
+            <li>用户信息提交成功之后, 删除操作只能冻结该门店, 并不能彻底删除</li>
+        </ul>
+    </div>
+    <div class="flexigrid" id="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>订单列表</h3>
+                <h5>(共{$page->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form class="navbar-form form-inline"  method="post" action="{:U('Admin/users/export_store')}"  name="search-form2" id="search-form2">
+                <input type="hidden" name="order_by" value="store_id">
+                <input type="hidden" name="sort" value="desc">
+                <input type="hidden" name="user_id" value="{$user_id}">
+                <input type="hidden" name="store_ids" value="">
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <select name="status" class="select sDiv3" >
+                            <option value="">门店状态</option>
+                            <option value="1">正常</option>
+                            <option value="2">冻结</option>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <select  name="keytype" class="select">
+                            <option value="store_name">门店名称</option>
+                            <option value="store_no">门店编号</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="sDiv2">
+                        <input type="text" size="30" name="keywords" class="qsbox" placeholder="搜索相关数据...">
+                    </div>
+                    <div class="sDiv2">
+                        <input type="button" onclick="ajax_get_table('search-form2',1)"  class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton">
+                    <a href="javascript:exportReport()">
+                        <div class="add" title="选定行数据导出excel文件,如果不选中行，将导出列表所有数据">
+                            <span><i class="fa fa-plus"></i>导出数据</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="fbutton">
+                    <a href="/index.php?m=Admin&c=Users&a=add_store&user_id={$user_id}">
+                        <div class="add" title="添加订单">
+                            <span><i class="fa fa-plus"></i>添加门店</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <table cellpadding="0" cellspacing="0" border="0" class="anothertable">
+            <thead>
+            <tr>
+                <th class="sign" axis="col6" onclick="checkAllSign(this)">
+                    <i class="ico-check"></i>
+                </th>
+                <th align="left" abbr="article_title" axis="col6" class="">
+                    序号
+                </th>
+                <th align="left" abbr="article_title" axis="col6" class="">
+                    门店编号
+                </th>
+                <th align="left" abbr="ac_id" axis="col4" class="">
+                    门店名称
+                </th>
+                <th align="left" abbr="ac_id" axis="col4" class="">
+                    权属人
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    门店电话
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    门店地址
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    产权
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    成立时间
+                </th>
+                <th align="center" abbr="article_time" axis="col6" class="">
+                    状态
+                </th>
+                <th align="left" axis="col1" class="handle">
+                    信息操作
+                </th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+        <!--分页位置-->
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        ajax_get_table('search-form2',1);
+
+        $('.ico-check ' , '.hDivBox').click(function(){
+            $('tr' ,'.hDivBox').toggleClass('trSelected' , function(index,currentclass){
+                var hasClass = $(this).hasClass('trSelected');
+                $('tr' , '#flexigrid').each(function(){
+                    if(hasClass){
+                        $(this).addClass('trSelected');
+                    }else{
+                        $(this).removeClass('trSelected');
+                    }
+                });
+            });
+        });
+
+    });
+
+
+    //ajax 抓取页面
+    function ajax_get_table(tab,page){
+        cur_page = page; //当前页面 保存为全局变量
+        $.ajax({
+            type : "POST",
+            url:"/index.php/Admin/users/ajaxStoreList/p/"+page,//+tab,
+            data : $('#'+tab).serialize(),// 你的formid
+            success: function(data){
+                // console.log(data)
+                $("#tbody").html('');
+                $("#tbody").append(data);
+
+                // 表格行点击选中切换
+                $('#flexigrid > table>tbody >tr').click(function(){
+                    $(this).toggleClass('trSelected');
+                });
+
+            }
+        });
+    }
+
+    // 点击排序
+    function sort(field){
+        $("input[name='order_by']").val(field);
+        var v = $("input[name='sort']").val() == 'desc' ? 'asc' : 'desc';
+        $("input[name='sort']").val(v);
+        ajax_get_table('search-form2',cur_page);
+    }
+
+    function exportReport(){
+        var selected_ids = '';
+        $('.trSelected' , '#flexigrid').each(function(i){
+            selected_ids += $(this).data('store-id')+',';
+        });
+        if(selected_ids != ''){
+            $('input[name="store_ids"]').val(selected_ids.substring(0,selected_ids.length-1));
+        }
+        $('#search-form2').submit();
+    }
+
+
+</script>
+</body>
+</html>

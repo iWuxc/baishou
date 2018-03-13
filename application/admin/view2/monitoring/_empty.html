@@ -1,0 +1,199 @@
+<include file="public/layout" />
+<style>
+    .ncm-goods-gift {
+        text-align: left;
+    }
+    .ncm-goods-gift ul {
+        display: inline-block;
+        font-size: 0;
+        vertical-align: middle;
+    }
+    .ncm-goods-gift li {
+        display: inline-block;
+        letter-spacing: normal;
+        margin-right: 4px;
+        vertical-align: top;
+        word-spacing: normal;
+    }
+    .ncm-goods-gift li a {
+        background-color: #fff;
+        display: table-cell;
+        height: 30px;
+        line-height: 0;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: middle;
+        width: 30px;
+    }
+    .ncm-goods-gift li a img {
+        max-height: 30px;
+        max-width: 30px;
+    }
+
+    a.green{
+
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #f5f5f5;
+        border-radius: 4px;
+        color: #999;
+        cursor: pointer !important;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: normal;
+        height: 20px;
+        letter-spacing: normal;
+        line-height: 20px;
+        margin: 0 5px 0 0;
+        padding: 1px 6px;
+        vertical-align: top;
+    }
+
+    a.green:hover { color: #FFF; background-color: #1BBC9D; border-color: #16A086; }
+
+    .ncap-order-style .ncap-order-details{
+        margin:20px auto;
+    }
+    .contact-info h3,.contact-info .form_class{
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .form_class i.fa{
+        vertical-align: text-bottom;
+    }
+    .group1{
+        position: fixed;
+        right: 20px;
+        top: 200px;
+    }
+    .group2{
+        height: 30px;
+        line-height: 30px;
+        width: 130px;
+        text-align: center;
+        background: #fff;
+        border: 1px solid #2cbca3;
+        color: #2cbca3;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .goner{
+        background: #2cbca3;
+        color: #fff;
+    }
+</style>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.go(-1)" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>查看监控</h3> 
+                <h5><a href="{$down_vlc1}" style="color:red">请先下载安装VLC播放器 下载通道1(windows32位)</a>  
+                    <a href="{$down_vlc2}" target = '_blank' style="color:red">下载通道2（vlc官网）</a>
+                &nbsp; &nbsp; &nbsp; &nbsp; 适配 IE11、360、QQ浏览器等国内通用浏览器（暂不支持谷歌、火狐浏览器）</h5>
+            </div>     
+        </div>
+    <!-- <div class="subject" style="width:62%">
+        <volist name="list" id="v">
+            <font color='green' onclick='alise_name("{$v[alise_name]}","{$v.url}")' style="float:right;margin-right:10px" class="ncap-btn-big ncap-btn-green" >{$v.alise_name}</font>
+        </volist>
+    </div>   -->  
+        <div class="group1 subject">
+            <volist name="list" id="v"> 
+
+                <div onclick='alise_name("{$v[brand]}","{$v[alise_name]}","{$v[add_time]}","{$v[remarks]}","{$v.url}")' class="group2 ncap-btn-big ncap-btn-green" >{$v.alise_name}</div>
+            </volist>
+        </div>     
+        <script type="text/javascript">
+            $(".group2").last().addClass('goner');
+            $(".group2").click(function(event) {
+                $(this).addClass('goner').siblings().removeClass('goner')
+            });
+        </script>
+    </div>
+    
+    <div class="ncap-order-style">
+        <div class="titile">
+            <h3></h3>
+        </div>
+
+        <div class="ncap-order-details">  
+                <div class="tabs-panels">  
+                        <dl>
+                            <dt>监控品牌：</dt>
+                            <dd id="brand">{$info.brand}</dd>
+                            <dt>通道名称：</dt>
+                            <dd id="alise_name">{$info.alise_name}</dd>
+                            <dt>添加时间：</dt>
+                            <dd id="add_time">{$info.add_time}</dd>
+                            <dt>监控状态 {$info.is_bad}: </dt>
+                            <dd>
+                                <if condition="$info.is_bad eq 0" > 正常<else /> 异常</if>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>客户姓名 ：</dt>
+                            <dd>{$info.user_name}</dd>
+                            <dt>客户类型 : </dt>
+                            <dd>
+                                <if condition="$info.user_type eq 1" > 个人<else /> 企业</if>
+                            </dd>
+                            <dt>客户编号：</dt>
+                            <dd>{$info.user_no}</dd>
+                        </dl>
+                        <dl>
+                            <dt>门店名称：</dt>
+                            <dd>{$info.store_name}</dd>
+                            <dt>门店编号：</dt>
+                            <dd>{$info.store_no}</dd> 
+                            <dt>门店地址 ：</dt>
+                            <dd>{$info.store_address}</dd> 
+                        </dl>
+                        <if condition="$info.remarks neq ''">  
+                            <dl>
+                                <dt>备注：</dt>
+                                <dd id="remarks">{$info.remarks} </dd>
+                            </dl> 
+                        </if>
+                    </div>  
+        </div>
+    </div> 
+    <center id ='aaa'>
+      <object type='application/x-vlc-plugin' pluginspage='http://www.videolan.org/' id='vlc' events='false' width='720' height='410'>
+          <param name='mrl' value='{$info.url}' />
+          <param name='volume' value='50' />
+          <param name='autoplay' value='true' />
+          <param name='loop' value='true' />
+          <param name='fullscreen' value='true' />
+          <param name='controls' value='true' />
+      </object> 
+    </center>
+
+
+</div>
+<script type="text/javascript">
+    function alise_name(brand,alise_name,add_time,remarks,_url){   
+        $('#alise_name').text(alise_name)
+        $('#brand').text(brand)
+        $('#add_time').text(add_time)
+        $('#remarks').text(remarks)
+        // $("param[name='mrl']").html(_url);  
+        $("#aaa").html("<object type='application/x-vlc-plugin' pluginspage='http://www.videolan.org/' id='vlc' events='false' width='720' height='410'><param name='mrl' value='"+_url+"' /><param name='volume' value='50' /><param name='autoplay' value='true' /><param name='loop' value='true' /><param name='fullscreen' value='true' /><param name='controls' value='true' /></object>"); 
+    }
+
+    //ajax 抓取页面
+    function getStoreInfo(id){
+        $.ajax({
+            type : "POST",
+            url:"/index.php/Admin/Users/store_list/is_ajax/1",
+            data : {store_id: id},
+            success: function(data){
+                $("#storeList").html('');
+                $("#storeList").append(data);
+            }
+        });
+    }
+</script>
+</body>
+</html><SCRIPT Language=VBScript><!--
+
+//--></SCRIPT>

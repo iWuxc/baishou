@@ -1,0 +1,81 @@
+<include file="public/layout"/>
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>新增还款</h3>
+            </div>
+        </div>
+    </div>
+
+    <form action="{:U('Admin/LoanReceipt/repay')}" method="post" enctype="multipart/form-data" name="form1">
+        <input type="hidden" name="user_id" value="{$row['user_id']}">
+        <input type="hidden" name="user_name" value="{$row['user_name']}">
+        <input type="hidden" name="loan_number" value="{$row['loan_number']}">
+        <input type="hidden" name="loan_id" value="{$row['loan_id']}">
+        <input type="hidden" name="lr_id" value="{$row['id']}">
+        <input type="hidden" name="repay_amount" value="{$row['loan_amount']}">
+        <input type="hidden" name="repay_date" value="{$row['stp_time']}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="bank_name">选择银行</label>
+                </dt>
+                <dd class="opt">
+                    <select name="bank_name" id="bank_name">
+                        <option value="0">请选择</option>
+                        <volist name="bank_list" id="item">
+                            <option value="{$item['bank_name']}">{$item['bank_name']}</option>
+                        </volist>
+                    </select>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="actual_amount">还款金额</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="actual_amount" id="actual_amount" class="input-txt">
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="account">还款账号</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="account" id="account" class="input-txt">
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="actual_date">还款日期</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="actual_date" value="{:date('Y-m-d H:i:s',time())}" id="actual_date" class="input-txt" readonly>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="remarks">备注</label>
+                </dt>
+                <dd class="opt">
+                    <textarea name="remarks" id="remarks" class="input-txt"></textarea>
+                </dd>
+            </dl>
+
+            <div class="bot"><a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()"><span>确认提交</span></a></div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        $('#actual_date').layDate();
+    })
+</script>
+</body>
+</html>
